@@ -1,0 +1,138 @@
+#contact
+  background-color: $dk_blue
+
+#contact-body
+  display: flex
+  background-image: url('/image/webp/phones.webp')
+  background-position: center
+  background-size: cover
+  background-repeat: no-repeat
+
+#request-org-body
+  display: flex
+  background-image: url('/image/webp/crowd-phones.webp')
+  background-position: center
+  background-size: cover
+  background-repeat: no-repeat
+
+.contact-form-body
+  .body-overlay
+    flex: 1
+    display: flex
+    background-color: rgba(16, 16, 25, 0.69)
+    padding: 10vh 0 0
+  .contact-body-content
+    flex: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 0px 30px 0px
+  p
+    text-align: center
+  h1
+    color: $white
+    font-family: var(--font-logo)
+    font-size: 43px
+    font-weight: 500
+    text-transform: uppercase
+    letter-spacing: 3px
+    text-align: center
+    text-shadow: 0px 0px 3px rgb(0 0 25 / 100%)
+    margin: 30px auto 30px
+  .secondary-tag
+    color: $blue
+    font-family: var(--font-logo)
+    font-size: 32px
+    font-weight: 400
+    letter-spacing: 1px
+    text-transform: uppercase
+    text-shadow: 0px 0px 7px rgb(0 0 25 / 100%)
+    margin: 0px auto 0px
+  .overview
+    color: $light
+    font-size: 16px
+    line-height: 32px
+    max-width: 630px
+    padding: 0 30px
+    text-shadow: 0px 0px 7px rgb(0 0 25 / 100%)
+    margin: 0 auto 0
+
+#contact-form
+  flex: 1
+  min-width: 480px
+  max-width: 630px
+  background-color: rgba(255, 255, 255, 1)
+  padding: 30px
+  border-top-left-radius: 30px
+  border-top-right-radius: 30px
+  margin-top: 60px
+
+#general-contact-form
+  margin-bottom: 0
+.contact-submission-secondary
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  min-width: 480px
+  min-height: 519px
+  h3
+    margin: 15px
+  .submit-btn
+    cursor: pointer
+
+// BREAKPOINTS
+
+@media (max-width: 768px)
+  #general-contact-form
+    margin-top: 0
+    margin-bottom: 0
+
+@media (max-width: 630px)
+  #contact-body
+    .w100
+      width: 100%
+    .container
+      padding: 0
+    .contact-body-content
+      padding: 0 5vw 0px
+    .contact-hide-mobile
+      display: none
+    .overview
+      padding: 0
+
+  #request-org-body
+    .w100
+      width: 100%
+  #contact-form
+    margin-left: 5vw
+    margin-right: 5vw
+    max-width: 100vw
+    &.org-form
+      margin-left: 0vw
+      margin-right: 0vw
+
+@media (max-width: 560px)
+  #contact-form
+    min-width: 90%
+    max-width: 90%
+    &.org-form
+      min-width: 100%
+      max-width: 100%
+    .mobile-row
+      flex-direction: column
+      .ml-15
+        margin-left: 0 !important
+      .mr-15
+        margin-right: 0 !important
+
+@media (max-width: 560px)
+  #contact-form
+    padding: 5vw 5vw 10vw
+  #general-contact-form
+    padding: 0
+  #contact-body
+    .primary-tag
+      font-size: 27px
+    .secondary-tag
+      font-size: 21px

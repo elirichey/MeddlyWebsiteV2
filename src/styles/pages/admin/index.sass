@@ -1,0 +1,35 @@
+#admin
+  flex: 1
+  display: flex
+  flex-direction: column
+  width: 100%
+  margin-left: 320px
+  color: $white
+
+.admin-events
+  overflow: hidden
+  height: 100%
+
+.overview-body
+  flex: 1
+  display: flex
+  width: 100%
+  flex-direction: column
+  padding: 15px
+  background-color: $light
+  position: relative
+  margin-top: 107px
+
+// Breakpoints
+
+@media(max-width: 1024px)
+  #admin
+    margin-left: 0
+  .overview-body
+    margin-top: 90px
+
+@media(max-width: 768px)
+  .admin-event
+    .event-form
+      display: flex
+      flex-direction: column

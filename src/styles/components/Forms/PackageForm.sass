@@ -1,0 +1,41 @@
+#package-form-container
+  background: $white
+  padding: 15px 30px
+  max-width: 405px
+  width: 100%
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 32%)
+  .checkbox-field
+    flex-direction: row
+  .loader-container
+    flex: 1
+
+#edit-package-modal
+  flex: 1
+  padding-bottom: 75px
+  .loader-container
+    flex: 1
+    .loader
+      flex: 1
+  .option
+    padding: 0
+  .selections
+    z-index: 2
+  .checkbox-field
+    display: flex
+    flex-direction: row
+  .currency
+    input
+      max-width: 80px
+      padding-right: 0
+
+@media(max-width: 435px)
+  #package-form-container
+    padding: 15px !important
+
+@media(max-width: 405px)
+  #package-form
+    .mobile-column-small
+      flex-direction: column
+    .ml-15
+      margin-left: 0
+      margin-top: 15px

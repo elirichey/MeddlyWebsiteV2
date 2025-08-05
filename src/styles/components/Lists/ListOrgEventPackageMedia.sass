@@ -1,0 +1,155 @@
+#package-media-container
+  flex: 1
+
+#list-package-media
+  flex: 1
+  flex-direction: column
+  background: $white
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 32%)
+  .title-section
+    padding: 19px 30px 15px
+    .title-section
+      flex: 1
+    .title
+      flex: 1
+      padding-bottom: 2px
+  .save-btn
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 20px
+    width: 80px
+    border: none
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 1px
+    background: transparent
+    color: $dk_green
+    &:hover
+      color: $blue
+  .sorting-options
+    span
+      display: flex
+      align-items: center
+      font-size: 12px
+      font-weight: 600
+      line-height: 12px
+      padding-bottom: 3px
+      margin-right: 10px
+    button
+      border: none
+      background: transparent
+      cursor: pointer
+      border-bottom: solid 2px transparent
+      padding: 0 5px
+      margin: 0 5px
+      &.active
+        border-bottom: solid 2px $green
+  .body-section
+    flex: 1
+    flex-grow: 0
+    flex-wrap: wrap
+    border: solid 2px $white
+    .single-post
+      display: flex
+      align-items: center
+      justify-content: center
+      position: relative
+      height: 200px
+      width: 200px
+      background: $light
+      border: solid 2px $white
+      cursor: pointer
+      overflow: hidden
+      .preview
+        height: auto
+        width: auto
+        max-height: none
+        max-width: none
+      .overlay
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        position: absolute
+        height: 100%
+        width: 100%
+        background: rgba(0,0,0,0.5)
+      .not-selected
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        position: absolute
+        height: 100%
+        width: 100%
+      .clickable
+        flex: 1
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 100%
+        padding-top: 50px
+      .selected
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 44px
+        width: 44px
+        padding: 5px
+        border: solid 2px $green
+        border-radius: 50%
+      .overview-bar
+        height: 50px
+        width: 100%
+        .img
+          display: flex
+          align-items: center
+          justify-content: center
+          height: 50px
+          width: 50px
+          &.avatar
+            img
+              border-radius: 50%
+        .overview
+          flex: 1
+          display: flex
+          flex-direction: column
+          justify-content: center
+          .username
+            color: $white
+            font-size: 14px
+          .info
+            color: $white
+            font-size: 12px
+
+#play-media-modal
+  .modal-content
+    background: $blackest
+    .modal-exit-icon line
+      color: $white
+
+// Breakpoints
+
+@media(max-width: 1024px)
+  #package-overview-container
+    flex-direction: column !important
+  #list-package-media
+    margin-left: 0
+    margin-top: 15px
+
+@media(max-width: 430px)
+  #list-package-media
+    .body-section
+      .single-post
+        height: calc(50vw - 15px)
+        width: calc(50vw - 15px)
+
+@media(max-width: 425px)
+  #list-package-media
+    .title-section
+      flex-direction: column
+      padding: 19px 15px 15px
+      .title
+        margin-top: 5px
+        margin-bottom: 15px

@@ -1,0 +1,197 @@
+#event-form
+  flex: 1
+  max-width: 100%
+  min-width: unset
+  &.form
+    margin: 0px 0px 30px
+
+.event-cover-input
+  max-height: 300px
+  max-width: 300px
+
+.event-form
+  width: 100%
+  padding: 15px
+  form
+    max-width: 480px
+  .row
+    &.wrap
+      width: 100%
+  .submit-btn
+    border-color: $gray
+    &:hover
+      border-color: $green
+    &.disabled
+      border-color: $gray
+  .venue-combobox
+    .option
+      height: 76px
+      &.active
+        background-color: $lt_green
+      .checkbox-field.combobox
+        border-bottom-color: $medium
+        .title
+          font-size: 14px
+          font-weight: 500
+          line-height: 1.5
+        .secondary
+          font-size: 12px
+          font-weight: 400
+          line-height: 1.5
+      &:hover
+        background-color: $lt_blue
+  .evpxent-selected-venue-container
+    height: 76px
+    width: calc(100% - 95px)
+    justify-content: center
+    align-items: center
+    .selected-marker
+      display: flex
+      align-items: center
+      justify-content: center
+      width: 60px
+      .icon
+        padding: 10px
+        fill: $dk_green
+
+.event-selected-venue-container
+  display: flex
+  align-items: center
+  justify-content: center
+  min-height: 76px
+  width: calc(100% - 95px)
+
+.event-form-container
+  background: $white
+  width: 100%
+  padding: 30px
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 7.5%)
+  .w100
+    width: 100%
+  .combobox-input-container
+    .relative-index
+      z-index: 2
+    .combobox-input
+      flex: 1
+.field-inputs
+  flex: 1
+  display: flex
+  flex-direction: column
+.dropdown-selections
+  flex: 1
+  display: flex
+  flex-direction: column
+.artwork-submit
+  flex-direction: column
+  align-items: center
+  #image-selection
+    position: relative
+    align-items: center
+    justify-content: center
+    height: 220px
+    width: 220px
+    margin-bottom: 5px
+    background-color: $white // #dfdfdf
+    // border: dotted 2px #dfdfdf
+    &.no-img
+      &:before
+        content: ""
+        position: absolute
+        border: dashed 4px #dfdfdf
+        top: -8px
+        bottom: -8px
+        left: -8px
+        right: -8px
+    .no-img-txt
+      font-size: 10px
+      text-transform: uppercase
+      font-weight: 500
+      letter-spacing: 1px
+      // font-size: 14px
+      color: $gray // $white
+
+@media(max-width: 1399px)
+  .event-form
+    .event-form-container
+      .input-field
+        &.time
+          display: flex
+    .selectable-event-rows
+      margin-top: 30px
+      .mx-15
+        margin-left: 0
+
+@media(max-width: 1200px)
+  .event-form
+    .selectable-event-rows
+      margin-top: 0px
+    .event-cover-input
+      padding-right: 0
+
+@media(max-width: 1099px)
+  .event-form
+    .event-form-container
+      .selections
+        .mr-15
+          margin-right: 30px
+        .ml-15
+          margin-left: 0
+          margin-top: 30px
+    .selectable-event-rows
+      margin-top: 30px
+
+@media(max-width: 1024px)
+  .event-form
+    .event-form-container
+      .selections
+        .ml-15
+          margin-top: 0
+      .event-selected-venue-container
+        position: relative
+        .selected-marker
+          position: absolute
+          right: 0
+          height: 76px
+    .selectable-event-rows
+      margin-top: 0px
+
+@media(max-width: 780px)
+  .event-form
+    .event-form-container
+      .selections
+        .ml-15
+          margin-top: 30px
+    .selectable-event-rows
+      margin-top: 30px
+
+@media(max-width: 720px)
+  .event-form
+    .event-form-container
+      .selections
+        .ml-15
+          margin-top: 0
+    .selectable-event-rows
+      margin-top: 30px
+      .mx-15
+        margin-right: 30px
+      .ml-15
+        margin-top: 30px
+        margin-left: 0
+
+@media(max-width: 479px)
+  .event-form
+    .event-form-container
+      .selections
+        .ml-15
+          margin-top: 30px
+
+@media(max-width: 375px)
+  .event-form-container
+    .combobox-input-container
+      .submit-btn
+        width: 70px
+
+@media(max-width: 350px)
+  .event-form
+    .event-form-container
+      padding: 15px

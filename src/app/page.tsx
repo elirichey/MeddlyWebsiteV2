@@ -1,95 +1,291 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import CashIcon from '@icons/CashIcon';
+import ChevronRight from '@icons/ChevronRight';
+import GlassesIcon from '@icons/GlassesIcon';
+import VantagePoints from '@icons/VantagePoints';
+import Image from 'next/image';
+import Link from 'next/link';
+import HandIcon from '@/components/Icons/HandIcon';
+import PrimaryLayout from '@/layout/PrimaryLayout';
+import '@styles/globals.sass';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+	const appleAppStoreUrl = 'https://apps.apple.com/us/app/meddly/id6670494632';
+	const androidAppStoreUrl = 'https://play.google.com/store/apps/details?id=app.meddly';
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+	return (
+		<PrimaryLayout>
+			<main id="artists">
+				<div className="body home">
+					<div id="artists-hero">
+						<video id="background-video" autoPlay muted loop poster="/video/web-720p.webp">
+							<source src="/video/web-720p.webm" type="video/webm" />
+						</video>
+
+						<div className="overlay">
+							<div className="container">
+								<div className="artists-hero-content flex1 column">
+									<h1 className="primary-tag">
+										Auto-Generated <span>Video</span> Productions
+									</h1>
+									<p className="overview">CROWDSOURCED EVENTS </p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="user-overview">
+						<div className="container">
+							<div className="flex1 row">
+								<div className="column justify-center">
+									<h2>Introducing Meddly</h2>
+									<p>
+										Meddly helps artists and event organizers capture, package, and release complete recordings of every
+										event.
+									</p>
+
+									<br />
+
+									<p>
+										Our mission is to make recording events fast, easy, and cost efficient. Create an event, setup
+										cameras, generate sequences, and publish the event so fans can enjoy each performance for years to
+										come.
+									</p>
+
+									<a className="get-started-btn" href="#user-how-it-works">
+										How It Works
+										<ChevronRight className="right-icon" />
+									</a>
+								</div>
+								<div className="column flex1 justify-center align-center">
+									<div className="image">
+										<Image src="/image/webp/devices/app-preview.webp" height={1826} width={1200} alt="App Preview" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="user-why-meddly" className="relative">
+						<div className="absolute-image desktop">
+							<Image
+								src="/image/webp/devices/horizontal-hand-recording.webp"
+								height={1157}
+								width={1928}
+								alt="App Recording Event"
+							/>
+						</div>
+
+						<div className="absolute-image mobile">
+							<Image
+								src="/image/webp/devices/vertical-hand-recording.webp"
+								height={1928}
+								width={1157}
+								alt="App Recording Event"
+							/>
+						</div>
+
+						<div className="container column">
+							<div className="row mobile-row">
+								<div className="flex1 column" />
+
+								<div className="flex1 column">
+									<h4 className="title">
+										Everyone has a cell phone. <br />
+										Put them to use!
+									</h4>
+
+									<p className="txt-dk-blue bold">
+										{`Renting camera equipment and hiring a production
+                  team is expensive.`}
+									</p>
+
+									<p className="txt-dk-blue">
+										Meddly simplifies event recording by empowering teams to use a range of devices, including
+										smartphones, digital cameras, drones, and professional-grade equipment.
+									</p>
+
+									<br />
+
+									<p className="txt-dk-blue">
+										Given that many people own personal recording devices and almost everyone has a phone, Meddly makes
+										it effortless to harness the technology in people's pockets for creating high-quality recordings.
+									</p>
+
+									<h5>Get the more out of every event. Use Meddly</h5>
+
+									<a className="get-started-btn" href="#user-how-it-works">
+										Get Started
+										<ChevronRight className="right-icon" />
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="video-examples">
+						<div className="container">
+							<div className="flex1 column">
+								<h3>Example Meddly Event</h3>
+								<div className="row">
+									<iframe
+										className="meddly-example-video"
+										width="1035"
+										height="582"
+										src="https://www.youtube.com/embed/LbrCULZeZEw"
+										title="Meddly&#39;s First Event - Clayton Anderson at Winners"
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+										referrerPolicy="strict-origin-when-cross-origin"
+										allowFullScreen
+									/>
+								</div>
+
+								<div className="row">
+									<div className="flex1 column">
+										<p>
+											The goal was to test media capture and uploading on both iOS and Android devices. The Android user
+											appears front and center, while the iOS user is positioned further back and off to the side.
+										</p>
+
+										<p>Camera angles start changing around the 0:26 second mark.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="user-liner-note" className="column">
+						<div className="background-image" />
+						<div className="content container">
+							<div className="row my-30">
+								<h3>
+									We Help <span>You</span>
+									<br /> Give Fans More
+								</h3>
+							</div>
+
+							<div className="row mobile-column align-start justify-center my-30">
+								<div className="flex1 column align-center justify-center mx-10">
+									<div className="card">
+										<div className="icon-outline">
+											<HandIcon className="ticket-icon" />
+										</div>
+
+										<p className="txt-dk-blue text-center">
+											<b>Control recording</b> of many mobile devices with the press of a button.
+										</p>
+									</div>
+								</div>
+
+								<div className="flex1 column align-center justify-center mx-10">
+									<div className="card">
+										<div className="icon-outline">
+											<VantagePoints className="immersive-experience-icon" />
+										</div>
+
+										<p className="txt-dk-blue text-center">
+											Mix mobile devices and pro video. Create <b>collaborative events</b>.
+										</p>
+									</div>
+								</div>
+
+								<div className="flex1 column align-center justify-center mx-10">
+									<div className="card">
+										<div className="icon-outline">
+											<GlassesIcon className="glasses-icon" />
+										</div>
+
+										<p className="txt-dk-blue text-center">
+											<b>Automate video sequencing</b> to simplify video editing and post-production.
+										</p>
+									</div>
+								</div>
+
+								<div className="flex1 column align-center justify-center mx-10">
+									<div className="card">
+										<div className="icon-outline">
+											<CashIcon className="cash-icon" />d
+										</div>
+
+										<p className="txt-dk-blue text-center">
+											<b>Download</b> your event media for selling to fans or posting on social channels.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="user-how-it-works" className="column">
+						<div className="user-onboarding background">
+							<div className="container-xmd row mobile-column">
+								<div className="flex2 column text-center align-center mx-10">
+									<h3 className="sub-title">Get Started</h3>
+									<p>Download the Meddly mobile app and create your account.</p>
+
+									<div className="download-buttons">
+										<div className="app-store-container">
+											<Link href={appleAppStoreUrl} target="_blank">
+												<Image
+													src="/svg/logo/app-stores/download-on-the-app-store.svg"
+													height={80}
+													width={230}
+													alt="Download in the App Store"
+												/>
+											</Link>
+										</div>
+
+										<div className="app-store-container">
+											<Link href={androidAppStoreUrl} target="_blank">
+												<Image
+													src="/svg/logo/app-stores/google-play-download-android-app.svg"
+													height={80}
+													width={230}
+													alt="Download on Google Play"
+												/>
+											</Link>
+										</div>
+									</div>
+								</div>
+
+								<div className="flex1 column text-center mx-10">
+									<h3 className="sub-title">Documentation</h3>
+									<p>Learn how to record, edit, and create videos with Meddly.</p>
+
+									<div className="get-started-btn-container">
+										<Link href="/docs" className="get-started-btn">
+											Read Documentation
+										</Link>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* <div id="become-a-meddly-user">
+					<div className="body-overlay">
+						<div className="user-cta-container container column align-center">
+							<div className="become-a-meddly-user-content flex1 column">
+								<h3 className="primary-tag">Organization Registration</h3>
+								<p className="overview">
+									Are you an user or event organizer? To get started, simply complete the registration form below to
+									register your organization.
+								</p>
+							</div>
+
+							<div className="artists-onboarding-form row">
+								<div className="flex1 column become-an-user-hide-mobile" />
+
+								<div id="become-an-user-form" className="flex1 column">
+									<OrgForm />
+								</div>
+
+								<div className="flex1 column become-an-user-hide-mobile" />
+							</div>
+						</div>
+					</div>
+				</div> */}
+				</div>
+			</main>
+		</PrimaryLayout>
+	);
 }

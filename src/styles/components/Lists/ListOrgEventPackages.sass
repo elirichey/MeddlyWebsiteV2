@@ -1,0 +1,61 @@
+#list-event-packages
+  display: flex
+  flex-direction: column
+  height: fit-content
+  min-width: 320px
+  max-width: 320px
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 32%)
+  margin-left: 15px
+  .loader
+    flex: 0
+    background: $white
+    min-height: 66px
+  li
+    display: flex
+    align-items: center
+    background: $white
+    border-bottom: solid 1px $medium
+    padding: 10px 15px
+    cursor: pointer
+    &:hover
+      background: $lt_blue
+    .primary
+      flex: 1
+      flex-direction: column
+      .title
+        color: $black
+        font-size: 14px
+        font-weight: 500
+        line-height: 14px
+        margin: 5px 0
+      .prices
+        color: $black
+        font-size: 12px
+        font-weight: 500
+        line-height: 12px
+        opacity: 0.5
+        margin: 5px 0
+    .secondary
+      flex-direction: column
+      width: 80px
+      .totals
+        justify-content: flex-end
+        color: $black
+        font-size: 12px
+        font-weight: 500
+        line-height: 12px
+        opacity: 0.5
+        margin: 5px 0
+        span
+          width: 55px
+    &:last-child
+      border-bottom: none
+
+@media(max-width: 768px)
+  #list-event-packages
+    margin: 15px 0 0
+
+@media(max-width: 425px)
+  #list-event-packages
+    max-width: 100%
+    margin: 15px 0 0

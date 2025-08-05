@@ -1,0 +1,126 @@
+
+.event-section
+  width: 100%
+  padding: 15px
+
+.event-section-container
+  background: $white
+  width: 100%
+  padding: 30px 30px 5px
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 7.5%)
+  .w100
+    width: 100%
+  .combobox-input-container
+    .relative-index
+      z-index: 2
+    .combobox-input
+      flex: 1
+
+#package-overview-container
+  flex-direction: row
+
+#event-overview
+  width: 100%
+
+#manage-event-media
+  width: 100%
+  margin: 0px 0px 30px
+  .media-sources
+    flex: 1
+    flex-direction: column
+    padding-bottom: 30px
+    .edit-media-button
+      margin-left: 10px
+      border: none
+      background: none
+      font-weight: 500
+      cursor: pointer
+      opacity: 0.75
+      padding: 10px 20px 10px
+      &:hover
+        opacity: 1
+        color: $blue
+  .media-source-column
+    flex: 1
+    flex-direction: column
+    &:first-child
+      margin-right: 15px
+    &:last-child
+      margin-left: 15px
+  .custom-sources
+    margin-right: 15px
+  .master-sources
+    margin-left: 15px
+  .section-title
+    font-size: 20px
+    font-weight: 500
+    margin: 0px 0px 5px
+  .note
+    width: 100%
+    max-width: 360px
+    font-size: 14px
+    opacity: 0.5
+    margin: 5px 0px 10px
+  .subsubtitle
+    font-size: 14px
+    opacity: 0.5
+    font-weight: 500
+    margin-top: 10px
+    margin-bottom: 10px
+    &.mt
+      margin-top: 30px
+
+#event-sequences
+  width: 100%
+  margin: 0px 0px 30px
+
+// Breakpoints
+
+@media(max-width: 1099px)
+  .event-section-container
+    .selections
+      .mr-15
+        margin-right: 30px
+      .ml-15
+        margin-left: 0
+        margin-top: 30px
+
+@media(max-width: 1024px)
+  .event-section-container
+    .selections
+      .ml-15
+        margin-top: 0
+    .event-selected-venue-container
+      position: relative
+      .selected-marker
+        position: absolute
+        right: 0
+        height: 76px
+
+@media(max-width: 780px)
+  .event-section-container
+    .selections
+      .ml-15
+        margin-top: 30px
+
+@media(max-width: 720px)
+  .event-section-container
+    .selections
+      .ml-15
+        margin-top: 0
+
+@media(max-width: 479px)
+  .event-section-container
+    .selections
+      .ml-15
+        margin-top: 30px
+
+//@media(max-width: 375px)
+//  .event-section-container
+//    .combobox-input-container
+//      .submit-btn
+//        width: 70px
+
+@media(max-width: 350px)
+  .event-section-container
+    padding: 15px

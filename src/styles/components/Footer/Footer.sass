@@ -1,0 +1,98 @@
+footer
+  display: flex
+  position: relative
+  background-color: $white
+  flex-direction: column
+  z-index: 0
+
+#footer-main
+  display: flex
+  padding-top: 60px
+  padding-bottom: 60px
+  .hide-desktop
+    display: none
+  .footer-title
+    display: flex
+    height: 22px
+    width: 100%
+    text-transform: uppercase
+    font-size: 9px
+    letter-spacing: 3px
+    font-weight: 700
+    color: $gray
+  li
+    display: flex
+    padding-top: 7px
+    padding-bottom: 7px
+  a
+    color: $brand_blue
+    font-size: 14px
+    font-weight: 600
+    &:hover
+      color: $blue
+
+#footer-bottom
+  display: flex
+  background-color: $tmpt_blue
+  height: 44px
+
+#footer-logo
+  justify-content: center
+  align-items: flex-start
+  a
+    opacity: 1
+    &:hover
+      -webkit-filter: saturate(2)
+      -moz-filter: saturate(2)
+      -ms-filter: saturate(2)
+      -o-filter: saturate(2)
+      filter: saturate(2)
+
+#footer-copyright
+  color: $gray
+  font-size: 14px
+  align-items: center
+  justify-content: center
+
+// Breakpoints
+
+@media(max-width: 1200px)
+  #footer-main
+    padding-bottom: 60px
+    .hide-desktop
+      display: flex
+    .hide-mobile
+      display: none
+    .column
+      padding-left: 30px
+      padding-right: 30px
+    .footer-title
+      justify-content: center
+    li
+      justify-content: center
+
+@media(max-width: 900px)
+  #footer-logo
+    padding: 0 !important
+
+@media(max-width: 830px)
+  #footer-logo
+    align-items: center
+  #footer-main
+    .row
+      flex-direction: column
+    ul
+      margin-bottom: 30px
+
+  #footer-bottom
+    height: unset
+    padding-top: 10px
+    padding-bottom: 10px
+    .row
+      flex-direction: column
+  #footer-logo
+    margin-top: 30px
+    margin-bottom: 30px
+  #footer-social
+    margin-top: 30px
+    margin-bottom: 30px

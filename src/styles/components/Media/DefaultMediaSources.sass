@@ -1,0 +1,89 @@
+.default-media-title
+  padding-bottom: 30px
+  p
+    font-size: 24px
+    line-height: 30px
+    font-weight: 500
+
+.list-default-sources
+  flex: 1
+  width: 100%
+  display: flex
+  flex-direction: column
+  .media-source-card
+    margin-right: 30px
+    margin-bottom: 30px
+    &.add-media
+      width: fit-content
+      background-color: $white
+      box-shadow: none
+      border: none
+      .text-container
+        height: 42px // 84px // Full Height - Same as Media Cards
+        width: 100%
+        align-items: center
+        padding: 10px 15px 10px 0
+        justify-content: center
+        p
+          font-size: 16px
+          font-weight: 500
+          color: $gray
+          margin-right: 15px
+      .icon-container
+        height: 18px
+        width: unset
+        color: $gray
+        background-color: transparent
+        margin-left: 15px
+        margin-right: 5px
+        .add-icon
+          color: $gray
+          height: 18px
+          width: 18px
+          line
+            color: $gray
+            stroke: 2px solid $gray
+            stroke-width: 54px !important
+      &:hover
+        p
+          color: $blue
+        .icon-container
+          color: $blue
+          .add-icon
+            color: $blue
+            line
+              color: $blue
+              stroke-color: $blue
+    &.selected
+      border-color: $medium
+      &:hover
+        border-color: $blue
+    .is-playing
+      height: 60px
+      width: 60px
+      align-items: center
+      justify-content: center
+      margin-left: 5px
+      margin-right: 15px
+      p
+        color: $gray
+        font-size: 12px
+        font-weight: 500
+
+.audio-fixed-width
+  width: 320px
+
+#list-event-media-default-audio
+  flex-direction: column
+  position: relative
+  overflow-y: scroll
+  .default-media-title
+    padding-bottom: 15px
+  .add-media
+    margin-bottom: 15px
+
+#currently-selected-audio
+  justify-content: center
+  &.no-audio-selected
+    min-height: 121px
+    width: 100%

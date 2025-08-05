@@ -1,0 +1,176 @@
+#document
+  display: flex
+  background-color: $dk_blue
+  hr
+    margin: 60px 0 60px
+  .download-buttons
+    flex-direction: row
+  #download-buttons
+      .app-store-container
+        flex: 1
+        flex-direction: column
+        text-align: center
+        a
+          max-width: 200px
+          img
+            max-height: 80px
+  .container
+    background-color: $white
+  .header
+    display: flex
+    flex-direction: column
+    padding-top: 107px
+  .body.bg-white
+    padding-top: 0
+    .container-xmd
+      width: 100%
+    .content
+      flex: 1
+      flex-direction: column
+      padding: 60px 0 90px
+  .document-section
+    h2
+      margin-bottom: 10px
+  ol
+    margin-left: 15px
+    li
+      padding-top: 5px
+      padding-bottom: 5px
+    ul
+      list-style: disc
+      padding-left: 10px
+
+  a
+    color: $border_blue
+    font-weight: 700
+    &:hover
+      color: $blue
+
+#documentation-overview
+  display: flex
+  background-color: $dk_blue
+  .container
+    background-color: $light
+  .header
+    display: flex
+    flex-direction: column
+    padding-top: 107px
+  .body.bg-light
+    padding-top: 0
+    .container-xmd
+      width: 100%
+    .content
+      flex: 1
+      flex-direction: column
+      padding: 60px 0 60px
+    h3
+      font-weight: 400
+      font-size: 24px
+      text-transform: uppercase
+      line-height: 36px
+      letter-spacing: 0.5px
+      color: $dk_blue
+      // opacity: 0.25
+      margin: 0 15px 0px
+    hr
+      height: 2px
+      border: none
+      width: 100%
+      max-width: calc(100% - 30px)
+      background: $dk_blue
+      opacity: 0.125
+      margin: 60px auto 60px
+    ul
+      display: flex
+      align-items: center
+      flex-direction: row
+      flex-wrap: wrap
+      li
+        display: flex
+        align-items: center
+        justify-content: center
+        margin: 15px
+        overflow: hidden
+        a
+          flex: 1
+          display: flex
+          align-items: center
+          justify-content: center
+          flex-direction: column
+          background-color: $white
+          width: 180px
+          height: 180px
+          border-radius: 16px
+          padding: 0 30px
+          .title
+            font-family: var(--font-redhat)
+            font-size: 14px
+            font-weight: 500
+            line-height: 24px
+            letter-spacing: 1px
+            text-align: center
+            text-wrap: wrap
+            inline-size: 180px
+            color: $brand_blue
+          .icon-container
+            display: flex
+            align-items: center
+            justify-content: center
+            flex-direction: column
+            width: 44px
+            height: 44px
+            margin-bottom: 10px
+            position: relative
+          .number
+            font-family: var(--font-redhat)
+            font-size: 14px
+            font-weight: 500
+            color: $brand_blue
+            position: absolute
+            top: 16px
+          .icon
+            width: 44px
+            height: 44px
+            path
+              fill: $brand_blue
+            &.os-icon
+              height: 38px
+              width: 38px
+              margin-bottom: 6px
+              path
+                color: transparent
+          &:hover
+            background-color: $blue
+            .number
+              color: $white
+            .title
+              color: $white
+            .icon
+              path
+                fill: $white
+              &.os-icon
+                path
+                  color: transparent
+
+@media (max-width: 480px)
+  #document
+    #download-buttons
+      flex-direction: column !important
+      margin-top: 30px
+      .app-store-container
+        max-width: 100%
+      a
+        max-width: 100%
+  #documentation-overview
+    .body.bg-light
+      ul
+        justify-content: center
+
+@media (max-width: 375px)
+  #document
+    .header
+      padding-top: 97px
+
+  #documentation-overview
+    .header
+      padding-top: 97px

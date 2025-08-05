@@ -1,0 +1,40 @@
+.media-source-card
+  cursor: pointer
+  width: 100%
+  max-width: 360px
+  background-color: $most_lt_blue
+  align-items: center
+  border: solid 2px $most_lt_blue
+  border-radius: 16px
+  box-shadow: 0px 4px 12px rgb(0 0 0 / 7.5%)
+  &:hover
+    border-color: $blue
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.07)
+  &.no-hover
+    cursor: unset
+    &:hover
+      border-color: $most_lt_blue
+      box-shadow: 0px 4px 12px rgb(0 0 0 / 7.5%)
+  &.half-width
+    width: 50%
+  .icon-container
+    height: 60px
+    width: 60px
+    border-radius: 50%
+    align-items: center
+    justify-content: center
+    background-color: $white
+    margin: 10px 15px 10px
+    .media-icon
+      stroke: none
+      margin-left: 20px
+      margin-top: 16px
+      opacity: 0.5
+  .source-name
+    font-size: 16px
+    font-weight: 500
+  .footnote
+    font-size: 12px
+    line-height: unset
+    color: $lt_dark
+    margin-bottom: 5px

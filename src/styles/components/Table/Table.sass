@@ -1,0 +1,81 @@
+.dashboard-table
+  display: flex
+  flex-direction: column
+  background-color: $white
+  overflow: scroll
+  border: solid 2px $white
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.32)
+  thead
+    flex: 1
+    display: flex
+    background-color: $black
+    width: 100%
+    th
+      font-family: var(--font-logo)
+      font-size: 12px
+      letter-spacing: 2px
+      text-transform: uppercase
+      color: $white
+    tr
+      flex: 1
+      display: flex
+      align-items: center
+      height: 42px
+
+    th
+      span
+        height: 11px
+        align-items: center
+        justify-content: center
+        letter-spacing: 0px
+        .sort
+          margin-left: 5px
+        &.desc
+          display: inline-block
+          transform: rotate(270deg)
+          color: $white
+        &.asc
+          display: inline-block
+          transform: rotate(90deg)
+          color: $white
+  tbody
+    flex: 1
+    display: flex
+    flex-direction: column
+    width: 100%
+    tr
+      flex: 1
+      display: flex
+      cursor: pointer
+      &:hover
+        background-color: $lighter
+    td
+      display: flex
+      align-items: center
+      font-size: 14px
+      min-height: 51px
+      span
+        display: flex
+        align-items: center
+  .even
+    background-color: $white
+  .odd
+    background-color: $most_lt_blue
+
+.no-table-items
+  display: flex
+  flex-direction: column
+  align-items: center
+  height: 320px
+  p
+    font-size: 23px
+    color: $gray
+
+@media (max-width: 1236px)
+  .dashboard-table
+    thead
+      width: 100%
+      min-width: fit-content
+    tbody
+      width: 100%
+      min-width: fit-content

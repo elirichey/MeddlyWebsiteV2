@@ -1,0 +1,232 @@
+#header
+  display: flex
+  border-bottom: solid 1px $most_lt_blue
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 2
+  &.no-border
+    border-bottom: none
+  .avatar
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 44px
+    width: 44px
+    border-radius: 50%
+    background: $white
+    overflow: hidden
+    margin-right: 10px
+
+#header-top-Bar
+  display: flex
+  height: 40px
+  background-color: $most_lt_blue
+
+#header-body
+  background: $white
+  padding-top: 10px
+  padding-bottom: 10px
+  box-shadow: 0px 0px 11px rgb(14 14 26 / 7.5%)
+  position: relative
+  &.transparent
+    background: transparent
+    box-shadow: none
+  .container
+    &.centered
+      align-items: center
+      justify-content: center
+      #header-logo
+        padding-right: 0
+        a
+          margin: auto
+
+#header-logo
+  flex: 1
+  display: flex
+  justify-content: center
+  align-items: center
+  padding-right: 30px
+  a
+    display: flex
+    margin-right: auto
+    &:hover
+      -webkit-filter: saturate(2)
+      -moz-filter: saturate(2)
+      -ms-filter: saturate(2)
+      -o-filter: saturate(2)
+      filter: saturate(2)
+
+  img
+    flex: 1
+    display: flex
+    max-width: 270px
+    margin-right: 10px
+
+#desktop-main-menu
+  display: flex
+  justify-content: flex-end
+  ul
+    max-width: 960px
+    justify-content: flex-end
+    position: relative
+  .desktop-main-menu-link
+    display: flex
+    align-items: center
+    justify-content: center
+    max-width: 180px
+    font-size: 14px
+    font-weight: 600
+    letter-spacing: 1px
+    margin-left: 10px
+    margin-right: 10px
+  .desktop-main-menu-account-link
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 50px
+    font-size: 14px
+    font-weight: 600
+    letter-spacing: 1px
+    margin: auto 10px
+    cursor: pointer
+    .menu-account-icon
+      fill: $brand_blue
+      height: 32px
+      width: 32px
+    &:hover
+      span
+        color: $blue
+      .menu-account-icon
+        fill: $blue
+    span
+      display: flex
+      align-items: center
+      justify-content: center
+      color: $brand_blue
+      margin-left: 5px
+
+  a
+    display: flex
+    cursor: pointer
+    padding: 10px 30px
+    color: $brand_blue
+    text-shadow: 0px 0px 1px rgb(255 255 255 / 100%), 0px 0px 3px rgb(255 255 255 / 100%), 0px 0px 5px rgb(255 255 255 / 100%)
+    &:hover
+      color: $blue
+
+#mobile-main-menu
+  display: none
+  justify-content: flex-end
+  margin-right: 10px
+.mobile-menu-indicator
+  display: flex
+  align-items: center
+  justify-content: flex-end
+  height: 72px
+  width: 72px
+  .open
+    height: 32px
+    width: 32px
+  .close
+    height: 32px
+    width: 32px
+#mobile-menu-dropdown
+  display: none
+  flex-direction: column
+  position: absolute
+  background: $most_lt_blue
+  top: 92px
+  left: 0
+  right: 0
+  z-index: 1000
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.1)
+.mobile-menu-dropdown-container
+  position: relative
+  height: 100%
+  max-height: calc(100% - 133px)
+  overflow: scroll
+  a
+    flex: 1
+    display: flex
+    font-size: 18px
+    font-weight: 500
+    padding: 16px 30px
+    border-top: solid 1px $light
+    border-bottom: solid 1px $light
+    &:hover
+      color: $blue
+    &.open
+      background-color: rgba(0,0,0,0.125)
+.megamenu-dropdown-indicator
+  margin-left: 15px
+  &.open
+    transform: rotate(90deg)
+.mobile-menu-dropdown-indicator
+  margin-left: 15px
+  &.open
+    transform: rotate(90deg)
+.mobile-menu-secondary
+  flex: 1
+  display: flex
+  font-size: 16px
+  font-weight: 400
+  padding: 10px 30px 12px
+  padding-left: 45px
+  border-top: solid 1px $light
+  border-bottom: solid 1px $light
+  background-color: $white
+
+.mega-menu
+  display: flex
+  position: absolute
+  top: 81px
+  left: 0
+  right: 0
+  width: 720px
+  background-color: $white
+  border: solid 3px $white
+  border-top: solid 2px $light
+  box-shadow: 0px 5px 5px rgb(0 0 0 / 10%)
+  padding: 20px
+  margin: auto
+  .title
+    display: flex
+    margin-bottom: 7px
+  ul
+  li
+    font-weight: 400
+    text-transform: none
+    margin-left: 10px
+    margin-bottom: 5px
+
+// Breakpoints
+
+@media(max-width: 1100px)
+  #desktop-main-menu
+    display: none
+  #mobile-main-menu
+    display: flex
+    align-items: center
+  #mobile-menu-dropdown
+    display: flex
+    top: 106px
+    max-width: 430px
+    margin-left: auto
+
+@media(max-width: 500px)
+  #header-logo
+    padding-left: 0
+  #mobile-main-menu
+    margin-right: 0
+
+@media(max-width: 375px)
+  #header-body
+    min-height: 96px
+  #header-logo
+    padding: 6px 5vw 0
+    img
+      max-width: 180px
+  #mobile-menu-dropdown
+    top: 96px

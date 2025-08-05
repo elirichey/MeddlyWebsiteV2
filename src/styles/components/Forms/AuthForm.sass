@@ -1,0 +1,99 @@
+#auth-form
+  flex: 1
+  display: flex
+  justify-content: flex-start
+  align-items: center
+  max-width: 480px
+  margin: auto
+  .form
+    min-width: 360px
+    max-width: 360px
+  h1
+    color: $tmpt_blue
+    font-family: var(--font-logo)
+    font-size: 43px
+    font-weight: 500
+    text-transform: uppercase
+    letter-spacing: 3px
+    margin-top: 15px
+    margin-bottom: 0px
+  p
+    max-width: 360px
+
+#forgot-password-form
+  margin-top: 15px
+
+.auth-form
+  margin: auto 0 120px
+  .column
+    flex: 1
+  .submit-btn
+    margin: auto
+
+.password-input-container
+  position: relative
+  justify-content: center
+  .input
+    position: relative
+  .show-hide
+    width: 55px
+    align-items: center
+    justify-content: center
+    position: absolute
+    top: 13px
+    right: 13px
+    font-size: 12px
+    text-align: center
+    color: $gray
+    cursor: pointer
+
+#reset-form
+  .button
+    display: flex
+    justify-content: center
+    align-items: center
+    background: transparent
+    min-width: 160px
+    height: 36px
+    font-size: 16px
+    font-weight: 500
+    text-transform: uppercase
+    margin: 15px auto 10px
+    border: solid 2px $green
+    border-radius: 12px
+    color: $tmpt_blue
+    animation: color-change 1s infinite
+    padding-left: 30px
+    padding-right: 30px
+    cursor: pointer
+    &:hover
+      background: $white
+      border: solid 2px $dk_green
+      color: $brand_blue
+    &:disabled
+      color: $medium
+      background: transparent
+      border: solid 2px transparent
+      cursor: initial
+      &:hover
+        color: $medium
+        background: transparent
+        border: solid 2px transparent
+
+#login-form
+  .form-loader-container
+    flex: 1
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    min-height: 248px
+
+// Breakpoints
+
+@media(max-width: 425px)
+  .auth-form
+    width: 100%
+    .form
+      min-width: 100% !important
+      max-width: 100% !important
+      width: 100% !important

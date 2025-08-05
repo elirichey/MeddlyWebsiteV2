@@ -1,0 +1,45 @@
+#pagination
+  display: flex
+  .pagination-arrow
+    height: 20px
+    width: 20px
+    opacity: 0.5
+  button
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 40px
+    min-width: 40px
+    font-size: 14px
+    font-weight: 500
+    text-transform: uppercase
+    line-height: 20px
+    letter-spacing: 1px
+    background-color: $white
+    border: solid 2px $medium
+    border-radius: 50%
+    margin-left: 5px
+    margin-right: 5px
+    &:first-of-type
+      margin-left: 0
+      &:hover
+        border: solid 2px $blue
+    &:last-of-type
+      margin-right: 0
+      &:hover
+        border: solid 2px $blue
+    &:hover
+      border: solid 2px $blue
+      background-color: $most_lt_blue
+      .pagination-arrow
+        opacity: 1
+    &:disabled
+      font-size: 21px
+      color: $black
+      border-color: transparent
+    &[disabled]
+      font-size: 21px
+      color: $black
+      border-color: transparent
+  .current-page
+    background-color: transparent

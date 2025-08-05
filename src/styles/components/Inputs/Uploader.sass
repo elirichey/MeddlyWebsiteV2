@@ -1,0 +1,38 @@
+a.uppy-Dashboard-poweredBy
+  display: none !important
+
+.uppy-Dashboard-inner
+  display: block
+  *
+    display: block
+  .uppy-Dashboard-browse
+    color: $brand_blue
+    &:hover
+      color: $blue
+
+.uppy-u-reset
+  span
+    color: $gray
+.uppy-Dashboard-close
+  padding-top: 10px
+  span
+    color: $gray
+
+@media(max-width: 820px)
+  .uppy-Dashboard--modal
+    .uppy-Dashboard-inner
+      top: 90px !important
+  .uppy-Dashboard-close
+    top: 5px !important
+    right: 15px !important
+    span
+      font-size: 44px
+      color: $gray
+
+@media(min-width: 820px)
+  .uppy-Dashboard-close
+    top: unset 5px !important
+    right: -35px !important
+    span
+      font-size: 44px
+      color: $white

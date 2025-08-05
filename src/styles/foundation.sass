@@ -1,0 +1,472 @@
+html
+  flex: 1
+  display: flex
+  height: 100%
+  width: 100%
+  background: $dk_blue
+  scroll-behavior: smooth
+
+body
+  flex: 1
+  display: flex
+  flex-direction: column
+
+#__next
+  flex: 1
+  display: flex
+  flex-direction: column
+
+main
+  flex: 1
+  position: relative
+  z-index: 1
+a
+  color: inherit
+  text-decoration: none
+  cursor: pointer
+*
+  box-sizing: border-box
+  padding: 0
+  margin: 0
+  font-family: var(--font-redhat)
+  color: $dk_blue
+  *:focus-visible
+    outline: none
+
+div
+  display: flex
+
+img
+  max-width: 100%
+  max-height: 100%
+  height: auto
+
+h1, h2, h3, h4, h5
+  font-weight: 500
+p
+  font-size: 15px
+  line-height: 26px
+
+.base
+  flex: 1
+  display: flex
+  flex-direction: column
+
+// Layout
+
+.flex
+  display: flex
+.flex1
+  flex: 1
+.flex2
+  flex: 2
+.justify-center
+  justify-content: center
+.align-center
+  align-items: center
+.align-start
+  align-items: flex-start
+.row
+  display: flex
+  flex-direction: row
+.row-reverse
+  display: flex
+  flex-direction: row-reverse
+.column
+  display: flex
+  flex-direction: column
+.column-reverse
+  display: flex
+  flex-direction: column-reverse
+
+.justify-start
+  justify-content: flex-start
+.align-start
+  align-items: flex-start
+
+.justify-center
+  justify-content: center
+.align-center
+  align-items: center
+
+.justify-end
+  justify-content: flex-end
+.align-end
+  align-items: flex-end
+
+.wrap
+  flex-wrap: wrap
+.body
+  flex: 1
+  display: flex
+  flex-direction: column
+  min-height: calc(100% - 250px)
+  padding-top: 107px
+
+.relative
+  position: relative
+
+.z-index-1
+  z-index: 1
+.z-index-2
+  z-index: 2
+.z-index-3
+  z-index: 3
+
+// Containers
+
+.container
+  flex: 1
+  display: flex
+  width: 100%
+  max-width: 1440px
+  margin: auto
+.container-sm
+  flex: 1
+  display: flex
+  width: 100%
+  max-width: 720px
+  margin: auto
+.container-md
+  flex: 1
+  display: flex
+  width: 100%
+  max-width: 1024px
+  margin: auto
+.container-xmd
+  flex: 1
+  display: flex
+  width: 100%
+  max-width: 1200px
+  margin: auto
+.container-xl
+  flex: 1
+  display: flex
+  width: 100%
+  max-width: 1980px
+  margin: auto
+
+// Backgrounds
+
+.bg-black
+  background-color: $black
+.bg-dark
+  background-color: $dark_bg
+.bg-gray
+  background-color: $gray
+.bg-light
+  background-color: $light
+.bg-light-important
+  background-color: $light !important
+.bg-white
+  background-color: $white
+.bg-most-lt-blue
+  background-color: $most_lt_blue
+.bg-lt-blue
+  background-color: $lt_blue
+.bg-blue
+  background-color: $blue
+.bg-brand
+  background-color: $brand_blue
+.bg-tmpt-blue
+  background-color: $tmpt_blue
+.bg-dk-blue
+  background-color: $md_blue
+.bg-lt-green
+  background-color: $lt_green
+.bg-green
+  background-color: $dk_green
+.bg-red
+  background-color: $red
+.bg-bright-red
+  background-color: $bright_red
+.bg-dk-red
+  background-color: $dark_red
+.bg-lt-red
+  background-color: $lt_red
+.bg-gold
+  background-color: $gold
+
+// Opacity
+
+.opacity-50
+  opacity: 0.5
+
+.grow-1
+  flex-grow: 1 !important
+
+// Text
+
+.logo
+  font-family: var(--font-logo)
+.font-logo
+  font-family: var(--font-logo)
+.font-RedHat
+  font-family: var(--font-redhat)
+
+.font-400
+  font-weight: 400
+.font-500
+  font-weight: 500
+.font-700
+  font-weight: 700
+.light
+  font-weight: 400
+.normal
+  font-weight: 500
+.bold
+  font-family: var(--font-redhat)
+  font-weight: 700
+
+.itallic
+  font-style: italic
+
+.txt-left
+  text-align: left
+.text-center
+  text-align: center
+.txt-center
+  text-align: center
+.txt-right
+  text-align: right
+
+.txt-black
+  color: $black
+.txt-dark
+  color: $dark
+.txt-gray
+  color: $gray
+.txt-lt-gray
+  color: $lt_gray
+.txt-light
+  color: $light
+.txt-lightest
+  color: $lightest
+.txt-white
+  color: $white
+.txt-most-lt-blue
+  color: $most_lt_blue
+.txt-tmpt-blue
+  color: $tmpt_blue
+.txt-lt-blue
+  color: $lt_blue
+.txt-blue
+  color: $blue
+.txt-brand
+  color: $brand_blue
+.txt-dk-blue
+  color: $md_blue
+.txt-lt-green
+  color: $lt_green
+.txt-green
+  color: $dk_green
+.txt-red
+  color: $red
+.txt-bright-red
+  color: $bright_red
+.txt-dk-red
+  color: $dark_red
+.txt-lt-red
+  color: $lt_red
+.txt-gold
+  color: $gold
+
+// List
+
+ul
+  list-style: none
+  padding-left: 0
+  margin: 0
+
+// Padding
+
+.pl-0
+  padding-left: 0
+.pr-0
+  padding-right: 0
+.pt-0
+  padding-top: 0
+.pb-0
+  padding-bottom: 0
+
+.px-5
+  padding-left: 5px
+  padding-right: 5px
+.py-5
+  padding-top: 5px
+  padding-bottom: 5px
+.pl-5
+  padding-left: 5px
+.pr-5
+  padding-right: 5px
+.pt-5
+  padding-top: 5px
+.pb-5
+  padding-bottom: 5px
+
+.px-10
+  padding-left: 10px
+  padding-right: 10px
+.py-10
+  padding-top: 10px
+  padding-bottom: 10px
+.pl-10
+  padding-left: 10px
+.pr-10
+  padding-right: 10px
+.pt-10
+  padding-top: 10px
+.pb-10
+  padding-bottom: 10px
+
+.px-15
+  padding-left: 15px
+  padding-right: 15px
+.py-15
+  padding-top: 15px
+  padding-bottom: 15px
+.pl-15
+  padding-left: 15px
+.pr-15
+  padding-right: 15px
+.pt-15
+  padding-top: 15px
+.pb-15
+  padding-bottom: 15px
+.pt-60
+  padding-top: 60px
+.pb-60
+  padding-bottom: 60px
+
+// Margin
+
+.m-auto
+  margin: auto
+.mx-auto
+  margin-left: auto
+  margin-right: auto
+.my-auto
+  margin-top: auto
+  margin-bottom: auto
+.ml-auto
+  margin: auto
+.mr-auto
+  margin: auto
+.mt-auto
+  margin: auto
+.mb-auto
+  margin: auto
+
+.ml-0
+  margin-left: 0
+.mr-0
+  margin-right: 0
+.mt-0
+  margin-top: 0
+.mb-0
+  margin-bottom: 0
+
+.mx-5
+  margin-left: 5px
+  margin-right: 5px
+.my-5
+  margin-top: 5px
+  margin-bottom: 5px
+.ml-5
+  margin-left: 5px
+.mr-5
+  margin-right: 5px
+.mt-5
+  margin-top: 5px
+.mb-5
+  margin-bottom: 5px
+
+.mx-10
+  margin-left: 10px
+  margin-right: 10px
+.my-10
+  margin-top: 10px
+  margin-bottom: 10px
+.ml-10
+  margin-left: 10px
+.mr-10
+  margin-right: 10px
+.mt-10
+  margin-top: 10px
+.mb-10
+  margin-bottom: 10px
+
+.mx-15
+  margin-left: 15px
+  margin-right: 15px
+.my-15
+  margin-top: 15px
+  margin-bottom: 15px
+.ml-15
+  margin-left: 15px
+.mr-15
+  margin-right: 15px
+.mt-15
+  margin-top: 15px
+.mb-15
+  margin-bottom: 15px
+
+.mx-30
+  margin-left: 30px
+  margin-right: 30px
+.my-30
+  margin-top: 30px
+  margin-bottom: 30px
+.ml-30
+  margin-left: 30px
+.mr-30
+  margin-right: 30px
+.mt-30
+  margin-top: 30px
+.mb-30
+  margin-bottom: 30px
+
+// Toast
+
+.toast-container
+  position: fixed
+  z-index: 3
+  .Toastify__toast-container--top-right
+    .Toastify__progress-bar-theme--light
+      background: $green
+
+// BREAKPOINTS
+
+@media (max-width: 1980px)
+  .container-xl
+    padding: 0 30px
+
+@media (max-width: 1440px)
+  .container
+    padding: 0 30px
+
+@media (max-width: 1200px)
+  .container-xmd
+    padding: 0 30px
+
+@media (max-width: 1024px)
+  .container-md
+    padding: 0 30px
+
+@media (max-width: 720px)
+  .mobile-column
+    flex-direction: column
+  .container-sm
+    padding: 0 30px
+
+@media (max-width: 425px)
+  .container-xl
+    padding: 0 5vw
+  .container
+    padding: 0 5vw
+  .container-md
+    padding: 0 5vw
+  .container-xmd
+    padding: 0 5vw
+  .container-sm
+    padding: 0 5vw

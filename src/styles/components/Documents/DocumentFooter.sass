@@ -1,0 +1,50 @@
+#document-footer
+  background-color: $light
+  min-height: 84px
+  .container-xmd
+    width: 100%
+  span
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: flex-end
+    color: $dk_blue
+    &.align-left
+      justify-content: flex-start
+    a
+      display: flex
+      color: $dk_blue
+      font-weight: 500
+      span
+        margin-right: 10px
+      .previous-icon
+        height: 20px
+        width: 20px
+        padding-top: 3px
+        polyline
+          color: $dk_blue
+      .next-icon
+        height: 20px
+        width: 20px
+        padding-top: 3px
+        polyline
+          color: $dk_blue
+      &:hover
+        color: $blue
+        span
+          color: $blue
+        polyline
+          color: $blue
+
+@media (max-width: 670px)
+  #document-footer
+    min-height: 163px
+    .container-xmd
+      flex-direction: column
+      .flex1
+        justify-content: center
+        margin: 15px 0
+      .empty
+        display: none
+      .previous-icon, .next-icon
+        display: none

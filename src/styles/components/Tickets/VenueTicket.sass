@@ -1,0 +1,49 @@
+.venue-ticket-container
+  display: flex
+  align-items: center
+  position: relative
+  width: 250px
+  height: 76px
+  color: $dk_blue
+  font-family: var(--font-redhat)
+.venue-ticket
+  flex: 1
+  display: flex
+  align-items: center
+  position: relative
+  max-width: 100%
+  height: 76px
+  overflow: hidden
+  .select-venue-body
+    flex: 1
+    flex-direction: column
+    max-width: calc(450px - 90px)
+    overflow: hidden
+    padding: 0 10px
+    .title
+      height: 20px
+      font-size: 14px
+      line-height: 1.5
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+    .secondary
+      height: 20px
+      font-size: 12px
+      font-weight: 400
+      line-height: 1.5
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+
+// Breakpoints
+
+@media(max-width: 435px)
+  .venue-ticket
+    .select-venue-body
+      max-width: calc(100vw - 90px)
+
+@media(max-width: 350px)
+  .venue-ticket
+    .select-venue-body
+      max-width: calc(100vw - 60px)

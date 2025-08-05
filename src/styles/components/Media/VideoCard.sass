@@ -1,0 +1,30 @@
+.video-preview
+  flex-direction: column
+  background-color: $most_lt_blue
+  border: solid 2px transparent
+  border-radius: 8px
+  overflow: hidden
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.075)
+  &:hover
+    border-color: $blue
+    box-shadow: none
+  p
+    font-size: 14px
+    line-height: 36px
+    font-weight: 500
+    text-align: center
+  .preview-info
+    flex-direction: row
+    .duration
+      flex: 1
+      display: flex
+      justify-content: flex-start
+      padding: 0 15px
+    .date-time
+      font-size: 12px
+      font-weight: 400
+      padding: 0 15px
+      &:last-child
+        padding-left: 0
+.video-preview-img
+  overflow: hidden

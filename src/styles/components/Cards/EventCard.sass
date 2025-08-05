@@ -1,0 +1,92 @@
+.list-cards
+  flex: 1
+  display: flex
+  flex-wrap: wrap
+  // justify-content: space-around
+
+.event-card
+  flex-direction: column
+  position: relative
+  background: $white
+  width: 320px
+  height: 320px + 120px
+  border-radius: 16px
+  margin-right: 15px
+  margin-bottom: 15px
+  box-shadow: 4px 4px 12px rgb(208 250 255 / 3%)
+  border: solid 2px $white
+  &:hover
+    border-color: $blue
+    box-shadow: 4px 4px 12px rgb(0 0 0 / 7%)
+  .cover-art
+    height: 320px - 4px
+    min-height: 320px - 4px
+    max-height: 320px - 4px
+    width: 320px - 4px
+    min-width: 320px - 4px
+    max-width: 320px - 4px
+    border-top-left-radius: 12px
+    border-top-right-radius: 12px
+    position: relative
+    overflow: hidden
+    img
+      object-fit: contain
+  .event-info
+    flex: 1
+    flex-direction: column
+    position: relative
+    background-color: $most_lt_blue
+    border-radius: 15px
+    padding: 5px 15px 15px
+    margin-top: -15px
+    z-index: 1
+    .title
+      font-size: 16px
+      margin-top: 5px
+      margin-bottom: 7.5px
+    .event-txt
+      color: $dark
+      font-size: 13px
+      line-height: 21px
+    .calendar-icon
+      height: 14px
+      width: 14px
+      opacity: 0.5
+      margin-right: 5px
+    .location-icon-container
+      justify-content: center
+      height: 30px
+      width: 19px
+      margin-top: 2px
+      margin-left: 9px
+      margin-right: 9.5px
+    .location-icon
+      height: 12px
+      width: 12px
+      opacity: 0.5
+      margin-top: 3px
+      margin-right: 5px
+    .org-info
+      align-items: center
+      margin-right: 7.5px
+    .event-date
+      align-items: center
+    .avatar
+      height: 30px
+      min-height: 30px
+      max-height: 30px
+      width: 30px
+      min-width: 30px
+      max-width: 30px
+      border-radius: 50%
+      overflow: hidden
+      margin-right: 7.5px
+
+@media (max-width: 1024px)
+  #list-events-container
+    align-items: center
+
+@media (max-width: 700px)
+  #list-events-container
+    .list-cards
+      justify-content: center

@@ -1,0 +1,79 @@
+#help
+  display: flex
+  background-color: $dk_blue
+  .header
+    display: flex
+    flex-direction: column
+    padding-top: 107px
+  .body.bg-light
+    padding-top: 0
+    .container-xmd
+      width: 100%
+    .container-sm
+      width: 100%
+    .content
+      flex: 1
+      flex-direction: column
+      padding: 60px 0 90px
+    ol
+      display: flex
+      align-items: center
+      justify-content: center
+      flex-direction: row
+      flex-wrap: wrap
+      li
+        display: flex
+        align-items: center
+        justify-content: center
+        margin: 15px
+        overflow: hidden
+        a
+          flex: 1
+          display: flex
+          align-items: center
+          justify-content: center
+          background-color: $white
+          min-width: 320px
+          min-height: 230px
+          border-radius: 16px
+          font-family: var(--font-logo)
+          font-size: 27px
+          line-height: 36px
+          text-wrap: wrap
+          inline-size: 320px
+          padding: 0 15px
+          text-align: center
+          &:hover
+            background-color: $dk_blue
+            color: $white
+#help-list
+  display: flex
+  flex-direction: column
+  width: 100%
+  h3
+    font-weight: 400
+    font-size: 24px
+    text-transform: uppercase
+    line-height: 36px
+    letter-spacing: 0.5px
+    color: $dk_blue
+    margin: 30px 0px 15px
+  li
+    width: 100%
+    list-style: none
+    margin-bottom: 30px
+    &:last-child
+      margin-bottom: 0
+  hr
+    height: 2px
+    border: none
+    width: 100%
+    max-width: calc(100% - 30px)
+    background: $dk_blue
+    opacity: 0.125
+    margin: 60px auto 30px
+
+@media (max-width: 375px)
+  #help
+    .header
+      padding-top: 97px

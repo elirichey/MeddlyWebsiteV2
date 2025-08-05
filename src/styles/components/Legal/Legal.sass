@@ -1,0 +1,50 @@
+.legal-document
+  background-color: $light
+  padding: 138px 30px 30px
+  #id
+    width: 100%
+  .container
+    background-color: $white
+    width: 100%
+    max-width: 860px
+    padding-top: 30px
+    padding-left: 30px
+    padding-right: 30px
+    div, span
+      display: block
+      min-width: 100%
+  .document-container
+    flex: 1
+    min-height: calc(100vh - 138px)
+  h1
+    font-weight: 700
+  p.bold
+    line-height: 48px
+    margin-bottom: 16px
+  ul
+    list-style: disc
+    padding-left: 14px
+    li
+      margin-top: 10px
+      margin-bottom: 10px
+  p
+    font-size: 16px
+    line-height: 24px
+  a
+    color: $red
+    &:hover
+      color: $blue
+
+@media(max-width: 720px)
+  .legal-document
+    padding-left: 5vw
+    padding-right: 5vw
+    .container
+      padding-left: 0
+      padding-right: 0
+
+@media(max-width: 375px)
+  .legal-document
+    padding-top: 128px
+    .document-container
+      min-height: calc(100vh - 128px)

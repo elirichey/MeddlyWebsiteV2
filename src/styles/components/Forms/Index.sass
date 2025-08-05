@@ -1,0 +1,487 @@
+.form
+  min-width: 100%
+  margin: 30px auto 30px
+  &.loading
+    display: flex
+    align-items: center
+    justify-content: center
+  .row
+    width: 100%
+  label
+    font-weight: 500
+    font-size: 14px
+    .optional
+      font-size: 12px
+      font-weight: 400
+      margin-left: 5px
+      color: $gray
+  input, textarea
+    border-radius: 8px
+    &::placeholder
+      font-size: 12px
+      margin-top: 4px
+      opacity: 0.5
+  input[type='date'],input[type='time']
+    cursor: pointer
+
+  input[type='radio']
+    &:focus-visible
+      outline: none
+  input[type='radio']:after
+    width: 14px
+    height: 14px
+    border-radius: 50%
+    top: -2px
+    left: -1px
+    position: relative
+    background-color: $medium
+    content: ''
+    display: inline-block
+    visibility: visible
+    border: 2px solid $white
+
+  input[type='radio']:checked:after
+    width: 14px
+    height: 14px
+    border-radius: 50%
+    top: -2px
+    left: -1px
+    position: relative
+    background-color: $brand_blue
+    content: ''
+    display: inline-block
+    visibility: visible
+    border: 2px solid $white
+
+  .form-steps-container
+    width: 100%
+    margin-top: 16px
+    margin-bottom: 8px
+
+  .step-indicator-back-icon
+    height: 16px
+    width: 16px
+    margin-right: 10px
+
+  .form-step-title
+    font-size: 14px
+    width: 120px
+    font-weight: 700
+    text-transform: uppercase
+    color: $lt_dark
+    text-align: center
+    letter-spacing: 1px
+    margin-top: 6px
+    margin-bottom: 4px
+    opacity: 0.25
+    &.active
+      opacity: 1
+    &.opacity-low
+      opacity: 0.25
+      cursor: pointer
+
+  .form-step-marker
+    height: 2px
+    width: 48px
+    background-color: $lt_dark
+    border-radius: 4px
+    margin: auto auto 10px
+    opacity: 0.25
+    &.active
+      background-color: $tmpt_blue
+      opacity: 1
+
+  .form-go-back
+    flex: 1
+    display: flex
+    align-items: center
+    font-size: 14px
+    height: 34px
+    width: 120px
+    font-weight: 500
+    text-transform: uppercase
+    letter-spacing: 1px
+    padding-bottom: 12px
+    opacity: 0.5
+    cursor: pointer
+    &:hover
+      opacity: 1
+    img
+      margin-right: 4px
+
+  .label
+    display: flex
+    font-weight: 500
+    font-size: 16px
+    align-items: center
+    color: $lt_dark
+    margin-top: 10px
+    margin-bottom: 8px
+
+  .field-check
+    margin-bottom: 1px
+    margin-left: 5px
+
+  .input
+    height: 40px
+    width: 100%
+    font-size: 16px
+    letter-spacing: 0.5px
+    padding-left: 10px
+    padding-right: 5px
+    margin-bottom: 15px
+    color: $black
+    background: $white
+    border: solid 1px transparent
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.15)
+    &.disabled
+      box-shadow: none
+      cursor: initial
+    &:focus-visible
+      outline: none
+      border: solid 1px $blue
+      color: $black
+    &.number
+      height: 40px
+      width: 100%
+      max-width: 64px
+      font-size: 16px
+      padding-left: 5px
+      padding-right: 5px
+      margin-bottom: 15px
+      color: $black
+      background: $white
+      text-align: center
+      border: none
+    &.text-area
+      height: unset
+      font-size: 16px
+      letter-spacing: 0.5px
+      line-height: 24px
+      padding: 10px
+      margin-bottom: 15px
+      color: $black
+
+  .radios
+    label
+      cursor: pointer
+
+  .submit-btn
+    display: flex
+    justify-content: center
+    align-items: center
+    background: $white
+    width: 160px
+    height: 36px
+    font-size: 16px
+    font-weight: 500
+    text-transform: uppercase
+    margin: 15px auto 10px
+    border: solid 2px $dk_blue
+    border-radius: 12px
+    color: $tmpt_blue
+    animation: color-change 1s infinite
+    cursor: pointer
+    &:hover
+      border: solid 2px $blue
+      background-color: $most_lt_blue
+      color: $brand_blue
+    &:disabled
+      color: $medium
+      background: transparent
+      border: solid 2px transparent
+      cursor: initial
+      &:hover
+        color: $medium
+        background: transparent
+        border: solid 2px transparent
+
+.input-error
+  font-size: 12px
+  color: $dark_red
+  margin-left: auto
+
+// Select
+.input-field
+  flex-direction: column
+  position: relative
+  width: 100%
+  &.relative-index
+    z-index: 3
+  &.date
+    width: 115px
+    input
+      padding-right: 0
+  &.time
+    width: 115px
+    input
+      padding-right: 0
+  .label-container
+    display: flex
+  .input-error
+    font-size: 12px
+    line-height: 12px
+    color: $gray
+    margin-left: 5px
+
+.select-dropdown-x2
+  .mr-15
+    margin-right: 15px
+.select-input-container
+  position: relative
+  .low-opacity
+    opacity: 0.25
+    font-size: 12px
+    letter-spacing: 0px
+.select-input
+  display: flex
+  align-items: center
+  position: relative
+  border-radius: 8px
+  cursor: pointer
+  .indicator
+    display: flex
+    justify-content: center
+    align-items: center
+    position: absolute
+    top: 0
+    bottom: 0
+    right: 10px
+    font-size: 16px
+    transform: rotate(0deg)
+    &.open
+      transform: rotate(270deg)
+  &.open
+    border-bottom: solid 1px $lt_dark
+    border-bottom-right-radius: 0
+    border-bottom-left-radius: 0
+  &.disabled
+    cursor: default !important
+    .indicator
+      color: $medium
+.list-options
+  display: flex
+  flex-direction: column
+  // justify-content: center
+  position: absolute
+  width: 100%
+  top: 38px
+  left: 0
+  right: 0
+  background-color: $white
+  max-height: 230px
+  overflow: scroll
+  box-shadow: 4px 4px 8px 2px rgb(0 0 0 /10%)
+  border-bottom-left-radius: 8px
+  border-bottom-right-radius: 8px
+  z-index: 1
+  ul
+    width: 100%
+    list-style: none
+    padding: 0
+    margin: 0
+    border-bottom-left-radius: 8px
+    border-bottom-right-radius: 8px
+  &.combobox-list
+    flex-direction: row
+    top: 80px
+    width: 100%
+    min-width: 260px
+    z-index: 1
+    .option
+      width: 100%
+      cursor: pointer
+  &.user
+    top: 92px
+    width: 100%
+    li
+      cursor: pointer
+  &.venue
+    top: 88px
+    width: 300px
+    li
+      cursor: pointer
+.option
+  display: flex
+  height: 38px
+  width: 100%
+  background-color: transparent
+  color: $white
+  height: 38px
+  padding: 0px
+  font-size: 14px
+  line-height: 1.5
+  cursor: pointer
+  -webkit-user-select: none // Safari
+  -ms-user-select: none // IE 10 and IE 11
+  user-select: none // Standard syntax
+  &:last-child
+    border-bottom-left-radius: 8px
+    border-bottom-right-radius: 8px
+  &.loading
+    flex: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    color: $dk_blue
+  .option-span
+    display: flex
+    align-items: center
+    height: 38px
+    width: 100%
+    background-color: $lightest
+    padding: 0 10px
+    border: none
+    border-bottom: solid 1px $medium
+    -webkit-user-select: none // Safari
+    -ms-user-select: none // IE 10 and IE 11
+    user-select: none // Standard syntax
+    &:hover
+      background-color: $lt_blue
+  &.selected
+    .option-span
+      background-color: $lt_green
+      &:hover
+        background-color: $lt_blue
+  &.active
+    background: $lt_green
+    &:hover
+      background: $lt_blue
+  &.user
+    height: 50px
+    top: 50px
+    width: 100%
+    &:hover
+      background-color: $lt_blue
+    .clickable-div
+      width: 100%
+  &.venue
+    height: 76px
+    top: 88px
+    width: 300px
+    &:hover
+      background-color: $lt_blue
+    .clickable-div
+      width: 100%
+  button
+    display: flex
+    align-items: center
+    height: 38px
+    width: 100%
+    background-color: $light
+    padding: 0 10px
+    border: none
+    border-bottom: solid 1px $medium
+    &:hover
+      background-color: $lt_blue
+  &.active
+    button
+      background-color: $lt_green
+    .combobox
+      background-color: $lt_green
+      &:hover
+        background-color: $lt_blue
+  &.hide
+    display: none
+
+.select-external-listener
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  z-index: 1
+.select-user-dropdown
+  width: 100%
+  margin-top: 8px
+  .label
+    margin-top: 5px
+    margin-bottom: 0
+  .select-input
+    height: 50px
+    width: 300px
+    padding-right: 0
+    cursor: pointer
+.select-venue-dropdown
+  .select-input
+    height: 76px
+    width: 300px
+    padding-right: 0
+    cursor: pointer
+
+.submit-btn
+  display: flex
+  align-items: center
+  justify-content: center
+  background-color: $white
+  height: 36px
+  width: 160px
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 1px
+  border: solid 2px $lt_green
+  color: $black
+  border-radius: 20px
+  &:hover
+    border: solid 2px $blue
+    color: $dk_blue
+  &.disabled
+    border-color: $gray
+    color: $gray
+    opacity: 0.5
+
+.submit-search-container
+  display: flex
+  margin-top: 38px
+  .submit-btn
+    height: 40px
+    width: 80px
+    display: flex
+    align-items: center
+    justify-content: center
+    font-size: 10px
+    opacity: 1
+    border-radius: 0
+    background: $brand_blue
+    color: $white
+    margin-left: 7.5px
+    border: none
+    cursor: pointer
+    border-radius: 8px
+    &:hover
+      background: $dk_green
+    &.disabled
+      opacity: 0.25
+      background: $gray
+      cursor: not-allowed
+      &:hover
+        background: $gray
+
+.low-opacity-text
+  opacity: 0.25
+  font-size: 12px
+  letter-spacing: 0px
+
+// Breakpoints
+
+@media(max-width: 1280px)
+  .form
+    .row
+      flex-direction: column
+    .radios
+      flex-direction: row !important
+    .text-container
+      align-items: center
+      max-width: 440px
+      margin: auto
+
+@media(max-width: 560px)
+  .form
+    min-width: 100%
+    max-width: 100%
+    padding: 30px 0 30px
+
+@media(max-width: 500px)
+  .form
+    .row
+      width: 100%
