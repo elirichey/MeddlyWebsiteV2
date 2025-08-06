@@ -1,11 +1,14 @@
+'use client';
+
 import AdminAuthHTTP from '@utilities/http/admin/auth';
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import Loader from '@/components/Loader/Loader';
 import { formatLoginFormPayload } from '@/utilities/validations/AuthFormValidator';
+import { setSecureAuthCookie, setSecureRefreshCookie } from '../../../storage/cookies';
 import Input from '../_Inputs/Input';
 import Password from '../_Inputs/Password';
 
@@ -69,13 +72,15 @@ export default function LoginForm() {
 				const accessToken = res?.data?.accessToken;
 				const refreshToken = res?.data?.refreshToken;
 				if (accessToken && refreshToken) {
-					setCookie('accessToken', res.data.accessToken);
-					setCookie('refreshToken', res.data.refreshToken);
+					// Set secure authentication cookies
+					setSecureAuthCookie('accessToken', accessToken);
+					setSecureRefreshCookie('refreshToken', refreshToken);
 
 					const userCreds = await AdminAuthHTTP.userGetSelf(accessToken);
 					if (userCreds.status === 200) {
 						const user = userCreds.data;
-						setCookie('user', JSON.stringify(user));
+						// Store user data in localStorage instead of cookies for better security
+						localStorage.setItem('user', JSON.stringify(user));
 						return router.push('/admin');
 					}
 				}

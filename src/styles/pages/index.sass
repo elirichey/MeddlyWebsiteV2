@@ -1,3 +1,5 @@
+@use "../_variables" as *
+
 .body
   &.home
     position: relative
@@ -47,6 +49,7 @@
     color: $brand_blue
     font-family: var(--font-logo)
     font-size: 43px
+    line-height: 77px
     font-weight: 500
     text-transform: uppercase
     letter-spacing: 2px
@@ -414,6 +417,10 @@
       width: 480px
 
 @media(max-width: 1200px)
+  #artists-hero
+    h1
+      font-size: 27px
+      line-height: 43px
   #user-liner-note
     .my-30
       margin: 0
@@ -462,6 +469,7 @@
   #artists-hero
     h1
       font-size: 43px
+      line-height: 77px
     .overview
       font-size: 16px
 
@@ -504,7 +512,6 @@
     .mx-10
       margin-left: 15px !important
       margin-right: 15px !important
-  #user-how-it-works
 
 @media (max-width: 768px)
   #artists-hero
@@ -535,7 +542,6 @@
   #user-why-meddly
     .column
       margin-bottom: 210px
-    .absolute-image.mobile
   #video-examples
     .meddly-example-video
       width: 640px
@@ -593,7 +599,6 @@
   #user-why-meddly
     .absolute-image.mobile
       max-width: 430px
-  #user-how-it-works
   #become-a-meddly-user
     .overview
       padding: 0

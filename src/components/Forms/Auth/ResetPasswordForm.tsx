@@ -2,8 +2,7 @@
 
 import UserAuthHTTP from '@utilities/http/user/auth';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Loader/Loader';

@@ -25,9 +25,9 @@ export default function Home() {
 							<div className="container">
 								<div className="artists-hero-content flex1 column">
 									<h1 className="primary-tag">
-										Auto-Generated <span>Video</span> Productions
+										Crowdsourced Event Video <span>&</span> <br />
+										Auto-Generated Video Productions
 									</h1>
-									<p className="overview">CROWDSOURCED EVENTS </p>
 								</div>
 							</div>
 						</div>

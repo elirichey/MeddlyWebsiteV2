@@ -1,5 +1,5 @@
-import API_URL from '@/utilities/http/_url';
 import Uppy from '@uppy/core';
+import API_URL from '@/utilities/http/_url';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
 import DashboardModal from '@uppy/react/lib/DashboardModal';
@@ -12,9 +12,7 @@ interface Props {
 	type?: string;
 }
 
-export default function VideoUpload(props: Props) {
-	const { type } = props;
-
+export default function VideoUpload() {
 	const roleCookie: any = getCookie('role');
 	const accessToken: any = getCookie('accessToken');
 	const refreshToken: any = getCookie('refreshToken');
@@ -69,13 +67,14 @@ export default function VideoUpload(props: Props) {
 	return (
 		<>
 			<div id="video-upload-button">
-				<div
+				<button
+					type="button"
 					className="upload-button new-video"
 					onClick={() => setShowUploadModal(!showUploadModal)}
 					onKeyDown={() => setShowUploadModal(!showUploadModal)}
 				>
 					UPLOAD FILE
-				</div>
+				</button>
 			</div>
 
 			<DashboardModal uppy={uppy} open={showUploadModal} />

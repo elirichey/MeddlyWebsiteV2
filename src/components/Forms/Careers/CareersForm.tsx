@@ -137,9 +137,9 @@ export default function CareersForm() {
 
 						<p className="text-center my-10">Your submission was successful</p>
 
-						<span className="reset-form" onClick={clearForm} onKeyDown={clearForm}>
+						<button type="button" className="reset-form" onClick={clearForm} onKeyDown={clearForm}>
 							Reset
-						</span>
+						</button>
 					</div>
 				</div>
 			) : null}
@@ -147,9 +147,9 @@ export default function CareersForm() {
 			{hasError ? (
 				<div className="contact-submission-secondary">
 					<h3>Submission Error</h3>
-					<span onClick={clearError} className="submit-btn" onKeyDown={clearError}>
+					<button type="button" onClick={clearError} className="submit-btn" onKeyDown={clearError}>
 						Try Again
-					</span>
+					</button>
 				</div>
 			) : null}
 

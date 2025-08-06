@@ -36,6 +36,35 @@ export interface MeddlyEvent {
 	created: Date;
 }
 
+export interface MeddlyEventOnCreate {
+	id: string;
+	title: string;
+	status: string;
+	date: string;
+	time: string;
+	type: string;
+	coverImg?: string;
+	venue: Venue;
+	venueId?: string;
+	orgOwner: Organization;
+	orgOwnerId?: string;
+	manager: EventManager;
+	managerId?: string;
+	timestampStart?: number | null;
+	timestampEnd?: number | null;
+	managerAudio?: AudioItem;
+	managerAudioId?: string;
+	managerVideo?: VideoItem;
+	managerVideoId?: string;
+	primaryAudio?: AudioItem;
+	primaryAudioId?: string;
+	primaryVideo?: VideoItem;
+	primaryVideoId?: string;
+	totalVideoDuration?: number;
+	updated: Date;
+	created: Date;
+}
+
 export interface MeddlyConnectedEvent {
 	id: string;
 	title: string;

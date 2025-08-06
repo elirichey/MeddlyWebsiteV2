@@ -1,3 +1,5 @@
+'use client';
+
 import UserAuthHTTP from '@utilities/http/user/auth';
 import { useEffect, useState } from 'react';
 import isEmail from 'validator/lib/isEmail';

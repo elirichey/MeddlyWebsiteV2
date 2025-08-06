@@ -115,9 +115,9 @@ export default function GeneralContact() {
 
 						<p className="text-center my-10">Your submission was successful</p>
 
-						<span className="reset-form" onClick={clearForm} onKeyDown={clearForm}>
+						<button type="button" className="reset-form" onClick={clearForm} onKeyDown={clearForm}>
 							Reset
-						</span>
+						</button>
 					</div>
 				</div>
 			) : null}
@@ -125,100 +125,93 @@ export default function GeneralContact() {
 			{hasError ? (
 				<div className="contact-submission-secondary">
 					<h3>Submission Error</h3>
-					<span onClick={clearError} onKeyDown={clearError} className="submit-btn">
+					<button type="button" onClick={clearError} onKeyDown={clearError} className="submit-btn">
 						Try Again
-					</span>
+					</button>
 				</div>
 			) : null}
 
 			{!hasError && !isSuccessful ? (
-				<>
-					<form
-						id="general-contact-form"
-						className={loading ? 'form loading' : 'form'}
-						onSubmit={submitForm}
-						ref={form}
-					>
-						{loading ? (
-							<div className="form-loader-container py-5">
-								<div className="loader-block">
-									<Loader loaderId="colored-dots" />
-								</div>
-								<span>SUBMITTING</span>
+				<form id="general-contact-form" className={loading ? 'form loading' : 'form'} onSubmit={submitForm} ref={form}>
+					{loading ? (
+						<div className="form-loader-container py-5">
+							<div className="loader-block">
+								<Loader loaderId="colored-dots" />
 							</div>
-						) : (
-							<>
-								<Input
-									name="name"
-									value={name}
-									onChange={setName}
-									type="text"
-									placeholder="Your Name"
-									isComplete={nameComplete}
-									label="Name"
-									// error={nameError ? nameError.message : null}
-								/>
+							<span>SUBMITTING</span>
+						</div>
+					) : (
+						<>
+							<Input
+								name="name"
+								value={name}
+								onChange={setName}
+								type="text"
+								placeholder="Your Name"
+								isComplete={nameComplete}
+								label="Name"
+								// error={nameError ? nameError.message : null}
+							/>
 
-								<Input
-									name="email"
-									value={email}
-									onChange={setEmail}
-									type="text"
-									placeholder="email@example.com"
-									isComplete={emailComplete}
-									label="Email"
-									// error={emailError ? emailError.message : null}
-								/>
+							<Input
+								name="email"
+								value={email}
+								onChange={setEmail}
+								type="text"
+								placeholder="email@example.com"
+								isComplete={emailComplete}
+								label="Email"
+								// error={emailError ? emailError.message : null}
+							/>
 
-								<SelectCustom
-									name="subject"
-									value={subject}
-									onChange={setSubject}
-									label="How can we help?"
-									options={[
-										'General Contact',
-										'Request Organization',
-										// "Support",
-										// "Partnerships & Collaborations",
-										'Media & Press Inquiries',
-										'Investor Relations',
-									]}
-									showOptions={showSubjectOptions}
-									setShowOptions={setShowSubjectOptions}
-									disabled={false}
-									isComplete={subjectComplete}
-									placeholder="Subject"
-									// error={subjectError ? subjectError.message : null}
-								/>
+							<SelectCustom
+								name="subject"
+								value={subject}
+								onChange={setSubject}
+								label="How can we help?"
+								options={[
+									'General Contact',
+									'Request Organization',
+									// "Support",
+									// "Partnerships & Collaborations",
+									'Media & Press Inquiries',
+									'Investor Relations',
+								]}
+								showOptions={showSubjectOptions}
+								setShowOptions={setShowSubjectOptions}
+								disabled={false}
+								isComplete={subjectComplete}
+								placeholder="Subject"
+								// error={subjectError ? subjectError.message : null}
+							/>
 
-								<Textarea
-									name="message"
-									value={message}
-									onChange={setMessage}
-									placeholder="Your message..."
-									isComplete={messageComplete}
-									label="Message"
-									rows={3}
-									// error={messageError ? messageError.message : null}
-								/>
+							<Textarea
+								name="message"
+								value={message}
+								onChange={setMessage}
+								placeholder="Your message..."
+								isComplete={messageComplete}
+								label="Message"
+								rows={3}
+								// error={messageError ? messageError.message : null}
+							/>
 
-								<div className="row">
-									<div className="flex1 column">
-										<button
-											type="submit"
-											onClick={submitForm}
-											onKeyDown={submitForm}
-											className="submit-btn"
-											disabled={!formIsComplete}
-										>
-											Submit
-										</button>
-									</div>
+							<div className="row">
+								<div className="flex1 column">
+									<button
+										type="submit"
+										onClick={submitForm}
+										onKeyDown={submitForm}
+										className="submit-btn"
+										disabled={!formIsComplete}
+									>
+										Submit
+									</button>
 								</div>
-							</>
-						)}
-					</form>
-				</>
+							</div>
+						</>
+					)}
+				</form>
 			) : null}
 		</>
 	);
