@@ -24,12 +24,13 @@ export interface UserToken {
 	token: string;
 }
 export interface UserConnectToEventPayload {
-	eventConnectedId: string;
+	eventConnectedId: string | null;
 }
 
 export interface Auth {
 	profile: Profile | null;
 	currentRole: UserSelectedRole | null;
+	connectedEvent: UserConnectedEvent | null;
 	tokens: {
 		accessToken: string;
 		refreshToken: string;

@@ -1,9 +1,10 @@
-import type { FullUser } from '@/interfaces/User';
-import type { UserRole } from '@/interfaces/UserRoles';
 import AccountIcon from '@icons/AccountIcon';
 import { getCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { FullUser } from '@/interfaces/User';
+import type { UserRole } from '@/interfaces/UserRoles';
+
 interface Props {
 	user: FullUser | null;
 }

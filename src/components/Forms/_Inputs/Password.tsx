@@ -54,7 +54,8 @@ export default function Password(props: Props) {
 					/>
 
 					{showToggle ? (
-						<span
+						<button
+							type="button"
 							onKeyDown={(e) => {
 								if (e.key === 'Enter' || e.key === ' ') {
 									toggleHidePassword(!hidePassword);
@@ -64,7 +65,7 @@ export default function Password(props: Props) {
 							onClick={() => toggleHidePassword(!hidePassword)}
 						>
 							{hidePassword ? '[ SHOW ]' : '[ HIDE ]'}
-						</span>
+						</button>
 					) : null}
 				</div>
 			</div>

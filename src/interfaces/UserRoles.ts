@@ -4,8 +4,8 @@ export interface UserRole {
 	id: string;
 	name: string;
 	role: string;
-	position: string;
-	notes: string;
+	position: string | undefined;
+	notes: string | undefined;
 	user: UserRoleUser;
 	organization: GeneralAdminOrganization;
 	created: Date;

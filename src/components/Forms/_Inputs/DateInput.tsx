@@ -28,6 +28,8 @@ export default function DateInput(props: Props) {
 			</label>
 
 			<input
+				id={name}
+				name={name}
 				value={value}
 				type="date"
 				onChange={onChange}

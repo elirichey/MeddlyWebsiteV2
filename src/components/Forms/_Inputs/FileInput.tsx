@@ -7,7 +7,7 @@ interface Props {
 	value: string;
 	onChange: (val: any) => void;
 	setFile: (val: File) => void;
-	type: string;
+	type?: string;
 	placeholder?: string;
 	isComplete: boolean;
 	label: string;
@@ -33,7 +33,10 @@ export default function FileInput(props: Props) {
 				</label>
 
 				<div className="file-input-container">
-					<div
+					<button
+						type="button"
+						tabIndex={0}
+						aria-label="Browse files"
 						onKeyDown={(e) => {
 							if (e.key === 'Enter' || e.key === ' ') {
 								disabled ? null : document?.getElementById(id || '')?.click();
@@ -46,10 +49,13 @@ export default function FileInput(props: Props) {
 							{value ? <DocumentOutline className="file-input-icon" /> : null}
 							{value ? `${value.replace(/^.*[\\/]/, '')}` : 'Browse'}
 						</span>
-					</div>
+					</button>
 
 					{value ? (
-						<span
+						<button
+							type="button"
+							tabIndex={0}
+							aria-label="Clear file selection"
 							onKeyDown={(e) => {
 								if (e.key === 'Enter' || e.key === ' ') {
 									onChange('');
@@ -59,7 +65,7 @@ export default function FileInput(props: Props) {
 							onClick={() => onChange('')}
 						>
 							[ Clear ]
-						</span>
+						</button>
 					) : null}
 				</div>
 

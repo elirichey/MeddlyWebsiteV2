@@ -44,7 +44,8 @@ export default function SelectCustom(props: Props) {
 
 				<div className="select-input-container">
 					{/* Main Selector */}
-					<span
+					<button
+						type="button"
 						onKeyDown={(e) => {
 							if (e.key === 'Enter' || e.key === ' ') {
 								!disabled ? setShowOptions(!showOptions) : null;
@@ -63,7 +64,7 @@ export default function SelectCustom(props: Props) {
 							{value ? value : placeholder ? placeholder : 'Select'}
 						</span>
 						<span className={showOptions ? 'indicator open' : 'indicator'}>{!disabled ? '«' : null}</span>
-					</span>
+					</button>
 
 					{/* List dropdown */}
 					{showOptions ? (
@@ -72,7 +73,8 @@ export default function SelectCustom(props: Props) {
 								{options.map((item, i) => {
 									return (
 										<li className={value === item ? 'option selected' : 'option'} key={item}>
-											<span
+											<button
+												type="button"
 												onKeyDown={(e) => {
 													if (e.key === 'Enter' || e.key === ' ') {
 														onChange(item);
@@ -86,7 +88,7 @@ export default function SelectCustom(props: Props) {
 												className="option-span"
 											>
 												{item}
-											</span>
+											</button>
 										</li>
 									);
 								})}
@@ -98,7 +100,8 @@ export default function SelectCustom(props: Props) {
 
 			{/* List Dropdown - Background Listener */}
 			{showOptions ? (
-				<span
+				<button
+					type="button"
 					className="select-external-listener"
 					onKeyDown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {

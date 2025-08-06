@@ -50,7 +50,6 @@ export interface PostItem {
 export interface VideoItem extends PostItem {
 	m3u8?: string;
 	preview?: string;
-	gif?: string;
 	duration: number;
 	fps: number;
 	height: number;
@@ -60,13 +59,7 @@ export interface VideoItem extends PostItem {
 }
 
 export interface AudioItem extends PostItem {
-	m3u8?: string;
-	preview?: string;
-	gif?: string;
 	duration: number;
-	fps?: number;
-	height?: number;
-	width?: number;
 	tsStart: number;
 	tsEnd: number;
 }

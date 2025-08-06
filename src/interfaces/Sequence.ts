@@ -28,6 +28,7 @@ export interface Sequence {
 	m3u8: string;
 	preview: string;
 	gif: string;
+	status: string;
 	duration: number;
 	width: number;
 	height: number;
@@ -65,6 +66,7 @@ export interface SequenceLight {
 	packageId: string;
 	preview: string;
 	gif: string;
+	status: string;
 	duration: number;
 	width: number;
 	height: number;

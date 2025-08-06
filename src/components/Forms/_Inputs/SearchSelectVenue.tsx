@@ -108,7 +108,8 @@ export default function SearchSelectVenue(props: Props) {
 
 				{/* List Dropdown - Background Listener */}
 				{showOptions ? (
-					<span
+					<button
+						type="button"
 						className="select-external-listener"
 						onClick={() => setShowOptions(false)}
 						onKeyDown={(e) => {
@@ -123,7 +124,8 @@ export default function SearchSelectVenue(props: Props) {
 			{!disabled ? (
 				<div className="combobox-btn">
 					<div className="submit-search-container">
-						<span
+						<button
+							type="button"
 							className={searchValue !== '' ? 'submit-btn' : 'submit-btn disabled'}
 							onClick={() => onSearch()}
 							onKeyDown={(e) => {
@@ -133,7 +135,7 @@ export default function SearchSelectVenue(props: Props) {
 							}}
 						>
 							Search
-						</span>
+						</button>
 					</div>
 				</div>
 			) : null}

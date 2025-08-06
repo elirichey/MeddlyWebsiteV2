@@ -36,9 +36,16 @@ export interface MeddlyEvent {
 	created: Date;
 }
 
-export interface MeddlyEventOnCreate extends MeddlyEvent {
-	date: string;
-	time: string;
+export interface MeddlyConnectedEvent {
+	id: string;
+	title: string;
+	status: string;
+	dateTime: string;
+	type: string;
+	coverImg?: string;
+	venue: Venue;
+	orgOwner: Organization;
+	managerId: string;
 }
 
 export interface EventManager {
