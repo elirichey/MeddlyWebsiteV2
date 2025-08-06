@@ -1,38 +1,34 @@
+import type { AxiosResponse } from 'axios';
 import axios from 'axios';
-import API_URL from '../_url';
+import API from '../_url';
 
-const getOrgCloudServices = async (id: string, token: string) => {
-	return await axios.get(`${API_URL}/page/${id}/services`, {
-		headers: { Authorization: `Bearer ${token}` },
-	});
-};
-
-const createOrgCloudService = async (id: string, payload: any, accessToken: string) => {
-	return await axios
-		.post(`${API_URL}/page/${id}/service`, payload, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+async function getOrgCloudServices(id: string, token: string): Promise<AxiosResponse> {
+	return axios
+		.get(`${API.url}/page/${id}/services`, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const updateOrgCloudService = async (id: string, payload: any, accessToken: string) => {
-	return await axios
-		.put(`${API_URL}/page/${id}/service`, payload, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+async function createOrgCloudService(id: string, payload: any, token: string): Promise<AxiosResponse> {
+	return axios
+		.post(`${API.url}/page/${id}/service`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const deleteOrgCloudService = async (id: string, accessToken: string) => {
-	return await axios
-		.delete(`${API_URL}/page/service/${id}`, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+async function updateOrgCloudService(id: string, payload: any, token: string): Promise<AxiosResponse> {
+	return axios
+		.put(`${API.url}/page/${id}/service`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
+
+async function deleteOrgCloudService(id: string, token: string): Promise<AxiosResponse> {
+	return axios
+		.delete(`${API.url}/page/service/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+		.then((res) => res)
+		.catch((error) => error);
+}
 
 const CloudServicesHttp = {
 	getOrgCloudServices,

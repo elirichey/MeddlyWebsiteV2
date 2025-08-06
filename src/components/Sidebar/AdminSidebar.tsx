@@ -1,15 +1,16 @@
-import type { FullUser } from '@/interfaces/User';
-import type { UserRole } from '@/interfaces/UserRoles';
 import CalendarOutline from '@icons/CalendarOutline';
 import ChevronDown from '@icons/ChevronDown';
 import ChevronUp from '@icons/ChevronUp';
 import DocumentsOutline from '@icons/DocumentsOutline';
 import HomeOutline from '@icons/HomeOutline';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import type { FullUser } from '@/interfaces/User';
+import type { UserRole } from '@/interfaces/UserRoles';
+import { getCookieValue, removeSecureCookie } from '../../storage/cookies';
 
 export default function AdminSidebar() {
 	const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
@@ -28,26 +29,29 @@ export default function AdminSidebar() {
 		checkForRoles();
 	}, []);
 
-	const roleCookie = getCookie('role');
+	const roleCookie = getCookieValue('role');
 	const currentRole = roleCookie ? JSON.parse(roleCookie) : null;
 
 	const logout = () => {
-		const userCookie = getCookie('user');
-		const accessToken = getCookie('accessToken');
-		const refreshToken = getCookie('refreshToken');
+		const userCookie = getCookieValue('user');
+		const accessToken = getCookieValue('accessToken');
+		const refreshToken = getCookieValue('refreshToken');
 		const user = userCookie ? JSON.parse(userCookie) : null;
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 
-		user ? deleteCookie('user') : null;
-		accessToken ? deleteCookie('accessToken') : null;
-		refreshToken ? deleteCookie('refreshToken') : null;
-		role ? deleteCookie('role') : null;
+		// Remove secure authentication cookies
+		accessToken ? removeSecureCookie('accessToken') : null;
+		refreshToken ? removeSecureCookie('refreshToken') : null;
+		// Remove user data from localStorage
+		localStorage.removeItem('user');
+		// Remove role cookie
+		role ? removeSecureCookie('role') : null;
 		return router.push('/');
 	};
 
 	const checkForRoles = () => {
 		// Logout user, invalidate current token...
-		const userCookie = getCookie('user');
+		const userCookie = getCookieValue('user');
 		const user = userCookie ? JSON.parse(userCookie) : null;
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 

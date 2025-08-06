@@ -1,27 +1,23 @@
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
-import { ToastError, ToastGeneral, ToastSuccess } from '../../config/toastConfig';
+import AuthHTTP from '@/utilities/http/auth';
 import type { AuthCredentials, NewUserCredentials } from '../../interfaces/Auth';
-import AuthHTTP from '../../utils/http/auth';
-import { timeout } from '../../config/variables';
+import type { UsersOrgRole } from '../../interfaces/UserRoles';
 import { useEventStore } from '../stores/useEventStore';
 import { useMediaStore } from '../stores/useMediaStore';
 import { usePackagesStore } from '../stores/usePackagesStore';
 import { useRolesStore } from '../stores/useRolesStore';
 import { useSequencesStore } from '../stores/useSequencesStore';
-import { useThemeStore } from '../stores/useThemeStore';
-import { useSocketStore } from '../stores/useSocketStore';
 import { useServerStore } from '../stores/useServerStore';
+import { useSocketStore } from '../stores/useSocketStore';
+import { useThemeStore } from '../stores/useThemeStore';
 import { useUserStore } from '../stores/useUserStore';
-import type { UsersOrgRole } from '../../interfaces/UserRoles';
-import delay from '../../utils/helpers/delay';
 
 async function tryLogin(data: AuthCredentials) {
 	const { setLoading, setTokens, setError } = useUserStore.getState();
 	setLoading(true);
 	setError(null);
 
-	// console.log('tryLogin: Start', { data });
+	// console.log('tryLogin: Star	t', { data });
 
 	let errorMsg = '';
 	try {
@@ -47,11 +43,11 @@ async function tryLogin(data: AuthCredentials) {
 	} finally {
 		setLoading(false);
 		// console.log('tryLogin: Complete');
-		if (errorMsg && errorMsg?.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
-		} else {
-			Toast.show(ToastGeneral('Login Successful'));
-		}
+		// if (errorMsg && errorMsg?.trim() !== '') {
+		// 	Toast.show(ToastError('Oops!', errorMsg));
+		// } else {
+		// 	Toast.show(ToastGeneral('Login Successful'));
+		// }
 	}
 }
 
@@ -86,11 +82,11 @@ async function trySignUp(data: NewUserCredentials) {
 	} finally {
 		setLoading(false);
 		// console.log('trySignUp: Complete');
-		if (errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
-		} else {
-			Toast.show(ToastGeneral('Welcome To Meddly'));
-		}
+		// if (errorMsg.trim() !== '') {
+		// 	Toast.show(ToastError('Oops!', errorMsg));
+		// } else {
+		// 	Toast.show(ToastGeneral('Welcome To Meddly'));
+		// }
 	}
 }
 
@@ -135,9 +131,9 @@ async function tryLogout(): Promise<void> {
 			if (res?.status === 200) {
 				logoutSuccessful = true;
 				// console.log('tryLogout: Server logout successful');
-				setTimeout(() => {
-					Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
-				}, timeout.auth);
+				// setTimeout(() => {
+				// 	Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
+				// }, timeout.auth);
 			} else {
 				const msg = res?.response?.data?.message || 'Logout failed';
 				errorMsg = msg;
@@ -161,9 +157,9 @@ async function tryLogout(): Promise<void> {
 		// console.log('tryLogout: Resetting stores');
 		await resetAllStores();
 
-		if (errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
-		}
+		// if (errorMsg.trim() !== '') {
+		// 	Toast.show(ToastError('Oops!', errorMsg));
+		// }
 
 		setLoading(false);
 	}
@@ -182,13 +178,13 @@ async function refreshUser(): Promise<void> {
 	isRefreshing = true;
 
 	// Add a small delay to prevent rapid successive calls
-	await delay(100);
+	// await delay(100);
 
 	try {
 		const { tokens, setTokens } = useUserStore.getState();
 
 		if (!tokens?.refreshToken) {
-			Toast.show(ToastError('Session expired', 'Please log in again.'));
+			// Toast.show(ToastError('Session expired', 'Please log in again.'));
 			// console.log('refreshUser: Logout - No refresh token');
 			await tryLogout();
 			return;
@@ -246,7 +242,7 @@ async function getUserProfile(retryCount = 0) {
 
 	if (!tokens?.accessToken) {
 		const msg = 'Failed to get user profile';
-		Toast.show(ToastError('Oops!', msg));
+		// Toast.show(ToastError('Oops!', msg));
 		return msg;
 	}
 
@@ -266,7 +262,7 @@ async function getUserProfile(retryCount = 0) {
 		if (res?.message?.includes('403')) {
 			if (retryCount < maxRetries) {
 				await refreshUser();
-				await delay(timeout.auth);
+				// await delay(timeout.auth);
 				return getUserProfile(retryCount + 1);
 			}
 		}
@@ -283,9 +279,9 @@ async function getUserProfile(retryCount = 0) {
 	} finally {
 		setLoading(false);
 		// console.log('getUserProfile: Complete');
-		if (errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
-		}
+		// if (errorMsg.trim() !== '') {
+		// Toast.show(ToastError('Oops!', errorMsg));
+		// }
 	}
 }
 

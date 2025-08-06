@@ -1,73 +1,102 @@
 import axios from 'axios';
-import API_URL from '../_url';
+import API from '../_url';
 
-const getEventPackages = async (id: string, token: string) => {
+interface EventCall {
+	id: string;
+	token: string;
+	page?: number;
+}
+
+interface PackageCall {
+	eventId: string;
+	packageId: string;
+	token: string;
+}
+
+interface CreatePackage {
+	payload: any;
+	token: string;
+}
+
+interface UpdatePackage {
+	eventId: string;
+	packageId: string;
+	payload: any;
+	token: string;
+}
+
+interface DeletePackage {
+	eventId: string;
+	packageId: string;
+	token: string;
+}
+
+async function userGetEventPackages(data: EventCall): Promise<any> {
+	const { id, token, page } = data;
+
+	const pageIsNumber = typeof page === 'number';
+	const route = `${API.url}/event/${id}/packages/all${pageIsNumber ? `?page=${page}` : ''}`;
+
 	return await axios
-		.get(`${API_URL}/event/${id}/packages/all`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
-			},
+		.get(route, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
+		.then((res) => res)
+		.catch((error) => error);
+}
+
+async function orgGetEventPackages(data: EventCall): Promise<any> {
+	const { id, token, page } = data;
+
+	const pageIsNumber = typeof page === 'number';
+	const route = `${API.url}/event/${id}/packages/all/org${pageIsNumber ? `?page=${page}` : ''}`;
+
+	return await axios
+		.get(route, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
+		.then((res) => res)
+		.catch((error) => error);
+}
+
+async function getEventPackage(data: PackageCall): Promise<any> {
+	const { eventId, packageId, token } = data;
+
+	return await axios
+		.get(`${API.url}/event/${eventId}/package/${packageId}`, {
+			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
 		})
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const getEventPackage = async (eventId: string, packageId: string, token: string) => {
+async function createEventPackage(data: CreatePackage): Promise<any> {
+	const { payload, token } = data;
+
 	return await axios
-		.get(`${API_URL}/event/${eventId}/package/${packageId}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
-			},
-		})
+		.post(`${API.url}/event/${payload.eventId}/package`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const orgGetEventPackages = async (id: string, token: string) => {
+async function updateEventPackage(data: UpdatePackage): Promise<any> {
+	const { eventId, packageId, payload, token } = data;
+
 	return await axios
-		.get(`${API_URL}/event/${id}/packages/all/org`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
-			},
-		})
+		.put(`${API.url}/event/${eventId}/package/${packageId}`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const createEventPackage = async (payload: any, token: string) => {
+async function deleteEventPackage(data: DeletePackage): Promise<any> {
+	const { eventId, packageId, token } = data;
+
 	return await axios
-		.post(`${API_URL}/event/${payload.eventId}/package`, payload, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((res) => res)
-		.catch((error) => error);
-};
-
-const updateEventPackage = async (eventId: string, packageId: string, payload: any, token: string) => {
-	return await axios
-		.put(`${API_URL}/event/${eventId}/package/${packageId}`, payload, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((res) => res)
-		.catch((error) => error);
-};
-
-const deleteEventPackage = async (eventId: string, packId: string, token: string) => {
-	axios
-		.delete(`${API_URL}/event/${eventId}/package/${packId}`, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		.delete(`${API.url}/event/${eventId}/package/${packageId}`, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((e) => e);
-};
+}
 
 const EventPackageHTTP = {
-	getEventPackages,
-	getEventPackage,
+	userGetEventPackages,
 	orgGetEventPackages,
+	getEventPackage,
 	createEventPackage,
 	updateEventPackage,
 	deleteEventPackage,

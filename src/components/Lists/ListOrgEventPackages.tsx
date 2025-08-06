@@ -1,9 +1,9 @@
-import refreshUser from '@/utilities/RefreshUser';
 import AddIcon from '@icons/AddIcon';
 import EventPackageHTTP from '@utilities/http/admin/event-packages';
-import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { getCookieValue } from '@/storage/cookies';
+import refreshUser from '@/utilities/RefreshUser';
 import PackageForm from '../Forms/Packages/PackageForm';
 import Loader from '../Loader/Loader';
 import Modal from '../Modal/Modal';
@@ -38,8 +38,8 @@ export default function ListOrgEventPackages(props: any) {
 	}, []);
 
 	const getEventPackages = async (id: string) => {
-		const roleCookie = getCookie('role');
-		const accessToken = getCookie('accessToken');
+		const roleCookie = getCookieValue('role');
+		const accessToken = getCookieValue('accessToken');
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 
 		setLoading(true);

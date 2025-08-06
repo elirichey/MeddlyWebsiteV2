@@ -1,6 +1,6 @@
 'use client';
 
-import UserAuthHTTP from '@utilities/http/user/auth';
+import AuthHTTP from '@utilities/http/auth';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -53,7 +53,7 @@ export default function ResetPasswordForm() {
 		const payload: Values = { newPassword: password };
 
 		try {
-			const res: any = await UserAuthHTTP.resetPassword(payload, token || '');
+			const res: any = await AuthHTTP.resetPassword(payload, token || '');
 			if (res?.status === 200 || res?.status === 201) {
 				setFormSuccess(true);
 				return 'Password Updated!';

@@ -1,10 +1,3 @@
-import type { MeddlyEvent, MeddlyEventOnCreate } from '@/interfaces/Event';
-import refreshUser from '@/utilities/RefreshUser';
-import {
-	type EventOnCreate,
-	formatCreateEventPayload,
-	formatEditEventPayload,
-} from '@/utilities/validations/EventFormValidator';
 import { formatDateForInput, formatTimeForInput } from '@utilities/conversions/dates';
 import {
 	determineEventFieldsEditableByOrgRoles,
@@ -16,15 +9,22 @@ import VenuesHttp from '@utilities/http/admin/venues';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import type { MeddlyEvent, MeddlyEventOnCreate } from '@/interfaces/Event';
+import refreshUser from '@/utilities/RefreshUser';
+import {
+	type EventOnCreate,
+	formatCreateEventPayload,
+	formatEditEventPayload,
+} from '@/utilities/validations/EventFormValidator';
 import Loader from '../../Loader/Loader';
 import VenueTicket from '../../Tickets/VenueTicket';
-import ImageUpload from '../Uploader/ImageUpload';
 import DateInput from '../_Inputs/DateInput';
 import Input from '../_Inputs/Input';
 import SearchSelectVenue from '../_Inputs/SearchSelectVenue';
 import SelectCustom from '../_Inputs/SelectCustom';
 import SelectUser from '../_Inputs/SelectUser';
 import TimeInput from '../_Inputs/TimeInput';
+import ImageUpload from '../Uploader/ImageUpload';
 
 interface Props {
 	viewEvent: MeddlyEvent | null;
@@ -80,53 +80,53 @@ export default function EventForm(props: Props) {
 		const updated = originalTitle ? originalTitle !== eventTitle : eventTitle.trim() !== '';
 		if (updated) setUpdatedEventTitle(true);
 		else if (updatedEventTitle) setUpdatedEventTitle(false);
-	}, [eventTitle]);
+	}, [eventTitle, viewEvent?.title, updatedEventTitle]);
 
 	useEffect(() => {
 		const originalDate = initialDate ? initialDate : false;
 		const updated = originalDate ? originalDate !== eventDate : eventDate;
 		if (updated) setUpdatedEventDate(true);
 		else if (updatedEventDate) setUpdatedEventDate(false);
-	}, [eventDate]);
+	}, [eventDate, initialDate, updatedEventDate]);
 
 	useEffect(() => {
 		const originalTime = initialTime ? initialTime : false;
 		const updated = originalTime ? originalTime !== eventTime : eventTime;
 		if (updated) setUpdatedEventTime(true);
 		else if (updatedEventTime) setUpdatedEventTime(false);
-	}, [eventTime]);
+	}, [eventTime, initialTime, updatedEventTime]);
 
 	useEffect(() => {
 		const originalStatus = viewEvent?.status ? viewEvent.status : false;
 		const updated = originalStatus ? originalStatus !== eventStatus : eventStatus;
 		if (updated) setUpdatedEventStatus(true);
 		else if (updatedEventStatus) setUpdatedEventStatus(false);
-	}, [eventStatus]);
+	}, [eventStatus, viewEvent?.status, updatedEventStatus]);
 
 	useEffect(() => {
 		const originalType = viewEvent?.type ? viewEvent.type : false;
 		const updated = originalType ? originalType !== eventType : eventType;
 		if (updated) setUpdatedEventType(true);
 		else if (updatedEventType) setUpdatedEventType(false);
-	}, [eventType]);
+	}, [eventType, viewEvent?.type, updatedEventType]);
 
 	useEffect(() => {
 		const originalManager = viewEvent?.manager ? viewEvent.manager : false;
 		const updated = originalManager ? originalManager.id !== eventManager.id : eventManager;
 		if (updated) setUpdatedEventManager(true);
 		else if (updatedEventManager) setUpdatedEventManager(false);
-	}, [eventManager]);
+	}, [eventManager, viewEvent?.manager, updatedEventManager]);
 
 	useEffect(() => {
 		const originalVenue = viewEvent?.venue ? viewEvent.venue : false;
 		const updated = originalVenue ? originalVenue.id !== eventVenue.id : eventVenue;
 		if (updated) setUpdatedEventVenue(true);
 		else if (updatedEventVenue) setUpdatedEventVenue(false);
-	}, [eventVenue]);
+	}, [eventVenue, viewEvent?.venue, updatedEventVenue]);
 
 	useEffect(() => {
 		showManagerOptions ? setShowManagerOptions(false) : null;
-	}, [eventManager]);
+	}, [showManagerOptions]);
 
 	const completeOnCreate =
 		updatedEventTitle &&
@@ -149,13 +149,6 @@ export default function EventForm(props: Props) {
 
 	// ********** Lifecycle ********** //
 
-	useEffect(() => {
-		checkAvailableStatuses();
-		checkEditableFields();
-		getOrgRoles();
-		setTimeout(() => setLoading(false), 500);
-	}, []);
-
 	const [statusOptions, setStatusOptions] = useState<Array<string>>([]);
 	const checkAvailableStatuses = async () => {
 		const statusOptions = determineEventStatusesByOrgRole(eventStatus);
@@ -169,8 +162,7 @@ export default function EventForm(props: Props) {
 	};
 
 	const getOrgRoles = async () => {
-		const roleCookie: any = getCookie('role');
-		const accessToken: any = getCookie('accessToken');
+		const [roleCookie, accessToken]: any = await Promise.all([getCookie('role'), getCookie('accessToken')]);
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 
 		try {
@@ -199,10 +191,21 @@ export default function EventForm(props: Props) {
 		}
 	};
 
+	const loadData = async () => {
+		await checkAvailableStatuses();
+		await checkEditableFields();
+		await getOrgRoles();
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		loadData();
+	}, []);
+
 	// ********** Form Actions ********** //
 
 	const onSearch = async () => {
-		const accessToken = getCookie('accessToken');
+		const accessToken = await getCookie('accessToken');
 		if (searchValue !== '') {
 			setLoadingSearchVenues(true);
 			setShowVenueOptions(true);
@@ -250,7 +253,7 @@ export default function EventForm(props: Props) {
 	};
 
 	const onSubmit = async (values: any) => {
-		const accessToken: any = getCookie('accessToken');
+		const accessToken: any = await getCookie('accessToken');
 
 		setLoading(true);
 

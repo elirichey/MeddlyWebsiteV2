@@ -1,14 +1,14 @@
-import axios, { type AxiosResponse } from 'axios';
-import API_URL from '../_url';
+import axios from 'axios';
+import API from '../_url';
 
-const searchVenues = async (keyword: string, accessToken: string): Promise<AxiosResponse> => {
-	return await axios
-		.get(`${API_URL}/places/search?keyword=${keyword}`, {
+async function searchVenues(keyword: string, accessToken: string): Promise<any> {
+	return axios
+		.get(`${API.url}/ticketmaster/search/venues?keyword=${keyword}`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		})
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
 const VenuesHttp = {
 	searchVenues,

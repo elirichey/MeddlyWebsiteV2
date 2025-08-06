@@ -3,6 +3,8 @@ const isDev = isDevelopent === 'true';
 const productionURL = 'https://api.meddly.app';
 const developmentURL = 'https://api.meddly.dev';
 
-const API_URL: string = isDev ? developmentURL : productionURL;
+const API_URL: string = productionURL; // isDev ? developmentURL : productionURL;
 
-export default API_URL;
+export default {
+	url: API_URL,
+};

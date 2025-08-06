@@ -1,6 +1,6 @@
 'use client';
 
-import UserAuthHTTP from '@utilities/http/user/auth';
+import AuthHTTP from '@utilities/http/auth';
 import { useEffect, useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import Loader from '@/components/Loader/Loader';
@@ -36,7 +36,7 @@ export default function ForgotPasswordForm(props: Props) {
 		const payload: Values = values;
 
 		try {
-			const res: any = await UserAuthHTTP.requestPasswordReset(payload);
+			const res: any = await AuthHTTP.requestPasswordReset(payload);
 			if (res?.status === 201) {
 				setLoading(false);
 				setCompleted(true);

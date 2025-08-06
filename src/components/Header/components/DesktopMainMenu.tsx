@@ -1,9 +1,9 @@
 import AccountIcon from '@icons/AccountIcon';
-import { getCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { FullUser } from '@/interfaces/User';
 import type { UserRole } from '@/interfaces/UserRoles';
+import { getCookieValue } from '@/storage/cookies';
 
 interface Props {
 	user: FullUser | null;
@@ -12,7 +12,7 @@ interface Props {
 export default function DesktopMainMenu(props: Props) {
 	const { user } = props;
 
-	const roleCookie = getCookie('role');
+	const roleCookie = getCookieValue('role');
 	const role: UserRole = roleCookie ? JSON.parse(roleCookie) : null;
 
 	const currentRoleImage = role?.organization?.avatar || '/image/webp/placeholders/avatar.webp';

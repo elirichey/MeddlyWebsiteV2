@@ -1,14 +1,15 @@
 'use client';
 
-import AdminAuthHTTP from '@utilities/http/admin/auth';
+import AuthHTTP from '@utilities/http/auth';
 import { getCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import Loader from '@/components/Loader/Loader';
+import { useUserStore } from '@/storage/stores/useUserStore';
 import { formatLoginFormPayload } from '@/utilities/validations/AuthFormValidator';
-import { setSecureAuthCookie, setSecureRefreshCookie } from '../../../storage/cookies';
+import cookieStorage, { getCookieValue, setSecureAuthCookie, setSecureRefreshCookie } from '../../../storage/cookies';
 import Input from '../_Inputs/Input';
 import Password from '../_Inputs/Password';
 
@@ -20,10 +21,14 @@ interface Values {
 export default function LoginForm() {
 	const router = useRouter();
 
+	const { profile, setProfile } = useUserStore();
+
+	console.log({ profile });
+
 	const checkIfSignedIn = useCallback(() => {
-		const userCookie: any = getCookie('user');
-		const accessToken: any = getCookie('accessToken');
-		const refreshToken: any = getCookie('refreshToken');
+		const userCookie: any = getCookieValue('user');
+		const accessToken: any = getCookieValue('accessToken');
+		const refreshToken: any = getCookieValue('refreshToken');
 		const user = userCookie ? JSON.parse(userCookie) : null;
 		if (user && accessToken && refreshToken) router.push('/admin');
 	}, [router]);
@@ -67,7 +72,7 @@ export default function LoginForm() {
 		const payload: Values = formatLoginFormPayload(values);
 
 		try {
-			const res: any = await AdminAuthHTTP.login(payload);
+			const res: any = await AuthHTTP.login(payload);
 			if (res?.status && res?.status === 201) {
 				const accessToken = res?.data?.accessToken;
 				const refreshToken = res?.data?.refreshToken;
@@ -76,12 +81,14 @@ export default function LoginForm() {
 					setSecureAuthCookie('accessToken', accessToken);
 					setSecureRefreshCookie('refreshToken', refreshToken);
 
-					const userCreds = await AdminAuthHTTP.userGetSelf(accessToken);
+					const userCreds = await AuthHTTP.userGetSelf(accessToken);
 					if (userCreds.status === 200) {
 						const user = userCreds.data;
 						// Store user data in localStorage instead of cookies for better security
-						localStorage.setItem('user', JSON.stringify(user));
-						return router.push('/admin');
+						setProfile(user);
+						cookieStorage.setItem('user', user);
+						// console.log({ profile });
+						// return router.push('/admin');
 					}
 				}
 				return;
@@ -101,6 +108,8 @@ export default function LoginForm() {
 				setErrors([{ status, message }]);
 				setLoading(false);
 			}
+		} finally {
+			setLoading(false);
 		}
 	};
 

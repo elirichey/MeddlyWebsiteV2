@@ -1,6 +1,7 @@
 import CloseIcon from '@icons/CloseIcon';
 import MobileMenuWhite from '@icons/MobileMenuWhite';
-import { type CookieValueTypes, getCookie } from 'cookies-next';
+import { type CookieValueTypes } from 'cookies-next';
+import { getCookieValue } from '@/storage/cookies';
 import localFont from 'next/font/local';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -40,7 +41,7 @@ export default function AdminLayout({ children }: Props) {
 	const wrapperRef = useRef<any>(null);
 
 	useEffect(() => {
-		const roleCookie: CookieValueTypes = getCookie('role');
+		const roleCookie = getCookieValue('role');
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 		if (!role) setShowMobileMenu(true);
 	}, []);

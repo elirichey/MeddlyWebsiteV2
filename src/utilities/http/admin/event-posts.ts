@@ -1,47 +1,87 @@
 import axios from 'axios';
-import API_URL from '../_url';
+import type { PostItem } from '../../../interfaces/Post';
+import API from '../_url';
 
-const editorGetEventPostsByType = async (eventId: string, type: string, accessToken: string) => {
+interface EditorByType {
+	eventId: string;
+	type: string;
+	accessToken: string;
+	page?: number;
+}
+
+interface EditorBulkAddPosts {
+	packageId: string;
+	payload: PostItem[];
+	accessToken: string;
+}
+
+interface MediaDefaults {
+	eventId: string;
+	accessToken: string;
+	page?: number;
+}
+
+async function editorGetEventPostsByType(data: EditorByType): Promise<any> {
+	const { eventId, type, accessToken, page } = data;
+
+	const pageIsNumber = typeof page === 'number';
+	const route = `${API.url}/event/${eventId}/posts/${type}${pageIsNumber ? `?page=${page}` : ''}`;
+
 	return await axios
-		.get(`${API_URL}/event/${eventId}/posts/${type}`, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+		.get(route, { headers: { Authorization: `Bearer ${accessToken}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const editorBulkAddPosts = async (packageId: string, payload: any, accessToken: string) => {
+async function editorBulkAddPosts(data: EditorBulkAddPosts): Promise<any> {
+	const { packageId, payload, accessToken } = data;
+	// Returns new viewPackage item
 	return await axios
-		.post(`${API_URL}/package/${packageId}/posts`, payload, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+		.post(`${API.url}/package/${packageId}/posts`, payload, { headers: { Authorization: `Bearer ${accessToken}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const getEventDefaultAudios = async (eventId: string, accessToken: string) => {
+async function getEventDefaultAudios(data: MediaDefaults): Promise<any> {
+	const { eventId, accessToken, page } = data;
+
+	const pageIsNumber = typeof page === 'number';
+	const route = `${API.url}/event/${eventId}/posts/org/default/audio${pageIsNumber ? `?page=${page}` : ''}`;
+
 	return await axios
-		.get(`${API_URL}/event/${eventId}/posts/org/default/audio`, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+		.get(route, { headers: { Authorization: `Bearer ${accessToken}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const getEventDefaultVideos = async (eventId: string, accessToken: string) => {
+async function getEventDefaultVideos(data: MediaDefaults): Promise<any> {
+	const { eventId, accessToken, page } = data;
+
+	const pageIsNumber = typeof page === 'number';
+	const route = `${API.url}/event/${eventId}/posts/org/default/video${pageIsNumber ? `?page=${page}` : ''}`;
+
 	return await axios
-		.get(`${API_URL}/event/${eventId}/posts/org/default/video`, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-		})
+		.get(route, { headers: { Authorization: `Bearer ${accessToken}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
+
+async function generateAudioFileForPost(data: { postId: string; accessToken: string }): Promise<any> {
+	const { postId, accessToken } = data;
+	const route = `${API.url}/post/${postId}/generate-audio`;
+
+	return await axios
+		.post(route, {}, { headers: { Authorization: `Bearer ${accessToken}` } })
+		.then((res) => res)
+		.catch((error) => error);
+}
 
 const EventPostHTTP = {
 	editorGetEventPostsByType,
 	editorBulkAddPosts,
 	getEventDefaultAudios,
 	getEventDefaultVideos,
+	generateAudioFileForPost,
 };
 
 export default EventPostHTTP;

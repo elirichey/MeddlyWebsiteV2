@@ -1,14 +1,15 @@
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 import type { NextRouter } from 'next/router';
 import AuthUserHTTP from './http/user/auth';
+import { getCookieValue } from '@/storage/cookies';
 
 export default async function refreshUser(router: NextRouter) {
 	const logout = () => {
-		const accessToken = getCookie('accessToken');
-		const refreshToken = getCookie('refreshToken');
+		const accessToken = getCookieValue('accessToken');
+		const refreshToken = getCookieValue('refreshToken');
 
-		const roleCookie = getCookie('role');
-		const userCookie = getCookie('user');
+		const roleCookie = getCookieValue('role');
+		const userCookie = getCookieValue('user');
 
 		const user = userCookie ? JSON.parse(userCookie) : null;
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
@@ -21,7 +22,7 @@ export default async function refreshUser(router: NextRouter) {
 	};
 
 	const refreshUser = async () => {
-		const refreshToken = getCookie('refreshToken');
+		const refreshToken = getCookieValue('refreshToken');
 		try {
 			const res = await AuthUserHTTP.refreshUser(refreshToken);
 			if (res.status === 200 || res.status === 201) {

@@ -1,12 +1,12 @@
-import type { UserRole } from '@/interfaces/UserRoles';
-import { getCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { UserRole } from '@/interfaces/UserRoles';
+import { getCookieValue } from '@/storage/cookies';
 
 export default function Footer() {
 	const year = new Date().getFullYear();
 
-	const roleCookie = getCookie('role');
+	const roleCookie = getCookieValue('role');
 	const role: UserRole = roleCookie ? JSON.parse(roleCookie) : null;
 
 	return (

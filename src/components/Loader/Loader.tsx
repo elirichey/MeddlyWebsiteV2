@@ -1,10 +1,11 @@
 import dynamic from 'next/dynamic';
-import * as circleEqWhite from './lottie/circle-eq-white.json';
 import * as circleEq from './lottie/circle-eq.json';
+import * as circleEqWhite from './lottie/circle-eq-white.json';
 import * as coloredDots from './lottie/colored-dots.json';
 import * as darkSoundWaves from './lottie/dark-sound-waves.json';
 import * as lightSoundWaves from './lottie/light-text-sound-waves.json';
 import * as monoColorHorizontalEq from './lottie/mono-color-horizontal-eq.json';
+
 const Lottie: any = dynamic((): Promise<any> => import('react-lottie'), {
 	ssr: false,
 });
@@ -18,25 +19,31 @@ interface Props {
 		| 'colored-dots'
 		| 'mono-colored-horizontal-eq';
 }
+
+// Helper function to create a deep copy of JSON data
+const createDeepCopy = (data: any): any => {
+	return JSON.parse(JSON.stringify(data));
+};
+
 export default function Loader(props: Props) {
 	const { loaderId } = props;
 
 	const returnLoader = (id: string) => {
 		switch (id) {
 			case 'circle-eq':
-				return circleEq;
+				return createDeepCopy(circleEq);
 			case 'circle-eq-white':
-				return circleEqWhite;
+				return createDeepCopy(circleEqWhite);
 			case 'light-sound-waves':
-				return lightSoundWaves;
+				return createDeepCopy(lightSoundWaves);
 			case 'dark-sound-waves':
-				return darkSoundWaves;
+				return createDeepCopy(darkSoundWaves);
 			case 'colored-dots':
-				return coloredDots;
+				return createDeepCopy(coloredDots);
 			case 'mono-colored-horizontal-eq':
-				return monoColorHorizontalEq;
+				return createDeepCopy(monoColorHorizontalEq);
 			default:
-				return monoColorHorizontalEq;
+				return createDeepCopy(monoColorHorizontalEq);
 		}
 	};
 
@@ -50,5 +57,5 @@ export default function Loader(props: Props) {
 	if (typeof navigator !== 'undefined') {
 		return <Lottie options={defaultOptions} />;
 	}
-	return <div />;
+	return null;
 }

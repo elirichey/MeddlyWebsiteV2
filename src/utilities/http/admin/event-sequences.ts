@@ -1,5 +1,5 @@
-import axios, { type AxiosResponse } from 'axios';
-import API_URL from '../_url';
+import axios from 'axios';
+import API from '../_url';
 
 interface EventCall {
 	eventId: string;
@@ -11,10 +11,18 @@ interface SequenceCall {
 	token: string;
 }
 
-interface CreateSequence {
+export interface SequenceOptions {
+	orientation?: 'landscape' | 'portrait';
+	segmentLength?: 'short' | 'medium' | 'long';
+	customStartTime?: number;
+	customEndTime?: number;
+}
+
+export interface CreateSequence {
 	payload: {
 		eventId: string;
 		packageId: string;
+		sequenceOptions: SequenceOptions;
 	};
 	token: string;
 }
@@ -35,76 +43,53 @@ interface DeleteSequence {
 	token: string;
 }
 
-const orgGetEventSequences = async (data: EventCall): Promise<AxiosResponse> => {
+async function orgGetEventSequences(data: EventCall): Promise<any> {
 	const { eventId, token } = data;
 	return await axios
-		.get(`${API_URL}/event/${eventId}/sequences/all/org`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
-			},
+		.get(`${API.url}/event/${eventId}/sequences/all/org`, {
+			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
 		})
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const getEventSequence = async (data: SequenceCall): Promise<AxiosResponse> => {
+async function getEventSequence(data: SequenceCall): Promise<any> {
 	const { sequenceId, token } = data;
+
 	return await axios
-		.get(`${API_URL}/sequence/${sequenceId}/org`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: 'application/json',
-			},
+		.get(`${API.url}/sequence/${sequenceId}/org`, {
+			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
 		})
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const createEventSequence = async (data: CreateSequence): Promise<AxiosResponse> => {
+async function createEventSequence(data: CreateSequence): Promise<any> {
 	const { payload, token } = data;
-	const { eventId, packageId } = payload;
 
 	return await axios
-		.post(`${API_URL}/event/${eventId}/package/${packageId}/sequence/generate`, payload, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		.post(`${API.url}/sequence/request`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
-};
+}
 
-const updateEventSequence = async (data: UpdateSequence): Promise<AxiosResponse> => {
+const updateEventSequence = async (data: UpdateSequence): Promise<any> => {
 	const { sequenceId, payload, token } = data;
 
 	return await axios
-		.put(`${API_URL}/sequence/${sequenceId}/user`, payload, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		.put(`${API.url}/sequence/${sequenceId}/user`, payload, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
 };
 
-const deleteEventSequence = async (data: DeleteSequence): Promise<AxiosResponse> => {
+async function deleteEventSequence(data: DeleteSequence): Promise<any> {
 	const { sequenceId, token } = data;
 
 	return await axios
-		.delete(`${API_URL}/sequence/${sequenceId}}`, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
+		.post(`${API.url}/sequence/${sequenceId}/delete`, {}, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((e) => e);
-};
-
-const requestSequenceGeneration = async (data: CreateSequence): Promise<AxiosResponse> => {
-	const { payload, token } = data;
-
-	return await axios
-		.post(`${API_URL}/sequence/request`, payload, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((res) => res)
-		.catch((e) => e);
-};
+}
 
 const EventSequenceHTTP = {
 	orgGetEventSequences,
@@ -112,7 +97,6 @@ const EventSequenceHTTP = {
 	createEventSequence,
 	updateEventSequence,
 	deleteEventSequence,
-	requestSequenceGeneration,
 };
 
 export default EventSequenceHTTP;
