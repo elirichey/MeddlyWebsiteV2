@@ -4,6 +4,7 @@ import validator from 'validator';
 import type { AuthCredentials, NewUserCredentials, UserConnectToEventPayload } from '../../interfaces/Auth';
 import type { Error as ErrorType, ResponseError } from '../../interfaces/General';
 import API from './_url';
+import cookieStorage from '@/storage/cookies';
 
 interface UpdatePasswordPayload {
 	oldPassword: string;
@@ -81,14 +82,24 @@ async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
 	return res;
 }
 
-async function signOut(token: string): Promise<AxiosResponse> {
+async function signOut(): Promise<AxiosResponse> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.get(`${API.url}/auth/signout`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
 		.then((res) => res)
 		.catch((error) => error);
 }
 
-async function refreshUser(token: string): Promise<AxiosResponse> {
+async function refreshUser(): Promise<AxiosResponse> {
+	const token = cookieStorage.getItem('refreshToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	if (!token || typeof token !== 'string' || token.trim() === '') {
 		return Promise.reject(new Error('Invalid refresh token'));
 	}
@@ -110,7 +121,12 @@ async function requestPasswordReset(body: any): Promise<AxiosResponse> {
 }
 
 async function updateUserPassword(payload: UpdatePasswordPayload): Promise<AxiosResponse> {
-	const { oldPassword, newPassword, token } = payload;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
+	const { oldPassword, newPassword } = payload;
 	const body = { oldPassword, newPassword };
 	return axios
 		.post(`${API.url}/auth/password/update`, body, {
@@ -122,7 +138,12 @@ async function updateUserPassword(payload: UpdatePasswordPayload): Promise<Axios
 
 // *************** Profile *************** //
 
-async function userGetSelf(token: string): Promise<AxiosResponse> {
+async function userGetSelf(): Promise<AxiosResponse> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.get(`${API.url}/user`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
 		.then((res) => res)
@@ -130,7 +151,12 @@ async function userGetSelf(token: string): Promise<AxiosResponse> {
 }
 
 async function updateUser(payload: UpdateUserPayload): Promise<AxiosResponse> {
-	const { profile, data, token } = payload;
+	const { profile, data } = payload;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const currentAvatar = profile?.avatar;
 	const newAvatar = data?.avatar;
 
@@ -138,7 +164,7 @@ async function updateUser(payload: UpdateUserPayload): Promise<AxiosResponse> {
 		.put(`${API.url}/user`, data, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
 		.then(async (res) => {
 			if (newAvatar && newAvatar !== currentAvatar) {
-				const final = await uploadProfileImage(profile?.id, newAvatar, token);
+				const final = await uploadProfileImage(profile?.id, newAvatar);
 				return final;
 			}
 			return res;
@@ -146,7 +172,12 @@ async function updateUser(payload: UpdateUserPayload): Promise<AxiosResponse> {
 		.catch((error) => error);
 }
 
-async function uploadProfileImage(profileId: string, newAvatar: string, token: string): Promise<AxiosResponse> {
+async function uploadProfileImage(profileId: string, newAvatar: string): Promise<AxiosResponse> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const ts = new Date().getTime();
 	const file: any = {
 		uri: newAvatar,
@@ -174,7 +205,12 @@ async function uploadProfileImage(profileId: string, newAvatar: string, token: s
 }
 
 async function updateConnectedEvent(payload: UpdateUserConnectedEventPayload): Promise<AxiosResponse> {
-	const { eventConnectedId, token } = payload;
+	const { eventConnectedId } = payload;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const body: UserConnectToEventPayload = { eventConnectedId };
 
 	return await axios
@@ -183,7 +219,12 @@ async function updateConnectedEvent(payload: UpdateUserConnectedEventPayload): P
 		.catch((error) => error);
 }
 
-async function deleteUser(token: string): Promise<AxiosResponse> {
+async function deleteUser(): Promise<AxiosResponse> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.delete(`${API.url}/user`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
 		.then((res) => res)
@@ -200,7 +241,12 @@ async function checkIfEmailInUse(test: string): Promise<AxiosResponse> {
 }
 
 async function userCheckIfEmailInUse(payload: ValidateIfInUsePayload): Promise<AxiosResponse> {
-	const { test, token } = payload;
+	const { test } = payload;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.post(`${API.url}/check/email/${test}`, null, {
 			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },

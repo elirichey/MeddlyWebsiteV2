@@ -1,19 +1,23 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 interface UserEventSequencesRequest {
-	token: string;
 	eventId: string;
 }
 
 interface UserEventSequenceRequest {
-	token: string;
 	sequenceId: string;
 }
 
 async function getEventSequencesAsUser(payload: UserEventSequencesRequest): Promise<AxiosResponse> {
-	const { eventId, token } = payload;
+	const { eventId } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/event/${eventId}/sequences/all`, {
@@ -24,7 +28,12 @@ async function getEventSequencesAsUser(payload: UserEventSequencesRequest): Prom
 }
 
 async function getEventSequencesOwnedAsUser(payload: UserEventSequencesRequest): Promise<AxiosResponse> {
-	const { eventId, token } = payload;
+	const { eventId } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/event/${eventId}/sequences/owned`, {
@@ -35,7 +44,12 @@ async function getEventSequencesOwnedAsUser(payload: UserEventSequencesRequest):
 }
 
 async function getSequenceOwnedAsUser(payload: UserEventSequenceRequest): Promise<AxiosResponse> {
-	const { sequenceId, token } = payload;
+	const { sequenceId } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/sequence/${sequenceId}/user`, {

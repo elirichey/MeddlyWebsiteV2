@@ -1,5 +1,6 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 interface EventCall {
 	id: string;
@@ -32,7 +33,12 @@ interface DeletePackage {
 }
 
 async function userGetEventPackages(data: EventCall): Promise<any> {
-	const { id, token, page } = data;
+	const { id, page } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const pageIsNumber = typeof page === 'number';
 	const route = `${API.url}/event/${id}/packages/all${pageIsNumber ? `?page=${page}` : ''}`;
@@ -44,7 +50,12 @@ async function userGetEventPackages(data: EventCall): Promise<any> {
 }
 
 async function orgGetEventPackages(data: EventCall): Promise<any> {
-	const { id, token, page } = data;
+	const { id, page } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const pageIsNumber = typeof page === 'number';
 	const route = `${API.url}/event/${id}/packages/all/org${pageIsNumber ? `?page=${page}` : ''}`;
@@ -56,7 +67,12 @@ async function orgGetEventPackages(data: EventCall): Promise<any> {
 }
 
 async function getEventPackage(data: PackageCall): Promise<any> {
-	const { eventId, packageId, token } = data;
+	const { eventId, packageId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.get(`${API.url}/event/${eventId}/package/${packageId}`, {
@@ -67,7 +83,12 @@ async function getEventPackage(data: PackageCall): Promise<any> {
 }
 
 async function createEventPackage(data: CreatePackage): Promise<any> {
-	const { payload, token } = data;
+	const { payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.post(`${API.url}/event/${payload.eventId}/package`, payload, { headers: { Authorization: `Bearer ${token}` } })
@@ -76,7 +97,12 @@ async function createEventPackage(data: CreatePackage): Promise<any> {
 }
 
 async function updateEventPackage(data: UpdatePackage): Promise<any> {
-	const { eventId, packageId, payload, token } = data;
+	const { eventId, packageId, payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.put(`${API.url}/event/${eventId}/package/${packageId}`, payload, { headers: { Authorization: `Bearer ${token}` } })
@@ -85,7 +111,12 @@ async function updateEventPackage(data: UpdatePackage): Promise<any> {
 }
 
 async function deleteEventPackage(data: DeletePackage): Promise<any> {
-	const { eventId, packageId, token } = data;
+	const { eventId, packageId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.delete(`${API.url}/event/${eventId}/package/${packageId}`, { headers: { Authorization: `Bearer ${token}` } })

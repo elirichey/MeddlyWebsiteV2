@@ -1,14 +1,13 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 interface EventCall {
 	eventId: string;
-	token: string;
 }
 
 interface SequenceCall {
 	sequenceId: string;
-	token: string;
 }
 
 export interface SequenceOptions {
@@ -44,7 +43,13 @@ interface DeleteSequence {
 }
 
 async function orgGetEventSequences(data: EventCall): Promise<any> {
-	const { eventId, token } = data;
+	const { eventId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return await axios
 		.get(`${API.url}/event/${eventId}/sequences/all/org`, {
 			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
@@ -54,7 +59,12 @@ async function orgGetEventSequences(data: EventCall): Promise<any> {
 }
 
 async function getEventSequence(data: SequenceCall): Promise<any> {
-	const { sequenceId, token } = data;
+	const { sequenceId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.get(`${API.url}/sequence/${sequenceId}/org`, {
@@ -65,7 +75,12 @@ async function getEventSequence(data: SequenceCall): Promise<any> {
 }
 
 async function createEventSequence(data: CreateSequence): Promise<any> {
-	const { payload, token } = data;
+	const { payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.post(`${API.url}/sequence/request`, payload, { headers: { Authorization: `Bearer ${token}` } })
@@ -74,7 +89,12 @@ async function createEventSequence(data: CreateSequence): Promise<any> {
 }
 
 const updateEventSequence = async (data: UpdateSequence): Promise<any> => {
-	const { sequenceId, payload, token } = data;
+	const { sequenceId, payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.put(`${API.url}/sequence/${sequenceId}/user`, payload, { headers: { Authorization: `Bearer ${token}` } })
@@ -83,7 +103,12 @@ const updateEventSequence = async (data: UpdateSequence): Promise<any> => {
 };
 
 async function deleteEventSequence(data: DeleteSequence): Promise<any> {
-	const { sequenceId, token } = data;
+	const { sequenceId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.post(`${API.url}/sequence/${sequenceId}/delete`, {}, { headers: { Authorization: `Bearer ${token}` } })

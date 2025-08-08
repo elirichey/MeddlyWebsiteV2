@@ -1,10 +1,15 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 async function getOrganizations(data: any): Promise<any> {
-	const { page, token } = data;
-	const pageIsNumber = typeof page === 'number';
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
+	const { page } = data;
+	const pageIsNumber = typeof page === 'number';
 	const route = `${API.url}/pages${pageIsNumber ? `?page=${page}` : ''}`;
 
 	return axios
@@ -14,8 +19,12 @@ async function getOrganizations(data: any): Promise<any> {
 }
 
 async function getOrganization(data: any): Promise<any> {
-	const { id, token } = data;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
+	const { id } = data;
 	const route = `${API.url}/page/${id}`;
 
 	return axios

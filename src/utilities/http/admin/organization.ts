@@ -1,13 +1,25 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
-async function getOrgData(data: { id: string; token: string }): Promise<any> {
-	const { id, token } = data;
+async function getOrgData(data: { id: string }): Promise<any> {
+	const { id } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return await axios.get(`${API.url}/org/${id}`, { headers: { Authorization: `Bearer ${token}` } });
 }
 
 async function updateOrg(payload: any): Promise<any | any> {
-	const { id, data, token } = payload;
+	const { id, data } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const initialPayload = { ...data };
 	if (initialPayload.avatar) {
@@ -18,7 +30,7 @@ async function updateOrg(payload: any): Promise<any | any> {
 	if (isEmptyObject && data.avatar) {
 		// Upload Avatar Only
 		try {
-			const final = await uploadOrganizationalAvatar(id, data.avatar, token);
+			const final = await uploadOrganizationalAvatar(id, data.avatar);
 			if (final.status === 201) return final;
 			return final;
 		} catch (e) {
@@ -34,7 +46,7 @@ async function updateOrg(payload: any): Promise<any | any> {
 			if (res.status === 200 || res.status === 201) {
 				if (data.avatar) {
 					try {
-						const final = await uploadOrganizationalAvatar(id, data.avatar, token);
+						const final = await uploadOrganizationalAvatar(id, data.avatar);
 						if (final.status === 200 || final.status === 201) return final;
 						return res;
 					} catch (e) {
@@ -50,7 +62,12 @@ async function updateOrg(payload: any): Promise<any | any> {
 	}
 }
 
-async function uploadOrganizationalAvatar(id: string, avatar: string, token: string): Promise<any> {
+async function uploadOrganizationalAvatar(id: string, avatar: string): Promise<any> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const ts = new Date().getTime();
 	const file: any = {
 		uri: avatar,
@@ -83,11 +100,15 @@ async function uploadOrganizationalAvatar(id: string, avatar: string, token: str
 async function uploadVideo(data: {
 	eventId: string;
 	payload: any;
-	token: string;
 	setPercentUploaded?: (val: any) => void;
 	setOnError?: (val: any) => void;
 }): Promise<any> {
-	const { eventId, payload, token, setPercentUploaded, setOnError } = data;
+	const { eventId, payload, setPercentUploaded, setOnError } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const controller = new AbortController();
 	const { uri, fps, duration, orientation, height, width, metadata, deviceName, isPrimary } = payload;

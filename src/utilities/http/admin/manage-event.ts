@@ -1,8 +1,14 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
-async function managerStartEventServer(data: { eventId: string; token: string }): Promise<any> {
-	const { eventId, token } = data;
+async function managerStartEventServer(data: { eventId: string }): Promise<any> {
+	const { eventId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	// DON'T FORGET TO SEND AN EMPTY PAYLOAD OR THE REQUEST ARGUMENTS ARE NOT IN ORDER
 	const payload = {};
@@ -15,8 +21,13 @@ async function managerStartEventServer(data: { eventId: string; token: string })
 	return response;
 }
 
-async function managerUpdateEvent(data: { eventId: string; payload: any; token: string }): Promise<any> {
-	const { eventId, payload, token } = data;
+async function managerUpdateEvent(data: { eventId: string; payload: any }): Promise<any> {
+	const { eventId, payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return await axios
 		.put(`${API.url}/event/${eventId}/manager`, payload, {

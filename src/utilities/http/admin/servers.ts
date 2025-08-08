@@ -1,8 +1,15 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
-async function managerStartProcessingServer(data: { orgId: string; token: string }): Promise<any> {
-	const { orgId, token } = data;
+async function managerStartProcessingServer(data: { orgId: string }): Promise<any> {
+	const { orgId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	// DON'T FORGET TO SEND AN EMPTY PAYLOAD OR THE REQUEST ARGUMENTS ARE NOT IN ORDER
 	const payload = {};
 	const timeout = 1000 * 60 * 5; // 5 minutes

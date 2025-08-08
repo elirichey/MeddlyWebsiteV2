@@ -1,9 +1,9 @@
 import axios from 'axios';
 import API from './_url';
+import cookieStorage from '@/storage/cookies';
 
 export interface SupportTicketPayload {
 	payload: SupportTicketOnCreate;
-	token: string;
 }
 
 interface SupportTicketOnCreate {
@@ -25,11 +25,15 @@ interface RequestOrganizationPayload {
 		noShowsPerMonth: number;
 		hiddenInput: string;
 	};
-	token: string;
 }
 
 async function createSupportTicket(data: SupportTicketPayload): Promise<any> {
-	const { payload, token } = data;
+	const { payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.post(`${API.url}/support`, payload, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
@@ -38,7 +42,12 @@ async function createSupportTicket(data: SupportTicketPayload): Promise<any> {
 }
 
 async function requestOrganization(data: RequestOrganizationPayload): Promise<any> {
-	const { payload, token } = data;
+	const { payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.post(`${API.url}/request/organization`, payload, {
@@ -48,7 +57,12 @@ async function requestOrganization(data: RequestOrganizationPayload): Promise<an
 		.catch((error) => error);
 }
 
-async function getUserOrgRequests(token: string): Promise<any> {
+async function getUserOrgRequests(): Promise<any> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.get(`${API.url}/request/organization`, {
 			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
@@ -57,8 +71,13 @@ async function getUserOrgRequests(token: string): Promise<any> {
 		.catch((error) => error);
 }
 
-async function deleteUserOrgRequest(data: { token: string; id: string }): Promise<any> {
-	const { token, id } = data;
+async function deleteUserOrgRequest(data: { id: string }): Promise<any> {
+	const { id } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.delete(`${API.url}/request/${id}`, {

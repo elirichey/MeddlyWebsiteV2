@@ -1,14 +1,20 @@
 import axios from 'axios';
 import type { MeddlyEvent } from '../../../interfaces/Event';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 interface OrgEventData {
 	eventId: string;
-	token: string;
 }
 
 async function getOrgEvents(vals: { orgId: string; token: string; page?: number; status?: string }): Promise<any> {
-	const { orgId, token, page, status } = vals;
+	const { orgId, page, status } = vals;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const pageIsNumber = typeof page === 'number';
 	const statusIsString = typeof status === 'string';
 
@@ -28,7 +34,12 @@ async function getOrgEvents(vals: { orgId: string; token: string; page?: number;
 }
 
 async function getOrgEvent(vals: OrgEventData): Promise<any> {
-	const { eventId, token } = vals;
+	const { eventId } = vals;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/event/${eventId}/overview`, {
@@ -41,7 +52,12 @@ async function getOrgEvent(vals: OrgEventData): Promise<any> {
 // ************** NOT TESTED  ************** //
 
 async function createEvent(data: { payload: any; token: string }): Promise<any | any> {
-	const { payload, token } = data;
+	const { payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const payloadOnCreate = { ...payload };
 	payloadOnCreate.coverImg = undefined;
@@ -75,7 +91,12 @@ async function createEvent(data: { payload: any; token: string }): Promise<any |
 }
 
 async function updateEvent(data: { event: MeddlyEvent; payload: any; token: string }): Promise<any | any> {
-	const { event, payload, token } = data;
+	const { event, payload } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	console.log('updateEvent: Payload', { event, payload });
 
@@ -104,7 +125,12 @@ async function updateEvent(data: { event: MeddlyEvent; payload: any; token: stri
 }
 
 async function deleteEvent(data: { eventId: string; token: string }): Promise<any> {
-	const { eventId, token } = data;
+	const { eventId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.delete(`${API.url}/event/${eventId}`, {
@@ -114,7 +140,12 @@ async function deleteEvent(data: { eventId: string; token: string }): Promise<an
 		.catch((e) => e);
 }
 
-async function resyncEventAudioSources(eventId: string, token: string): Promise<any> {
+async function resyncEventAudioSources(eventId: string): Promise<any> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.post(
 			`${API.url}/event/${eventId}/sync`,

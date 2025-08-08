@@ -1,15 +1,20 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 interface UserEventPackagesRequest {
-	token: string;
 	eventId: string;
 	page?: number;
 }
 
 async function getEventPackagesAsUser(payload: UserEventPackagesRequest): Promise<AxiosResponse> {
-	const { eventId, token, page } = payload;
+	const { eventId, page } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	const pageIsNumber = typeof page === 'number';
 	const route = `${API.url}/event/${eventId}/packages/all${pageIsNumber ? `?page=${page}` : ''}`;

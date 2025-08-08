@@ -1,9 +1,9 @@
 import axios from 'axios';
 import API from '../_url';
+import cookieStorage from '@/storage/cookies';
 
 export interface UserEventsRequest {
 	id: string;
-	token: string;
 	type: string;
 	page?: number;
 	status?: string;
@@ -12,17 +12,21 @@ export interface UserEventsRequest {
 export interface UserEventPackagesRequest {
 	userId: string;
 	eventId: string;
-	token: string;
 	page?: number;
 }
 
 interface UserEventData {
 	eventId: string;
-	token: string;
 }
 
-async function getUserCameraEvents(data: { token: string; page?: number }): Promise<any> {
-	const { token, page } = data;
+async function getUserCameraEvents(data: { page?: number }): Promise<any> {
+	const { page } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const pageIsNumber = typeof page === 'number';
 
 	const route = `${API.url}/user/events${pageIsNumber ? `?page=${page}` : ''}`;
@@ -34,7 +38,13 @@ async function getUserCameraEvents(data: { token: string; page?: number }): Prom
 }
 
 async function getUserListEvents(payload: UserEventsRequest): Promise<any> {
-	const { id, token, type, page, status } = payload;
+	const { id, type, page, status } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const pageIsNumber = typeof page === 'number';
 	const statusIsString = typeof status === 'string';
 	// console.log({statusType: typeof status, statusIsString});
@@ -56,7 +66,12 @@ async function getUserListEvents(payload: UserEventsRequest): Promise<any> {
 }
 
 async function getEventAsUser(vals: UserEventData): Promise<any> {
-	const { eventId, token } = vals;
+	const { eventId } = vals;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/event/${eventId}/overview`, {
@@ -66,8 +81,14 @@ async function getEventAsUser(vals: UserEventData): Promise<any> {
 		.catch((e) => e);
 }
 
-async function userGetOrgEvents(vals: { orgId: string; token: string; page?: number; status?: string }): Promise<any> {
-	const { orgId, token, page, status } = vals;
+async function userGetOrgEvents(vals: { orgId: string; page?: number; status?: string }): Promise<any> {
+	const { orgId, page, status } = vals;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const pageIsNumber = typeof page === 'number';
 	const statusIsString = typeof status === 'string';
 
@@ -87,7 +108,12 @@ async function userGetOrgEvents(vals: { orgId: string; token: string; page?: num
 }
 
 async function getUserEventPackages(payload: UserEventPackagesRequest): Promise<any> {
-	const { eventId, token } = payload;
+	const { eventId } = payload;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
 
 	return axios
 		.get(`${API.url}/user/event/${eventId}`, {
