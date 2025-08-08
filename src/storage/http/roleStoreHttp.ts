@@ -1,8 +1,8 @@
-import Toast from 'react-native-toast-message';
-import { ToastError } from '../../config/toastConfig';
+// import Toast from 'react-native-toast-message';
+// import { ToastError } from '../../config/toastConfig';
 import { timeout } from '../../config/variables';
-import delay from '../../utils/helpers/delay';
-import OrgRolesHttp from '../../utils/http/admin/roles';
+import delay from '../../utilities/helpers/delay';
+import OrgRolesHttp from '../../utilities/http/admin/roles';
 import { useRolesStore } from '../stores/useRolesStore';
 import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
@@ -60,7 +60,7 @@ export async function getOrgRoles(retryCount = 0) {
 	} finally {
 		setLoadingRoles(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -103,7 +103,7 @@ export async function getOrgRole(id: string, retryCount = 0) {
 	} finally {
 		setLoadingRole(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -153,7 +153,7 @@ export async function getOrgManagerRoles(retryCount = 0) {
 	} finally {
 		setLoadingRoles(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -193,7 +193,7 @@ export async function createOrgRole(data: any, retryCount = 0) {
 		errorMsg = 'An unexpected error occurred';
 	} finally {
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 
 		setLoadingRole(false);
@@ -242,7 +242,7 @@ export async function updateOrgRole(data: any, retryCount = 0) {
 		errorMsg = 'An unexpected error occurred';
 	} finally {
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 
 		setLoadingRole(false);
@@ -288,7 +288,7 @@ export async function deleteOrgRole(id: string, retryCount = 0) {
 	} finally {
 		setLoadingRole(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }

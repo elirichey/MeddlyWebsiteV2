@@ -1,18 +1,18 @@
-import Toast from 'react-native-toast-message';
-import { ToastError } from '../../config/toastConfig';
+// import Toast from 'react-native-toast-message';
+// import { ToastError } from '../../config/toastConfig';
 import UserStoreHttp from './userStoreHttp';
 import { useUserStore } from '../stores/useUserStore';
-import CameraHttp from '../../utils/http/camera';
+import CameraHttp from '../../utilities/http/camera';
 import { useEventStore } from '../stores/useEventStore';
 import type { MeddlyEvent } from '../../interfaces/Event';
 import type { Profile, UserSelectedRole } from '../../interfaces/Auth';
-import UserEventsHttp from '../../utils/http/user/events';
-import OrgEventsHttp from '../../utils/http/admin/events';
-import EventManagerHTTP from '../../utils/http/admin/manage-event';
-import { ToastSuccess } from '../../config/toastConfig';
+import UserEventsHttp from '../../utilities/http/user/events';
+import OrgEventsHttp from '../../utilities/http/admin/events';
+import EventManagerHTTP from '../../utilities/http/admin/manage-event';
+// import { ToastSuccess } from '../../config/toastConfig';
 import { useOrgStore } from '../stores/useOrgStore';
 import { timeout } from '../../config/variables';
-import delay from '../../utils/helpers/delay';
+import delay from '../../utilities/helpers/delay';
 
 export interface ApiResponse {
 	status: number;
@@ -75,19 +75,19 @@ export async function getUserCameraEvents(retryCount = 0): Promise<any | null> {
 
 			setLoadingCameraEvents(false);
 			await UserStoreHttp.tryLogout();
-			Toast.show(ToastError('Error', 'Logging User Out'));
+			// Toast.show(ToastError('Error', 'Logging User Out'));
 			setError('Authentication failed');
 			return;
 		}
 
 		setLoadingCameraEvents(false);
-		Toast.show(ToastError('Oops!', 'Failed to get events'));
+		// Toast.show(ToastError('Oops!', 'Failed to get events'));
 		// console.log('getUserCameraEvents: Error 1', { response });
 		setError('Failed to fetch camera events');
 		return;
 	} catch (e) {
 		setLoadingCameraEvents(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		// console.log('getUserCameraEvents: Error 2', { e });
 		setError('An unexpected error occurred');
 		return;
@@ -145,12 +145,12 @@ export async function getOrgCameraEvents(retryCount = 0): Promise<CameraEventsRe
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to get events'));
+		// Toast.show(ToastError('Oops!', 'Failed to get events'));
 		// console.log('getOrgCameraEvents: Error 1', { response });
 		setError('Failed to fetch camera events');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		// console.log('getOrgCameraEvents: Error 2', { e });
 		setError('An unexpected error occurred');
 		return null;
@@ -233,11 +233,11 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to get events'));
+		// Toast.show(ToastError('Oops!', 'Failed to get events'));
 		setError('Failed to fetch org events');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -281,12 +281,12 @@ export async function getViewOrgListEvents(retryCount = 0, encodedStatus?: strin
 		}
 
 		setLoadingOrgEvents(false);
-		Toast.show(ToastError('Oops!', 'Failed to get events'));
+		// Toast.show(ToastError('Oops!', 'Failed to get events'));
 		setError('Failed to fetch view org events');
 		return null;
 	} catch (e) {
 		setLoadingOrgEvents(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -327,12 +327,12 @@ export async function getCurrentUserEvent(eventId: string, retryCount = 0): Prom
 		}
 
 		setLoadingOrgEvents(false);
-		Toast.show(ToastError('Oops!', 'Failed to get event'));
+		// Toast.show(ToastError('Oops!', 'Failed to get event'));
 		setError('Failed to fetch user event');
 		return null;
 	} catch (e) {
 		setLoadingOrgEvents(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		return null;
 	}
 }
@@ -375,12 +375,12 @@ export async function getOrgEvent(eventId: string, retryCount = 0): Promise<any 
 		}
 
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('Oops!', 'Failed to get event'));
+		// Toast.show(ToastError('Oops!', 'Failed to get event'));
 		setError('Failed to fetch org event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -404,7 +404,7 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 		if (response.status === 200 || response.status === 201) {
 			setError(null);
 			setViewEvent(response.data);
-			Toast.show(ToastSuccess('Success', 'Event Created'));
+			// Toast.show(ToastSuccess('Success', 'Event Created'));
 			return response.data;
 		}
 
@@ -416,11 +416,11 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 			}
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to create event'));
+		// Toast.show(ToastError('Oops!', 'Failed to create event'));
 		setError('Failed to create event');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -451,7 +451,7 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 			setError(null);
 			setLoadingViewEvent(false);
 			setViewEvent(response.data);
-			Toast.show(ToastSuccess('Success', 'Event Updated'));
+			// Toast.show(ToastSuccess('Success', 'Event Updated'));
 			return response.data;
 		}
 
@@ -464,12 +464,12 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 		}
 
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('Oops!', 'Failed to update event'));
+		// Toast.show(ToastError('Oops!', 'Failed to update event'));
 		setError('Failed to update event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -494,7 +494,7 @@ export async function uploadCoverArt(event: any, payload: any, retryCount = 0): 
 		if (response.status === 200 || response.status === 201) {
 			setError(null);
 			setLoadingViewEvent(false);
-			Toast.show(ToastSuccess('Success', 'Cover Art Updated'));
+			// Toast.show(ToastSuccess('Success', 'Cover Art Updated'));
 			return response.data;
 		}
 
@@ -507,12 +507,12 @@ export async function uploadCoverArt(event: any, payload: any, retryCount = 0): 
 		}
 
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('Oops!', 'Failed to upload cover art'));
+		// Toast.show(ToastError('Oops!', 'Failed to upload cover art'));
 		setError('Failed to upload cover art');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -536,7 +536,7 @@ export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: 
 		if (response.status === 200) {
 			setError(null);
 			setLoadingViewEvent(false);
-			Toast.show(ToastSuccess('Success', 'Event Deleted'));
+			// Toast.show(ToastSuccess('Success', 'Event Deleted'));
 			if (dismiss) dismiss();
 			return response.data;
 		}
@@ -550,12 +550,12 @@ export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: 
 		}
 
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('Oops!', 'Failed to delete event'));
+		// Toast.show(ToastError('Oops!', 'Failed to delete event'));
 		setError('Failed to delete event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -577,7 +577,7 @@ export async function resyncEventAudioSources(eventId: string, retryCount = 0): 
 		if (response.status === 201) {
 			setError(null);
 			setLoadingViewEvent(false);
-			Toast.show(ToastSuccess('Success', 'Event Audio Sources Resynced'));
+			// Toast.show(ToastSuccess('Success', 'Event Audio Sources Resynced'));
 			return response.data;
 		}
 
@@ -595,12 +595,12 @@ export async function resyncEventAudioSources(eventId: string, retryCount = 0): 
 		}
 
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('Oops!', 'Failed to resync event audio sources'));
+		// Toast.show(ToastError('Oops!', 'Failed to resync event audio sources'));
 		setError('Failed to resync event audio sources');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	}
@@ -630,7 +630,7 @@ export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null
 		if (response.status === 200) {
 			setError(null);
 			await getOrgCameraEvents();
-			Toast.show(ToastSuccess('Event Setup Ready'));
+			// Toast.show(ToastSuccess('Event Setup Ready'));
 			return response.data;
 		}
 
@@ -646,11 +646,11 @@ export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to setup event'));
+		// Toast.show(ToastError('Oops!', 'Failed to setup event'));
 		setError('Failed to setup event');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -682,7 +682,7 @@ export async function eventManagerStartEvent(timestamp: number, retryCount = 0):
 		if (response.status === 200) {
 			setError(null);
 			await getOrgCameraEvents();
-			Toast.show(ToastSuccess('Event Started'));
+			// Toast.show(ToastSuccess('Event Started'));
 			return response.data;
 		}
 
@@ -698,11 +698,11 @@ export async function eventManagerStartEvent(timestamp: number, retryCount = 0):
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to start event'));
+		// Toast.show(ToastError('Oops!', 'Failed to start event'));
 		setError('Failed to start event');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -750,11 +750,11 @@ export async function eventManagerCancelEvent(retryCount = 0): Promise<any | nul
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to end event'));
+		// Toast.show(ToastError('Oops!', 'Failed to end event'));
 		setError('Failed to end event');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -786,7 +786,7 @@ export async function eventManagerEndEvent(retryCount = 0): Promise<any | null> 
 		if (response.status === 200) {
 			setError(null);
 			await getOrgCameraEvents();
-			Toast.show(ToastSuccess('Success', 'Event Ended'));
+			// Toast.show(ToastSuccess('Success', 'Event Ended'));
 			return response.data;
 		}
 
@@ -802,11 +802,11 @@ export async function eventManagerEndEvent(retryCount = 0): Promise<any | null> 
 			return null;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to end event'));
+		// Toast.show(ToastError('Oops!', 'Failed to end event'));
 		setError('Failed to end event');
 		return null;
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError('An unexpected error occurred');
 		return null;
 	} finally {

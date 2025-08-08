@@ -11,6 +11,8 @@ import { useServerStore } from '../stores/useServerStore';
 import { useSocketStore } from '../stores/useSocketStore';
 import { useThemeStore } from '../stores/useThemeStore';
 import { useUserStore } from '../stores/useUserStore';
+import delay from '../../utilities/helpers/delay';
+import { timeout } from '../../config/variables';
 
 async function tryLogin(data: AuthCredentials) {
 	const { setLoading, setTokens, setError } = useUserStore.getState();
@@ -24,7 +26,7 @@ async function tryLogin(data: AuthCredentials) {
 		const response = await AuthHTTP.login(data);
 		// console.log('tryLogin: Response', { response });
 		if (response.status === 201 && response.data) {
-			setTokens(response.data);
+			// setTokens(response.data);
 			UserStoreHttp.getUserProfile();
 
 			// console.log('tryLogin: Response', { tokens: response.data });
@@ -333,15 +335,15 @@ async function updateUserProfile(data: any, retryCount = 0) {
 		const msg = err?.message || 'Failed to update user profile';
 		errorMsg = msg;
 		// console.log('updateUserProfile: Error Catch', { err, msg });
-		Toast.show(ToastError('Oops!', msg));
+		// Toast.show(ToastError('Oops!', msg));
 		return msg;
 	} finally {
 		setLoading(false);
 		// console.log('updateUserProfile: Complete');
 		if (errorMsg && errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		} else {
-			Toast.show(ToastSuccess('Update Successful!'));
+			// Toast.show(ToastSuccess('Update Successful!'));
 		}
 	}
 }
@@ -388,7 +390,7 @@ async function updateUserConnectedEvent(eventConnectedId: string | null, retryCo
 		setConnectedEventLoading(false);
 		// console.log('updateUserConnectedEvent: Complete');
 		if (errorMsg && errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -402,7 +404,7 @@ async function updateUserPassword(data: { oldPassword: string; newPassword: stri
 
 	if (!data.token) {
 		const msg = 'Password update failed';
-		Toast.show(ToastError('Oops!', msg));
+		// Toast.show(ToastError('Oops!', msg));
 		return msg;
 	}
 
@@ -410,7 +412,7 @@ async function updateUserPassword(data: { oldPassword: string; newPassword: stri
 		const res: any = await AuthHTTP.updateUserPassword(data);
 		// console.log('updateUserPassword: Response', { res });
 		if (res.status === 201) {
-			Toast.show(ToastSuccess('Password Updated'));
+			// Toast.show(ToastSuccess('Password Updated'));
 			// console.log('updateUserPassword: Complete');
 			return null;
 		}
@@ -435,7 +437,7 @@ async function updateUserPassword(data: { oldPassword: string; newPassword: stri
 	} finally {
 		setLoading(false);
 		if (errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -452,7 +454,7 @@ async function deleteUser(retryCount = 0) {
 	try {
 		const res: any = await AuthHTTP.deleteUser(tokens?.accessToken || '');
 		if (res.status === 200) {
-			Toast.show(ToastGeneral('User Deleted', "We're sorry to see you go"));
+			// Toast.show(ToastGeneral('User Deleted', "We're sorry to see you go"));
 
 			// console.log('deleteUser: Success');
 			return setTimeout(() => {
@@ -468,7 +470,7 @@ async function deleteUser(retryCount = 0) {
 			}
 
 			const defaultMsg = 'Failed to delete user. Please try again.';
-			Toast.show(ToastError('Oops!', defaultMsg));
+			// Toast.show(ToastError('Oops!', defaultMsg));
 			return;
 		}
 
@@ -485,7 +487,7 @@ async function deleteUser(retryCount = 0) {
 		setLoading(false);
 		// console.log('deleteUser: Complete');
 		if (errorMsg && errorMsg.trim() !== '') {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }

@@ -1,12 +1,12 @@
-import Toast from 'react-native-toast-message';
-import { ToastError, ToastSuccess } from '../../config/toastConfig';
-import EventSequenceHTTP, { type CreateSequence } from '../../utils/http/admin/event-sequences';
-import UserEventSequencesHttp from '../../utils/http/user/event-sequences';
+// import Toast from 'react-native-toast-message';
+// import { ToastError, ToastSuccess } from '../../config/toastConfig';
+import EventSequenceHTTP, { type CreateSequence } from '../../utilities/http/admin/event-sequences';
+import UserEventSequencesHttp from '../../utilities/http/user/event-sequences';
 import { timeout } from '../../config/variables';
 import { useSequencesStore } from '../stores/useSequencesStore';
 import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
-import delay from '../../utils/helpers/delay';
+import delay from '../../utilities/helpers/delay';
 
 export interface ApiResponse {
 	status: number;
@@ -56,7 +56,7 @@ export async function getEventSequencesAsUser(eventId: string, retryCount = 0) {
 	} finally {
 		setLoadingUserEventSequences(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -101,7 +101,7 @@ export async function getOrgEventSequences(eventId: string, retryCount = 0) {
 	} finally {
 		setLoadingOrgEventSequences(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -148,7 +148,7 @@ export async function getEventSequence(sequenceId: string, trigger?: () => void,
 	} finally {
 		setLoadingCurrentSequence(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -179,7 +179,7 @@ export async function createEventSequence(
 		const response: ApiResponse = await EventSequenceHTTP.createEventSequence(data);
 		if (response.status === 201) {
 			await getOrgEventSequences(payload.eventId);
-			Toast.show(ToastSuccess('Success', 'Sequence Generation Request Sent'));
+			// Toast.show(ToastSuccess('Success', 'Sequence Generation Request Sent'));
 			return response.data;
 		}
 		if (response.message?.includes('403')) {
@@ -199,7 +199,7 @@ export async function createEventSequence(
 		errorMsg = 'An unexpected error occurred';
 	} finally {
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -251,7 +251,7 @@ export async function updateEventSequence(sequenceId: string, payload: any, retr
 		errorMsg = 'An unexpected error occurred';
 	} finally {
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -311,9 +311,9 @@ export async function deleteEventSequence(
 	} finally {
 		setLoadingEventSequences(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		} else {
-			Toast.show(ToastSuccess('Sequence Deleted'));
+			// Toast.show(ToastSuccess('Sequence Deleted'));
 		}
 	}
 }

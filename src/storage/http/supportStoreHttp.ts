@@ -1,11 +1,11 @@
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
+// import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { timeout } from '../../config/variables';
-import delay from '../../utils/helpers/delay';
-import SupportHttp from '../../utils/http/support';
+import delay from '../../utilities/helpers/delay';
+import SupportHttp from '../../utilities/http/support';
 import { useSupportStore } from '../stores/useSupportStore';
 import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
-import { ToastError } from '../../config/toastConfig';
+// import { ToastError } from '../../config/toastConfig';
 
 export interface ApiResponse {
 	status: number;
@@ -41,11 +41,11 @@ async function getUserOrgRequests(retryCount = 0) {
 			return;
 		}
 
-		Toast.show(ToastError('Error', 'Get User Org Requests'));
+		// Toast.show(ToastError('Error', 'Get User Org Requests'));
 		return;
 	} catch (error) {
 		// console.log('getUserOrgRequests: Error', error);
-		Toast.show(ToastError('Caught Error', 'Get User Org Requests'));
+		// Toast.show(ToastError('Caught Error', 'Get User Org Requests'));
 	} finally {
 		setLoadingUserOrgRequests(false);
 	}
@@ -79,11 +79,11 @@ async function deleteUserOrgRequest(id: string, retryCount = 0) {
 			return;
 		}
 
-		Toast.show(ToastError('Error', 'Delete Organization Request'));
+		// Toast.show(ToastError('Error', 'Delete Organization Request'));
 		return;
 	} catch (error) {
 		// console.log('deleteUserOrgRequest: Error', error);
-		Toast.show(ToastError('Caught Error', 'Delete Organization Request'));
+		// Toast.show(ToastError('Caught Error', 'Delete Organization Request'));
 	} finally {
 		setLoadingUserOrgRequests(false);
 	}

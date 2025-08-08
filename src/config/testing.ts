@@ -9,6 +9,7 @@ const TestConfig = {
 		roles: false,
 		sequences: false,
 		server: false,
+		snackbar: false,
 		socket: false,
 		support: false,
 		theme: false,

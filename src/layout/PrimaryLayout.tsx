@@ -6,6 +6,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import type { ReactNode } from 'react';
 import Termly from '@/components/Legal/Termly';
+import Snackbar from '@/components/Notifications/Snackbar';
 
 interface Props {
 	children: ReactNode;
@@ -89,6 +90,9 @@ export default function PrimaryLayout({ children }: Props) {
 			<body className={`${redhat.variable} ${logo.variable} font-sans`}>
 				<Header />
 				{children}
+
+				<Snackbar />
+
 				<Footer />
 
 				<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />

@@ -1,0 +1,65 @@
+@use "../../_variables" as *
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar 
+  visibility: hidden 
+  min-width: 250px 
+  margin-left: -125px
+  background-color: $white 
+  color: $black
+  text-align: center 
+  border: 1px solid $light
+  border-radius: 16px 
+  padding: 16px 24px
+  position: fixed
+  z-index: 3
+  left: 50% 
+  top: 30px 
+  &.success
+    border-color: $green
+  &.error
+    border-color: $red
+  &.warning
+    border-color: $gold
+  &.general
+    border-color: $blue
+
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show 
+  visibility: visible
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s
+  animation: fadein 0.5s, fadeout 0.5s 2.5s
+
+
+@-webkit-keyframes fadein 
+  from 
+    top: 0
+    opacity: 0
+  to 
+    top: 30px
+    opacity: 1
+
+@keyframes fadein 
+  from 
+    top: 0
+    opacity: 0
+  to 
+    top: 30px
+    opacity: 1
+
+@-webkit-keyframes fadeout 
+  from 
+    top: 30px
+    opacity: 1
+  to 
+    top: 0
+    opacity: 0
+
+@keyframes fadeout 
+  from 
+    top: 30px
+    opacity: 1
+  to 
+    top: 0
+    opacity: 0

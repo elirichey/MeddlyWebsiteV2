@@ -1,12 +1,12 @@
-import Toast from 'react-native-toast-message';
-import { ToastError, ToastSuccess } from '../../config/toastConfig';
-import EventPackageHTTP from '../../utils/http/admin/event-packages';
-import EventPostHTTP from '../../utils/http/admin/event-posts';
+// import Toast from 'react-native-toast-message';
+// import { ToastError, ToastSuccess } from '../../config/toastConfig';
+import EventPackageHTTP from '../../utilities/http/admin/event-packages';
+import EventPostHTTP from '../../utilities/http/admin/event-posts';
 import { timeout } from '../../config/variables';
 import { usePackagesStore } from '../stores/usePackagesStore';
 import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
-import delay from '../../utils/helpers/delay';
+import delay from '../../utilities/helpers/delay';
 
 export interface ApiResponse {
 	status: number;
@@ -59,7 +59,7 @@ export async function getAllEventVideos(eventId: string, retryCount = 0) {
 	} finally {
 		setLoadingEventPosts(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -137,7 +137,7 @@ export async function getOrgEventPackages(eventId: string, retryCount = 0) {
 	} finally {
 		setLoadingEventPackages(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Oops!', errorMsg));
+			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -181,13 +181,13 @@ export async function getEventPackage(eventId: string, packageId: string, trigge
 			errorMsg = 'Failed to get event package';
 		}
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError(e);
 		errorMsg = 'Error fetching event package';
 	} finally {
 		setLoadingEventPackages(false);
 		if (errorMsg) {
-			Toast.show(ToastError('Error', errorMsg));
+			// Toast.show(ToastError('Error', errorMsg));
 		}
 	}
 }
@@ -212,7 +212,7 @@ export async function createEventPackage(payload: any, retryCount = 0) {
 		// console.log('createEventPackage: Response', response);
 		await delay(timeout.fetch);
 		if (response.status === 200) {
-			Toast.show(ToastSuccess('Success', 'Package Created'));
+			// Toast.show(ToastSuccess('Success', 'Package Created'));
 			await getOrgEventPackages(payload.eventId);
 			return response.data;
 		}
@@ -225,12 +225,12 @@ export async function createEventPackage(payload: any, retryCount = 0) {
 
 			await UserStoreHttp.tryLogout();
 		} else {
-			Toast.show(ToastError('Oops!', 'Failed to create package'));
+			// Toast.show(ToastError('Oops!', 'Failed to create package'));
 			setError(response);
 			errorMsg = 'Error creating package';
 		}
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError(e);
 		errorMsg = 'Error creating package';
 	}
@@ -258,7 +258,7 @@ export async function updateEventPackage(eventId: string, packageId: string, pay
 		// console.log('updateEventPackage: Response', response);
 		await delay(timeout.fetch);
 		if (response.status === 200) {
-			Toast.show(ToastSuccess('Success', 'Package Updated'));
+			// Toast.show(ToastSuccess('Success', 'Package Updated'));
 			await getOrgEventPackages(eventId);
 			return response.data;
 		}
@@ -279,7 +279,7 @@ export async function updateEventPackage(eventId: string, packageId: string, pay
 		errorMsg = 'An unexpected error occurred';
 	} finally {
 		if (errorMsg) {
-			Toast.show(ToastError('Error', errorMsg));
+			// Toast.show(ToastError('Error', errorMsg));
 		}
 	}
 }
@@ -306,7 +306,7 @@ export async function updateEventPackageMedia(packageId: string, payload: any, r
 		// console.log('updateEventPackageMedia: Response', response);
 		await delay(timeout.fetch);
 		if (response.status === 200 || response.status === 201) {
-			Toast.show(ToastSuccess('Success', 'Package Media Updated'));
+			// Toast.show(ToastSuccess('Success', 'Package Media Updated'));
 
 			await Promise.all([getOrgEventPackages(response.data.event.id, 0), getAllEventVideos(response.data.event.id, 0)]);
 
@@ -323,21 +323,21 @@ export async function updateEventPackageMedia(packageId: string, payload: any, r
 		} else {
 			const responseIsEmpty = !response || (typeof response === 'object' && Object.keys(response).length === 0);
 			if (!responseIsEmpty) {
-				Toast.show(ToastError('Oops!', 'Failed to update package media'));
+				// Toast.show(ToastError('Oops!', 'Failed to update package media'));
 				setError(response);
 				errorMsg = 'Error updating package media';
 			} else {
-				Toast.show(ToastSuccess('Success', 'Package Media Updated'));
+				// Toast.show(ToastSuccess('Success', 'Package Media Updated'));
 			}
 		}
 	} catch (e: any) {
 		const responseIsEmpty = !e || (typeof e === 'object' && !(e instanceof Error) && Object.keys(e).length === 0);
 		if (!responseIsEmpty) {
-			Toast.show(ToastError('An unexpected error occurred'));
+			// Toast.show(ToastError('An unexpected error occurred'));
 			setError(e);
 			errorMsg = 'Error updating package media';
 		} else {
-			Toast.show(ToastSuccess('Success', 'Package Media Updated'));
+			// Toast.show(ToastSuccess('Success', 'Package Media Updated'));
 		}
 	} finally {
 		setLoadingEventPackages(false);
@@ -365,7 +365,7 @@ export async function deleteEventPackage(eventId: string, packageId: string, dis
 		// console.log('deleteEventPackage: Response', response);
 		await delay(timeout.fetch);
 		if (response.status === 200) {
-			Toast.show(ToastSuccess('Success', 'Package Deleted'));
+			// Toast.show(ToastSuccess('Success', 'Package Deleted'));
 			if (dismiss) await dismiss();
 			await getOrgEventPackages(eventId);
 			return response.data;
@@ -379,12 +379,12 @@ export async function deleteEventPackage(eventId: string, packageId: string, dis
 
 			await UserStoreHttp.tryLogout();
 		} else {
-			Toast.show(ToastError('Oops!', 'Failed to delete package'));
+			// Toast.show(ToastError('Oops!', 'Failed to delete package'));
 			setError(response);
 			errorMsg = 'Error deleting package';
 		}
 	} catch (e) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setError(e);
 		errorMsg = 'Error deleting package';
 	}

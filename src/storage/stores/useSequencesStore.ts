@@ -8,25 +8,25 @@ export interface SequencesState {
 	// Event Sequences
 	eventSequences: any[];
 	loadingEventSequences: boolean;
-	setEventSequences: (sequences: any[]) => void;
+	setEventSequences: (sequences: Sequence[]) => void;
 	setLoadingEventSequences: (loading: boolean) => void;
 
 	// User Event Sequences
 	userEventSequences: any[];
 	loadingUserEventSequences: boolean;
-	setUserEventSequences: (sequences: any[]) => void;
+	setUserEventSequences: (sequences: Sequence[]) => void;
 	setLoadingUserEventSequences: (loading: boolean) => void;
 
 	// Org Event Sequences
 	orgEventSequences: any[];
 	loadingOrgEventSequences: boolean;
-	setOrgEventSequences: (sequences: any[]) => void;
+	setOrgEventSequences: (sequences: Sequence[]) => void;
 	setLoadingOrgEventSequences: (loading: boolean) => void;
 
 	// Current Sequence
 	currentSequence: any;
 	loadingCurrentSequence: boolean;
-	setCurrentSequence: (sequence: any) => void;
+	setCurrentSequence: (sequence: Sequence) => void;
 	setLoadingCurrentSequence: (loading: boolean) => void;
 
 	// Reset Sequences

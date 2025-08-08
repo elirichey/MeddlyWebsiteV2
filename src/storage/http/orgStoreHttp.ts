@@ -1,11 +1,11 @@
-import Toast from 'react-native-toast-message';
-import { ToastError, ToastSuccess } from '../../config/toastConfig';
-import OrganizationHttp from '../../utils/http/admin/organization';
+// import Toast from 'react-native-toast-message';
+// import { ToastError, ToastSuccess } from '../../config/toastConfig';
+import OrganizationHttp from '../../utilities/http/admin/organization';
 import UserStoreHttp from './userStoreHttp';
 import { useUserStore } from '../stores/useUserStore';
 import { useOrgStore } from '../stores/useOrgStore';
 import { timeout } from '../../config/variables';
-import delay from '../../utils/helpers/delay';
+import delay from '../../utilities/helpers/delay';
 
 export async function getOrganization(id: string, retryCount = 0) {
 	const { tokens } = useUserStore.getState();
@@ -34,11 +34,11 @@ export async function getOrganization(id: string, retryCount = 0) {
 			return;
 		}
 
-		Toast.show(ToastError('Oops!', 'Failed to get organization'));
+		// Toast.show(ToastError('Oops!', 'Failed to get organization'));
 		// console.log('getOrganization: Error 1', { response });
 		return;
 	} catch (err) {
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		// console.log('getOrganization: Error', { err });
 		return;
 	} finally {
@@ -66,7 +66,7 @@ export async function updateOrganization(id: string, data: any, retryCount = 0) 
 		if (response && (response.status === 200 || response.status === 201)) {
 			// console.log('updateOrganization: Success', { response });
 			await UserStoreHttp.getUserProfile();
-			Toast.show(ToastSuccess('Success', 'Organization Updated'));
+			// Toast.show(ToastSuccess('Success', 'Organization Updated'));
 			await getOrganization(id);
 			setLoadingOrg(false);
 			return;
@@ -85,12 +85,12 @@ export async function updateOrganization(id: string, data: any, retryCount = 0) 
 		}
 
 		// console.log('updateOrganization: Error 1', { response });
-		Toast.show(ToastError('Oops!', `Failed to update organization: ${response.response.data.message}`));
+		// Toast.show(ToastError('Oops!', `Failed to update organization: ${response.response.data.message}`));
 		setLoadingOrg(false);
 		return;
 	} catch (e) {
 		// console.log('updateOrganization: Error 2', { e });
-		Toast.show(ToastError('An unexpected error occurred'));
+		// Toast.show(ToastError('An unexpected error occurred'));
 		setLoadingOrg(false);
 		return;
 	}
