@@ -7,7 +7,7 @@ interface OrgEventData {
 	eventId: string;
 }
 
-async function getOrgEvents(vals: { orgId: string; token: string; page?: number; status?: string }): Promise<any> {
+async function getOrgEvents(vals: { orgId: string; page?: number; status?: string }): Promise<any> {
 	const { orgId, page, status } = vals;
 
 	const token = cookieStorage.getItem('accessToken');
@@ -51,7 +51,7 @@ async function getOrgEvent(vals: OrgEventData): Promise<any> {
 
 // ************** NOT TESTED  ************** //
 
-async function createEvent(data: { payload: any; token: string }): Promise<any | any> {
+async function createEvent(data: { payload: any }): Promise<any | any> {
 	const { payload } = data;
 
 	const token = cookieStorage.getItem('accessToken');
@@ -69,7 +69,7 @@ async function createEvent(data: { payload: any; token: string }): Promise<any |
 		.then(async (res) => {
 			if (payload.coverImg !== null) {
 				try {
-					const final = await uploadCoverArt(res.data, payload, token);
+					const final = await uploadCoverArt(res.data, payload);
 					if (final.status === 201) return final;
 					return final;
 				} catch (e) {
@@ -90,7 +90,7 @@ async function createEvent(data: { payload: any; token: string }): Promise<any |
 	return res;
 }
 
-async function updateEvent(data: { event: MeddlyEvent; payload: any; token: string }): Promise<any | any> {
+async function updateEvent(data: { event: MeddlyEvent; payload: any }): Promise<any | any> {
 	const { event, payload } = data;
 
 	const token = cookieStorage.getItem('accessToken');
@@ -107,7 +107,7 @@ async function updateEvent(data: { event: MeddlyEvent; payload: any; token: stri
 		.then(async (res) => {
 			if (payload.coverImg && event.coverImg !== payload.coverImg) {
 				try {
-					const final = await uploadCoverArt(res.data, payload, token);
+					const final = await uploadCoverArt(res.data, payload);
 					if (final.status === 201) {
 						return final;
 					}
@@ -124,7 +124,7 @@ async function updateEvent(data: { event: MeddlyEvent; payload: any; token: stri
 	return res;
 }
 
-async function deleteEvent(data: { eventId: string; token: string }): Promise<any> {
+async function deleteEvent(data: { eventId: string }): Promise<any> {
 	const { eventId } = data;
 
 	const token = cookieStorage.getItem('accessToken');
@@ -158,7 +158,12 @@ async function resyncEventAudioSources(eventId: string): Promise<any> {
 
 // ************* NOT TESTED ************* //
 
-async function startEventProcessing(eventId: string, token: string): Promise<any> {
+async function startEventProcessing(eventId: string): Promise<any> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.get(`${API.url}/event/${eventId}/completed`, {
 			headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
@@ -167,8 +172,14 @@ async function startEventProcessing(eventId: string, token: string): Promise<any
 		.catch((e) => e);
 }
 
-async function updateEventDefaultVideo(data: { eventId: string; videoId: string; token: string }): Promise<any> {
-	const { eventId, videoId, token } = data;
+async function updateEventDefaultVideo(data: { eventId: string; videoId: string }): Promise<any> {
+	const { eventId, videoId } = data;
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const payload = { default_video_id: videoId };
 
 	return axios
@@ -179,7 +190,12 @@ async function updateEventDefaultVideo(data: { eventId: string; videoId: string;
 		.catch((e) => e);
 }
 
-async function uploadCoverArt(data: any, payload: any, token: string): Promise<any> {
+async function uploadCoverArt(data: any, payload: any): Promise<any> {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const ts = new Date().getTime();
 	const file: any = {
 		uri: payload?.coverImg,

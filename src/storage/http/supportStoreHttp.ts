@@ -14,9 +14,6 @@ export interface ApiResponse {
 }
 
 async function getUserOrgRequests(retryCount = 0) {
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
-
 	const { setUserOrgRequests, setLoadingUserOrgRequests } = useSupportStore.getState();
 
 	setUserOrgRequests([]);
@@ -25,7 +22,7 @@ async function getUserOrgRequests(retryCount = 0) {
 	const maxRetries = 1;
 
 	try {
-		const response: ApiResponse = await SupportHttp.getUserOrgRequests(accessToken);
+		const response: ApiResponse = await SupportHttp.getUserOrgRequests();
 		if (response.status === 200) {
 			setUserOrgRequests(response.data);
 			return;
@@ -52,9 +49,6 @@ async function getUserOrgRequests(retryCount = 0) {
 }
 
 async function deleteUserOrgRequest(id: string, retryCount = 0) {
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
-
 	const { setLoadingUserOrgRequests } = useSupportStore.getState();
 
 	setLoadingUserOrgRequests(true);
@@ -62,7 +56,7 @@ async function deleteUserOrgRequest(id: string, retryCount = 0) {
 	const maxRetries = 1;
 
 	try {
-		const response: ApiResponse = await SupportHttp.deleteUserOrgRequest({ token: accessToken, id });
+		const response: ApiResponse = await SupportHttp.deleteUserOrgRequest({ id });
 		if (response.status === 200) {
 			await getUserOrgRequests();
 			await delay(timeout.auth);

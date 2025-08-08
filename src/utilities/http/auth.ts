@@ -9,23 +9,19 @@ import cookieStorage from '@/storage/cookies';
 interface UpdatePasswordPayload {
 	oldPassword: string;
 	newPassword: string;
-	token: string;
 }
 
 interface UpdateUserPayload {
 	profile: any;
 	data: any;
-	token: string;
 }
 
 interface UpdateUserConnectedEventPayload {
 	eventConnectedId: string | null;
-	token: string;
 }
 
 interface ValidateIfInUsePayload {
 	test: string;
-	token: string;
 }
 
 // *************** Auth *************** //
@@ -270,14 +266,24 @@ async function checkIfUsernameInUse(test: string): Promise<AxiosResponse> {
 }
 
 async function userCheckIfUsernameInUse(payload: ValidateIfInUsePayload): Promise<AxiosResponse> {
-	const { test, token } = payload;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
+	const { test } = payload;
 	return axios
 		.post(`${API.url}/check/username/${test}`, null, { headers: { Authorization: `Bearer ${token}` } })
 		.then((res) => res)
 		.catch((error) => error);
 }
 
-const resetPassword = async (payload: any, token: string) => {
+const resetPassword = async (payload: any) => {
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	return axios
 		.post(`${API.url}/auth/password/reset`, payload, {
 			headers: { Authorization: `Bearer ${token}` },

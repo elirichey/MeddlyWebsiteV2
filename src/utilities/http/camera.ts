@@ -3,21 +3,24 @@ import axios from 'axios';
 import API from './_url';
 import { useUploadsStore } from '../../storage/stores/useUploadsStore';
 import type { UploadPayload } from '../../interfaces/Upload';
+import cookieStorage from '@/storage/cookies';
 
 export interface OrgEventsData {
 	orgId: string;
-	token: string;
 	page?: number;
 	status?: string;
 }
 
 export interface UserEventsData {
-	token: string;
 	page?: number;
 }
 
 async function getUserCameraEvents(data: UserEventsData): Promise<any> {
-	const { token } = data;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	const route = `${API.url}/camera/events`;
 
 	return axios({
@@ -30,7 +33,12 @@ async function getUserCameraEvents(data: UserEventsData): Promise<any> {
 }
 
 async function getOrgCameraEvents(data: OrgEventsData): Promise<any> {
-	const { orgId, token } = data;
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
+	const { orgId } = data;
 	let route = 'camera/events';
 	if (orgId) route = `${route}/${orgId}`;
 
@@ -46,9 +54,8 @@ async function getOrgCameraEvents(data: OrgEventsData): Promise<any> {
 // async function uploadEventVideo(data: {
 // 	eventId: string;
 // 	payload: UploadPayload;
-// 	token: string;
 // }): Promise<any> {
-// 	const { eventId, payload, token } = data;
+// 	const { eventId, payload } = data;
 
 // 	const controller = new AbortController();
 // 	const { uri, fps, duration, orientation, height, width, metadata, deviceName, isPrimary } = payload;
@@ -176,7 +183,6 @@ async function useUpdatePackageUploadError(val: {
 	data: {
 		eventId: string;
 		payload: UploadPayload;
-		token: string;
 	};
 }): Promise<void> {
 	const { packageUploadQueue, setPackageUploadQueue } = useUploadsStore.getState();

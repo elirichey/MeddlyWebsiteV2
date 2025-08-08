@@ -209,7 +209,6 @@ async function useUpdatePercentUploaded(val: any) {
 // 	const uploadPayload: {
 // 		eventId: string;
 // 		payload: UploadPayload;
-// 		token: string;
 // 	} = {
 // 		eventId,
 // 		payload,
@@ -270,7 +269,6 @@ async function useUpdatePercentUploaded(val: any) {
 // 	const uploadPayload: {
 // 		eventId: string;
 // 		payload: UploadPayload;
-// 		token: string;
 // 	} = { eventId, payload, token: token || '' };
 
 // 	// console.log('retryUploadMedia - Upload Payload', { uploadPayload });
@@ -340,7 +338,6 @@ async function useUpdatePercentUploaded(val: any) {
 // 	const uploadPayload: {
 // 		eventId: string;
 // 		payload: UploadPayload;
-// 		token: string;
 // 	} = {
 // 		eventId,
 // 		payload,
@@ -372,10 +369,8 @@ async function useUpdatePercentUploaded(val: any) {
 // }
 
 export async function generateAudioFileForPost(retryCount = 0): Promise<void> {
-	const { tokens } = useUserStore.getState();
 	const { viewEvent } = useEventStore.getState();
 
-	const token = tokens?.accessToken;
 	const postId = viewEvent?.managerVideo?.id;
 
 	// console.log({ tokens, accessToken: tokens?.accessToken });
@@ -389,7 +384,7 @@ export async function generateAudioFileForPost(retryCount = 0): Promise<void> {
 	const maxRetries = 1;
 
 	try {
-		const response = await EventPostHTTP.generateAudioFileForPost({ postId, accessToken: token || '' });
+		const response = await EventPostHTTP.generateAudioFileForPost({ postId });
 		// console.log('generateAudioFileForPost - Response', { response });
 		await delay(timeout.xlong);
 		if (response.status === 200) {

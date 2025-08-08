@@ -8,16 +8,14 @@ import { timeout } from '../../config/variables';
 import delay from '../../utilities/helpers/delay';
 
 export async function getOrganization(id: string, retryCount = 0) {
-	const { tokens } = useUserStore.getState();
 	const { setViewOrg, loadingOrg, setLoadingOrg } = useOrgStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	const maxRetries = 1;
 
 	if (!loadingOrg) setLoadingOrg(true);
 
 	try {
-		const response = await OrganizationHttp.getOrgData({ id, token: accessToken });
+		const response = await OrganizationHttp.getOrgData({ id });
 		if (response.status === 200) {
 			await delay(timeout.auth);
 			setViewOrg(response.data);
@@ -47,18 +45,12 @@ export async function getOrganization(id: string, retryCount = 0) {
 }
 
 export async function updateOrganization(id: string, data: any, retryCount = 0) {
-	const { tokens } = useUserStore.getState();
 	const { loadingOrg, setLoadingOrg } = useOrgStore.getState();
 	if (!loadingOrg) setLoadingOrg(true);
 
-	const accessToken = tokens?.accessToken || '';
 	const maxRetries = 1;
 
-	const payload = {
-		id,
-		data,
-		token: accessToken,
-	};
+	const payload = { id, data };
 
 	try {
 		const response = await OrganizationHttp.updateOrg(payload);

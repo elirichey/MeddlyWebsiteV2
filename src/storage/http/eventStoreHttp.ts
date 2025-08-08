@@ -27,13 +27,11 @@ export interface CameraEventsResponse {
 
 interface OrgCameraEventsPayload {
 	orgId: string;
-	token: string;
 }
 
 interface EventManagerStatusPayload {
 	eventId: string;
 	payload: any;
-	token: string;
 }
 
 // Camera Events
@@ -46,13 +44,12 @@ export async function getUserCameraEvents(retryCount = 0): Promise<any | null> {
 	const { setCameraEvents, setCameraEventsTotal, setError, setLoadingCameraEvents } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const payload = { token: accessToken };
 
 	setError(null);
 	setLoadingCameraEvents(true);
 
 	try {
-		const response = await CameraHttp.getUserCameraEvents(payload);
+		const response = await CameraHttp.getUserCameraEvents({});
 		// console.log('getUserCameraEvents: Response', { response });
 
 		if (response.status === 200) {
@@ -110,7 +107,7 @@ export async function getOrgCameraEvents(retryCount = 0): Promise<CameraEventsRe
 		return getUserCameraEvents(retryCount);
 	}
 
-	const payload: OrgCameraEventsPayload = { orgId, token: accessToken };
+	const payload: OrgCameraEventsPayload = { orgId };
 
 	setError(null);
 	setLoadingCameraEvents(true);
@@ -193,7 +190,6 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 			if (events.length === 0) {
 				const allEventsResponse = await OrgEventsHttp.getOrgEvents({
 					orgId: currentRole ? currentRole.organization.id : '',
-					token: tokens?.accessToken || '',
 					status: 'All',
 				});
 				// console.log('getOrgListEvents: All Events Response', { allEventsResponse });
@@ -246,15 +242,11 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 }
 
 export async function getViewOrgListEvents(retryCount = 0, encodedStatus?: string): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { viewOrg } = useOrgStore.getState();
 	const { setError, setLoadingOrgEvents } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		orgId: viewOrg ? viewOrg.id : '',
-		token: tokens?.accessToken || '',
-	};
+	const data = { orgId: viewOrg ? viewOrg.id : '' };
 
 	setError(null);
 	setLoadingOrgEvents(true);
@@ -293,14 +285,10 @@ export async function getViewOrgListEvents(retryCount = 0, encodedStatus?: strin
 }
 
 export async function getCurrentUserEvent(eventId: string, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingOrgEvents } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		eventId,
-		token: tokens?.accessToken || '',
-	};
+	const data = { eventId };
 
 	setError(null);
 	setLoadingOrgEvents(true);
@@ -338,14 +326,10 @@ export async function getCurrentUserEvent(eventId: string, retryCount = 0): Prom
 }
 
 export async function getOrgEvent(eventId: string, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		eventId,
-		token: tokens?.accessToken || '',
-	};
+	const data = { eventId };
 
 	setError(null);
 	setLoadingViewEvent(true);
@@ -387,14 +371,10 @@ export async function getOrgEvent(eventId: string, retryCount = 0): Promise<any 
 }
 
 export async function createOrgEvent(payload: any, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		payload,
-		token: tokens?.accessToken || '',
-	};
+	const data = { payload };
 
 	setError(null);
 	setLoadingViewEvent(true);
@@ -429,7 +409,6 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 }
 
 export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -438,11 +417,7 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 	setLoadingViewEvent(true);
 
 	try {
-		const data = {
-			event,
-			payload,
-			token: tokens?.accessToken || '',
-		};
+		const data = { event, payload };
 
 		const response = await OrgEventsHttp.updateEvent(data);
 		await delay(timeout.fetch);
@@ -476,21 +451,16 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 }
 
 export async function uploadCoverArt(event: any, payload: any, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent, loadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		event,
-		payload,
-		token: tokens?.accessToken || '',
-	};
+	const data = { event, payload };
 
 	setError(null);
 	if (!loadingViewEvent) setLoadingViewEvent(true);
 
 	try {
-		const response = await OrgEventsHttp.uploadCoverArt(data.event, data.payload, data.token);
+		const response = await OrgEventsHttp.uploadCoverArt(data.event, data.payload);
 		if (response.status === 200 || response.status === 201) {
 			setError(null);
 			setLoadingViewEvent(false);
@@ -519,14 +489,10 @@ export async function uploadCoverArt(event: any, payload: any, retryCount = 0): 
 }
 
 export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: () => void): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = {
-		eventId,
-		token: tokens?.accessToken || '',
-	};
+	const data = { eventId };
 
 	setError(null);
 	setLoadingViewEvent(true);
@@ -562,17 +528,16 @@ export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: 
 }
 
 export async function resyncEventAudioSources(eventId: string, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setLoadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
-	const data = { eventId, token: tokens?.accessToken || '' };
+	const data = { eventId };
 
 	setError(null);
 	setLoadingViewEvent(true);
 
 	try {
-		const response = await OrgEventsHttp.resyncEventAudioSources(data.eventId, data.token);
+		const response = await OrgEventsHttp.resyncEventAudioSources(data.eventId);
 		// console.log('resyncEventAudioSources: Response', { response });
 		if (response.status === 201) {
 			setError(null);
@@ -619,7 +584,6 @@ export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null
 	const data: EventManagerStatusPayload = {
 		eventId,
 		payload,
-		token: tokens?.accessToken || '',
 	};
 
 	setError(null);
@@ -671,7 +635,6 @@ export async function eventManagerStartEvent(timestamp: number, retryCount = 0):
 	const data: EventManagerStatusPayload = {
 		eventId,
 		payload,
-		token: tokens?.accessToken || '',
 	};
 
 	setError(null);
@@ -723,7 +686,6 @@ export async function eventManagerCancelEvent(retryCount = 0): Promise<any | nul
 	const data: EventManagerStatusPayload = {
 		eventId,
 		payload,
-		token: tokens?.accessToken || '',
 	};
 
 	setError(null);
@@ -775,7 +737,6 @@ export async function eventManagerEndEvent(retryCount = 0): Promise<any | null> 
 	const data: EventManagerStatusPayload = {
 		eventId,
 		payload,
-		token: tokens?.accessToken || '',
 	};
 
 	setError(null);

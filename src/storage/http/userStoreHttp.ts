@@ -13,6 +13,7 @@ import { useThemeStore } from '../stores/useThemeStore';
 import { useUserStore } from '../stores/useUserStore';
 import delay from '../../utilities/helpers/delay';
 import { timeout } from '../../config/variables';
+import cookieStorage from '../cookies';
 
 async function tryLogin(data: AuthCredentials) {
 	const { setLoading, setTokens, setError } = useUserStore.getState();
@@ -118,7 +119,6 @@ async function resetAllStores() {
 
 async function tryLogout(): Promise<void> {
 	const { loading, setLoading, tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (!loading) setLoading(true);
 	let errorMsg = '';
@@ -128,21 +128,19 @@ async function tryLogout(): Promise<void> {
 
 	try {
 		// Only attempt server logout if we have a valid access token
-		if (accessToken && accessToken.length > 0) {
-			const res: any = await AuthHTTP.signOut(accessToken);
-			if (res?.status === 200) {
-				logoutSuccessful = true;
-				// console.log('tryLogout: Server logout successful');
-				// setTimeout(() => {
-				// 	Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
-				// }, timeout.auth);
-			} else {
-				const msg = res?.response?.data?.message || 'Logout failed';
-				errorMsg = msg;
-				// console.log('tryLogout: Server logout failed', { err: res, msg });
-			}
-			// } else {
-			// 	console.log('tryLogout: No access token, skipping server logout');
+		const res: any = await AuthHTTP.signOut();
+		if (res?.status === 200) {
+			logoutSuccessful = true;
+			cookieStorage.removeItem('accessToken');
+			cookieStorage.removeItem('refreshToken');
+			// console.log('tryLogout: Server logout successful');
+			// setTimeout(() => {
+			// 	Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
+			// }, timeout.auth);
+		} else {
+			const msg = res?.response?.data?.message || 'Logout failed';
+			errorMsg = msg;
+			// console.log('tryLogout: Server logout failed', { err: res, msg });
 		}
 	} catch (err: any) {
 		const msg = err?.message || 'Logout failed';
@@ -183,18 +181,7 @@ async function refreshUser(): Promise<void> {
 	// await delay(100);
 
 	try {
-		const { tokens, setTokens } = useUserStore.getState();
-
-		if (!tokens?.refreshToken) {
-			// Toast.show(ToastError('Session expired', 'Please log in again.'));
-			// console.log('refreshUser: Logout - No refresh token');
-			await tryLogout();
-			return;
-		}
-
-		// console.log('refreshUser: Refresh Token', { tokens });
-
-		const res: any = await AuthHTTP.refreshUser(tokens.refreshToken);
+		const res: any = await AuthHTTP.refreshUser();
 		// console.log('refreshUser: Response', { res });
 
 		// Check if response contains error data despite 201 status
@@ -210,13 +197,12 @@ async function refreshUser(): Promise<void> {
 
 			// Check if the response has the expected token structure
 			if (res.data?.accessToken && res.data?.refreshToken) {
-				setTokens(res.data);
-				// console.log('refreshUser: Tokens updated successfully');
+				cookieStorage.setItem('accessToken', res.data.accessToken);
+				cookieStorage.setItem('refreshToken', res.data.refreshToken);
 				return;
 			}
-			// console.log('refreshUser: Invalid token response structure', { data: res.data });
+
 			const msg = 'Invalid token response from server';
-			// console.log('refreshUser: Error - Invalid structure', { msg });
 			await tryLogout();
 			return;
 		}
@@ -249,7 +235,7 @@ async function getUserProfile(retryCount = 0) {
 	}
 
 	try {
-		const res: any = await AuthHTTP.userGetSelf(tokens.accessToken);
+		const res: any = await AuthHTTP.userGetSelf();
 		if (res?.status === 200 && res?.data) {
 			setProfile(res.data);
 			setUserRoles(res.data.userRoles);
@@ -349,16 +335,13 @@ async function updateUserProfile(data: any, retryCount = 0) {
 }
 
 async function updateUserConnectedEvent(eventConnectedId: string | null, retryCount = 0) {
-	const { setConnectedEventLoading, tokens, setProfile, setUserRoles } = useUserStore.getState();
+	const { setConnectedEventLoading, setProfile, setUserRoles } = useUserStore.getState();
 	setConnectedEventLoading(true);
 
 	let errorMsg = '';
 	const maxRetries = 3;
 
-	const payload = {
-		eventConnectedId,
-		token: tokens?.accessToken || '',
-	};
+	const payload = { eventConnectedId };
 
 	// console.log('updateUserConnectedEvent: Start', { payload });
 	try {
@@ -395,18 +378,18 @@ async function updateUserConnectedEvent(eventConnectedId: string | null, retryCo
 	}
 }
 
-async function updateUserPassword(data: { oldPassword: string; newPassword: string; token: string }, retryCount = 0) {
+async function updateUserPassword(data: { oldPassword: string; newPassword: string }, retryCount = 0) {
 	const { setLoading } = useUserStore.getState();
+
+	const token = cookieStorage.getItem('accessToken');
+	if (!token) {
+		return Promise.reject(new Error('No token found'));
+	}
+
 	setLoading(true);
 
 	let errorMsg = '';
 	const maxRetries = 1;
-
-	if (!data.token) {
-		const msg = 'Password update failed';
-		// Toast.show(ToastError('Oops!', msg));
-		return msg;
-	}
 
 	try {
 		const res: any = await AuthHTTP.updateUserPassword(data);
@@ -443,7 +426,7 @@ async function updateUserPassword(data: { oldPassword: string; newPassword: stri
 }
 
 async function deleteUser(retryCount = 0) {
-	const { setLoading, tokens } = useUserStore.getState();
+	const { setLoading } = useUserStore.getState();
 	setLoading(true);
 
 	let errorMsg = '';
@@ -452,7 +435,7 @@ async function deleteUser(retryCount = 0) {
 	// console.log('deleteUser: Start');
 
 	try {
-		const res: any = await AuthHTTP.deleteUser(tokens?.accessToken || '');
+		const res: any = await AuthHTTP.deleteUser();
 		if (res.status === 200) {
 			// Toast.show(ToastGeneral('User Deleted', "We're sorry to see you go"));
 
