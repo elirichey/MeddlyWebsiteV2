@@ -51,7 +51,7 @@ export default function Home() {
 										come.
 									</p>
 
-									<a className="get-started-btn" href="#user-how-it-works">
+									<a className="get-started-btn" href="#event-rundown">
 										How It Works
 										<ChevronRight className="right-icon" />
 									</a>
@@ -117,6 +117,40 @@ export default function Home() {
 										Get Started
 										<ChevronRight className="right-icon" />
 									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="event-rundown">
+						<div className="container">
+							<div className="flex1 column">
+								<h3>How It Works</h3>
+								<div className="row align-start mobile-column flex-wrap">
+									<div className="event-step">
+										<h4>1. Create an Event</h4>
+										<p>Assign the date, time, location, Event Manager, and more.</p>
+									</div>
+
+									<div className="event-step">
+										<h4>2. Setup Mobile Devices</h4>
+										<p>Before recording, connect additional mobile devices to the event.</p>
+									</div>
+
+									<div className="event-step">
+										<h4>3. Start Recording</h4>
+										<p>When the event starts, mobile devices will automatically start recording.</p>
+									</div>
+
+									<div className="event-step">
+										<h4>4. Stop Recording</h4>
+										<p>When the event ends, mobile devices will automatically stop recording.</p>
+									</div>
+
+									<div className="event-step">
+										<h4>5. Generate Sequences</h4>
+										<p>Customize settings to produce the sequences with the press of a button.</p>
+									</div>
 								</div>
 							</div>
 						</div>
