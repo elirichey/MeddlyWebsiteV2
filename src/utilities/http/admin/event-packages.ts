@@ -4,32 +4,27 @@ import cookieStorage from '@/storage/cookies';
 
 interface EventCall {
 	id: string;
-	token: string;
 	page?: number;
 }
 
 interface PackageCall {
 	eventId: string;
 	packageId: string;
-	token: string;
 }
 
 interface CreatePackage {
 	payload: any;
-	token: string;
 }
 
 interface UpdatePackage {
 	eventId: string;
 	packageId: string;
 	payload: any;
-	token: string;
 }
 
 interface DeletePackage {
 	eventId: string;
 	packageId: string;
-	token: string;
 }
 
 async function userGetEventPackages(data: EventCall): Promise<any> {

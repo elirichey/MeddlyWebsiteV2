@@ -23,7 +23,6 @@ export interface CreateSequence {
 		packageId: string;
 		sequenceOptions: SequenceOptions;
 	};
-	token: string;
 }
 
 interface UpdateSequence {
@@ -34,12 +33,10 @@ interface UpdateSequence {
 			nonAttendee?: number;
 		};
 	};
-	token: string;
 }
 
 interface DeleteSequence {
 	sequenceId: string;
-	token: string;
 }
 
 async function orgGetEventSequences(data: EventCall): Promise<any> {

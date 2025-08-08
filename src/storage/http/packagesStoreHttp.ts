@@ -17,8 +17,6 @@ export interface ApiResponse {
 export async function getAllEventVideos(eventId: string, retryCount = 0) {
 	const { setEventPosts, setEventTotalPosts, setLoadingEventPosts, setError, eventPostsCurrentPage } =
 		usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingEventPosts(true);
 	if (retryCount === 0) setError(null);
@@ -28,7 +26,6 @@ export async function getAllEventVideos(eventId: string, retryCount = 0) {
 
 	const data = {
 		eventId,
-		accessToken,
 		type: 'video',
 		page: eventPostsCurrentPage,
 	};
@@ -73,8 +70,6 @@ export async function getOrgEventPackages(eventId: string, retryCount = 0) {
 		setError,
 		eventPackagesCurrentPage,
 	} = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingEventPackages(true);
 	if (retryCount === 0) setError(null);
@@ -84,7 +79,6 @@ export async function getOrgEventPackages(eventId: string, retryCount = 0) {
 
 	const data = {
 		id: eventId,
-		token: accessToken,
 		page: eventPackagesCurrentPage,
 	};
 
@@ -144,8 +138,6 @@ export async function getOrgEventPackages(eventId: string, retryCount = 0) {
 
 export async function getEventPackage(eventId: string, packageId: string, trigger?: () => void, retryCount = 0) {
 	const { setViewPackage, setLoadingEventPackages, setError } = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingEventPackages(true);
 	if (retryCount === 0) setError(null);
@@ -156,7 +148,6 @@ export async function getEventPackage(eventId: string, packageId: string, trigge
 	const data = {
 		eventId,
 		packageId,
-		token: accessToken,
 	};
 
 	try {
@@ -194,18 +185,13 @@ export async function getEventPackage(eventId: string, packageId: string, trigge
 
 export async function createEventPackage(payload: any, retryCount = 0) {
 	const { setError } = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = {
-		payload,
-		token: accessToken,
-	};
+	const data = { payload };
 
 	try {
 		const response: ApiResponse = await EventPackageHTTP.createEventPackage(data);
@@ -238,8 +224,6 @@ export async function createEventPackage(payload: any, retryCount = 0) {
 
 export async function updateEventPackage(eventId: string, packageId: string, payload: any, retryCount = 0) {
 	const { setError } = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
@@ -250,7 +234,6 @@ export async function updateEventPackage(eventId: string, packageId: string, pay
 		eventId,
 		packageId,
 		payload,
-		token: accessToken,
 	};
 
 	try {
@@ -286,8 +269,6 @@ export async function updateEventPackage(eventId: string, packageId: string, pay
 
 export async function updateEventPackageMedia(packageId: string, payload: any, retryCount = 0) {
 	const { setError, setLoadingEventPackages, loadingEventPackages } = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 	if (!loadingEventPackages) setLoadingEventPackages(true);
@@ -298,7 +279,6 @@ export async function updateEventPackageMedia(packageId: string, payload: any, r
 	const data = {
 		packageId,
 		payload: payload.payload,
-		accessToken,
 	};
 
 	try {
@@ -346,8 +326,6 @@ export async function updateEventPackageMedia(packageId: string, payload: any, r
 
 export async function deleteEventPackage(eventId: string, packageId: string, dismiss?: () => void, retryCount = 0) {
 	const { setError } = usePackagesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
@@ -357,7 +335,6 @@ export async function deleteEventPackage(eventId: string, packageId: string, dis
 	const data = {
 		eventId,
 		packageId,
-		token: accessToken,
 	};
 
 	try {

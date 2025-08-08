@@ -274,8 +274,7 @@ async function getUserProfile(retryCount = 0) {
 }
 
 async function updateUserProfile(data: any, retryCount = 0) {
-	const { setLoading, profile, setProfile, tokens, currentRole, setCurrentRole, setUserRoles } =
-		useUserStore.getState();
+	const { setLoading, profile, setProfile, currentRole, setCurrentRole, setUserRoles } = useUserStore.getState();
 	setLoading(true);
 
 	let errorMsg = '';
@@ -284,7 +283,6 @@ async function updateUserProfile(data: any, retryCount = 0) {
 	const payload = {
 		profile,
 		data,
-		token: tokens?.accessToken || '',
 	};
 
 	// console.log('updateUserProfile: Start', { payload });
@@ -380,11 +378,6 @@ async function updateUserConnectedEvent(eventConnectedId: string | null, retryCo
 
 async function updateUserPassword(data: { oldPassword: string; newPassword: string }, retryCount = 0) {
 	const { setLoading } = useUserStore.getState();
-
-	const token = cookieStorage.getItem('accessToken');
-	if (!token) {
-		return Promise.reject(new Error('No token found'));
-	}
 
 	setLoading(true);
 

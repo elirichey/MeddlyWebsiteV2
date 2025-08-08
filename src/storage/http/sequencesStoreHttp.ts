@@ -16,8 +16,6 @@ export interface ApiResponse {
 
 export async function getEventSequencesAsUser(eventId: string, retryCount = 0) {
 	const { setUserEventSequences, setLoadingUserEventSequences, setError } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingUserEventSequences(true);
 	if (retryCount === 0) setError(null);
@@ -25,10 +23,7 @@ export async function getEventSequencesAsUser(eventId: string, retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = {
-		eventId,
-		token: accessToken,
-	};
+	const data = { eventId };
 
 	try {
 		const response: ApiResponse = await UserEventSequencesHttp.getEventSequencesAsUser(data);
@@ -63,8 +58,6 @@ export async function getEventSequencesAsUser(eventId: string, retryCount = 0) {
 
 export async function getOrgEventSequences(eventId: string, retryCount = 0) {
 	const { setOrgEventSequences, setLoadingOrgEventSequences, setError } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingOrgEventSequences(true);
 	if (retryCount === 0) setError(null);
@@ -72,10 +65,7 @@ export async function getOrgEventSequences(eventId: string, retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = {
-		eventId,
-		token: accessToken,
-	};
+	const data = { eventId };
 
 	try {
 		const response: ApiResponse = await EventSequenceHTTP.orgGetEventSequences(data);
@@ -108,8 +98,6 @@ export async function getOrgEventSequences(eventId: string, retryCount = 0) {
 
 export async function getEventSequence(sequenceId: string, trigger?: () => void, retryCount = 0) {
 	const { setCurrentSequence, setLoadingCurrentSequence, setError } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingCurrentSequence(true);
 	if (retryCount === 0) setError(null);
@@ -117,10 +105,7 @@ export async function getEventSequence(sequenceId: string, trigger?: () => void,
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = {
-		sequenceId,
-		token: accessToken,
-	};
+	const data = { sequenceId };
 
 	try {
 		const response: ApiResponse = await EventSequenceHTTP.getEventSequence(data);
@@ -165,15 +150,13 @@ export async function createEventSequence(
 	retryCount = 0,
 ) {
 	const { setError } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data: CreateSequence = { payload, token: accessToken };
+	const data: CreateSequence = { payload };
 
 	try {
 		const response: ApiResponse = await EventSequenceHTTP.createEventSequence(data);
@@ -206,8 +189,6 @@ export async function createEventSequence(
 
 export async function updateEventSequence(sequenceId: string, payload: any, retryCount = 0) {
 	const { setError } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
@@ -224,7 +205,6 @@ export async function updateEventSequence(sequenceId: string, payload: any, retr
 	const data = {
 		sequenceId,
 		payload: formattedPayload,
-		token: accessToken,
 	};
 
 	try {
@@ -263,8 +243,6 @@ export async function deleteEventSequence(
 	retryCount = 0,
 ) {
 	const { setError, loadingEventSequences, setLoadingEventSequences } = useSequencesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (retryCount === 0) setError(null);
 
@@ -279,7 +257,6 @@ export async function deleteEventSequence(
 		eventId,
 		sequenceId,
 		dismiss,
-		token: accessToken,
 	};
 
 	try {

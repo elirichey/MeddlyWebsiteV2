@@ -37,9 +37,6 @@ interface EventManagerStatusPayload {
 // Camera Events
 
 export async function getUserCameraEvents(retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
-
 	const { setUserRoles, setProfile } = useUserStore.getState();
 	const { setCameraEvents, setCameraEventsTotal, setError, setLoadingCameraEvents } = useEventStore.getState();
 
@@ -92,9 +89,6 @@ export async function getUserCameraEvents(retryCount = 0): Promise<any | null> {
 }
 
 export async function getOrgCameraEvents(retryCount = 0): Promise<CameraEventsResponse | null> {
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
-
 	const { currentRole, setUserRoles, setProfile, setCurrentRole } = useUserStore.getState();
 	const { setCameraEvents, setError, setCameraEventsTotal, setLoadingCameraEvents } = useEventStore.getState();
 
@@ -158,7 +152,7 @@ export async function getOrgCameraEvents(retryCount = 0): Promise<CameraEventsRe
 
 // Org Events
 export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): Promise<any | null> {
-	const { tokens, currentRole } = useUserStore.getState();
+	const { currentRole } = useUserStore.getState();
 	const {
 		setError,
 		setLoadingOrgEvents,
@@ -173,7 +167,6 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 	const maxRetries = 1;
 	const data = {
 		orgId: currentRole ? currentRole.organization.id : '',
-		token: tokens?.accessToken || '',
 		status: decodedStatus,
 	};
 
@@ -572,7 +565,6 @@ export async function resyncEventAudioSources(eventId: string, retryCount = 0): 
 }
 
 export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setManagerSetupEvent } = useEventStore.getState();
 
 	const { profile } = useUserStore.getState();
@@ -623,7 +615,6 @@ export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null
 }
 
 export async function eventManagerStartEvent(timestamp: number, retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setManagerStartingEvent } = useEventStore.getState();
 
 	const { profile } = useUserStore.getState();
@@ -674,7 +665,6 @@ export async function eventManagerStartEvent(timestamp: number, retryCount = 0):
 }
 
 export async function eventManagerCancelEvent(retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setManagerCancelingEvent } = useEventStore.getState();
 
 	const { profile } = useUserStore.getState();
@@ -725,7 +715,6 @@ export async function eventManagerCancelEvent(retryCount = 0): Promise<any | nul
 }
 
 export async function eventManagerEndEvent(retryCount = 0): Promise<any | null> {
-	const { tokens } = useUserStore.getState();
 	const { setError, setManagerEndingEvent } = useEventStore.getState();
 
 	const { profile } = useUserStore.getState();

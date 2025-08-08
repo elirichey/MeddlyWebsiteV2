@@ -15,8 +15,7 @@ export interface ApiResponse {
 
 export async function getOrgRoles(retryCount = 0) {
 	const { setLoadingRoles, setOrgRoles, setOrgTotalRoles, setError, orgRolesCurrentPage } = useRolesStore.getState();
-	const { tokens, currentRole } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
+	const { currentRole } = useUserStore.getState();
 
 	setLoadingRoles(true);
 	if (retryCount === 0) setError(null);
@@ -26,7 +25,6 @@ export async function getOrgRoles(retryCount = 0) {
 
 	const data = {
 		id: currentRole?.organization?.id || '',
-		token: accessToken,
 		page: orgRolesCurrentPage,
 	};
 
@@ -67,8 +65,6 @@ export async function getOrgRoles(retryCount = 0) {
 
 export async function getOrgRole(id: string, retryCount = 0) {
 	const { setLoadingRole, setViewRole, setError } = useRolesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	setLoadingRole(true);
 	if (retryCount === 0) setError(null);
@@ -76,7 +72,7 @@ export async function getOrgRole(id: string, retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = { id, token: accessToken };
+	const data = { id };
 
 	try {
 		const response: ApiResponse = await OrgRolesHttp.getOrgRole(data);
@@ -110,8 +106,7 @@ export async function getOrgRole(id: string, retryCount = 0) {
 
 export async function getOrgManagerRoles(retryCount = 0) {
 	const { setLoadingRoles, setOrgRoles, setOrgTotalRoles, setError, orgRolesCurrentPage } = useRolesStore.getState();
-	const { tokens, currentRole } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
+	const { currentRole } = useUserStore.getState();
 
 	setLoadingRoles(true);
 	if (retryCount === 0) setError(null);
@@ -119,7 +114,7 @@ export async function getOrgManagerRoles(retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = { id: currentRole?.organization?.id || '', token: accessToken, page: orgRolesCurrentPage };
+	const data = { id: currentRole?.organization?.id || '', page: orgRolesCurrentPage };
 
 	try {
 		const response: ApiResponse = await OrgRolesHttp.getOrgEventManagers(data);
@@ -160,8 +155,6 @@ export async function getOrgManagerRoles(retryCount = 0) {
 
 export async function createOrgRole(data: any, retryCount = 0) {
 	const { setError, setLoadingRole, loadingRole } = useRolesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	if (!loadingRole) setLoadingRole(true);
 	if (retryCount === 0) setError(null);
@@ -169,7 +162,7 @@ export async function createOrgRole(data: any, retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const payload = { id: data?.organizationId, payload: data, token: accessToken };
+	const payload = { id: data?.organizationId, payload: data };
 
 	try {
 		const response: ApiResponse = await OrgRolesHttp.createUserRole(payload);
@@ -202,8 +195,6 @@ export async function createOrgRole(data: any, retryCount = 0) {
 
 export async function updateOrgRole(data: any, retryCount = 0) {
 	const { setError } = useRolesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	const { loadingRole, setLoadingRole } = useRolesStore.getState();
 
@@ -216,7 +207,7 @@ export async function updateOrgRole(data: any, retryCount = 0) {
 	const id = data?.id;
 	if (id) data.id = undefined;
 
-	const payload = { id, payload: data, token: accessToken };
+	const payload = { id, payload: data };
 
 	try {
 		const response: ApiResponse = await OrgRolesHttp.updateUserRole(payload);
@@ -251,8 +242,6 @@ export async function updateOrgRole(data: any, retryCount = 0) {
 
 export async function deleteOrgRole(id: string, retryCount = 0) {
 	const { setError } = useRolesStore.getState();
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
 
 	const { loadingRole, setLoadingRole } = useRolesStore.getState();
 
@@ -262,7 +251,7 @@ export async function deleteOrgRole(id: string, retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 1;
 
-	const data = { id, token: accessToken };
+	const data = { id };
 
 	try {
 		const response: ApiResponse = await OrgRolesHttp.deleteUserRole(data);

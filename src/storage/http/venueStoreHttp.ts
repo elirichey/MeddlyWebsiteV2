@@ -8,9 +8,6 @@ import { useVenueStore } from '../stores/useVenueStore';
 import delay from '../../utilities/helpers/delay';
 
 export async function searchVenues(search: string, retryCount = 0) {
-	const { tokens } = useUserStore.getState();
-	const accessToken = tokens?.accessToken || '';
-
 	const { loadingVenues, setSearchVenues, setLoadingVenues, setVenuesError } = useVenueStore.getState();
 
 	const maxRetries = 1;
@@ -20,7 +17,7 @@ export async function searchVenues(search: string, retryCount = 0) {
 
 	try {
 		const encodedSearch = encodeURIComponent(search);
-		const response = await VenuesHttp.searchVenues(encodedSearch, accessToken);
+		const response = await VenuesHttp.searchVenues(encodedSearch);
 		if (response.status === 200) {
 			setSearchVenues(response.data);
 			setLoadingVenues(false);
