@@ -10,30 +10,18 @@ export default function Snackbar() {
 	const type = snackbar?.type;
 	const duration = snackbar?.duration || 3000;
 
-	console.log('snackbar', snackbar);
+	const shouldShow = snackbar && show;
 
-	// Auto-hide after duration
 	useEffect(() => {
-		if (show && duration > 0) {
-			const timer = setTimeout(() => {
-				setSnackbar(null);
-			}, duration);
+		if (shouldShow) {
+			const timer = setTimeout(() => setSnackbar(null), duration);
 			return () => clearTimeout(timer);
 		}
-	}, [show, duration, setSnackbar]);
+	}, [shouldShow, duration, setSnackbar]);
 
-	if (!show) return null;
-
+	if (!shouldShow) return null;
 	return (
-		<div
-			id="snackbar"
-			data-testid="snackbar"
-			className={`show ${type}`}
-			style={{
-				opacity: 1,
-				transition: 'opacity 0.3s ease-in-out',
-			}}
-		>
+		<div id="snackbar" data-testid="snackbar" className={`${shouldShow ? 'show' : ''} ${type}`}>
 			<div id="snackbar-text1" data-testid="snackbar-text1">
 				{text1}
 			</div>
