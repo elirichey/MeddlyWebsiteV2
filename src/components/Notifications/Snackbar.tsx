@@ -1,3 +1,5 @@
+'use client';
+
 import { useSnackbarStore } from '@/storage/stores/useSnackbarStore';
 import { useEffect, useState } from 'react';
 
