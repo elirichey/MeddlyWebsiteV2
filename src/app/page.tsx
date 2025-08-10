@@ -134,22 +134,22 @@ export default function Home() {
 
 									<div className="event-step">
 										<h4>2. Setup Mobile Devices</h4>
-										<p>Before recording, connect additional mobile devices to the event.</p>
+										<p>Setup additional mobile devices. Go to Camera, connect to the event.</p>
 									</div>
 
 									<div className="event-step">
 										<h4>3. Start Recording</h4>
-										<p>When the event starts, mobile devices will automatically start recording.</p>
+										<p>When the event starts, all setup mobile devices start recording.</p>
 									</div>
 
 									<div className="event-step">
 										<h4>4. Stop Recording</h4>
-										<p>When the event ends, mobile devices will automatically stop recording.</p>
+										<p>When the event ends, all mobile devices stop recording.</p>
 									</div>
 
 									<div className="event-step">
 										<h4>5. Generate Sequences</h4>
-										<p>Customize settings to produce the sequences with the press of a button.</p>
+										<p>Customize sequence productions with the press of a button.</p>
 									</div>
 								</div>
 							</div>
