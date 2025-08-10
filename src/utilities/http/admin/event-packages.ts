@@ -1,6 +1,6 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 interface EventCall {
 	id: string;
@@ -30,7 +30,7 @@ interface DeletePackage {
 async function userGetEventPackages(data: EventCall): Promise<any> {
 	const { id, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -47,7 +47,7 @@ async function userGetEventPackages(data: EventCall): Promise<any> {
 async function orgGetEventPackages(data: EventCall): Promise<any> {
 	const { id, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -64,7 +64,7 @@ async function orgGetEventPackages(data: EventCall): Promise<any> {
 async function getEventPackage(data: PackageCall): Promise<any> {
 	const { eventId, packageId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -80,7 +80,7 @@ async function getEventPackage(data: PackageCall): Promise<any> {
 async function createEventPackage(data: CreatePackage): Promise<any> {
 	const { payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -94,7 +94,7 @@ async function createEventPackage(data: CreatePackage): Promise<any> {
 async function updateEventPackage(data: UpdatePackage): Promise<any> {
 	const { eventId, packageId, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -108,7 +108,7 @@ async function updateEventPackage(data: UpdatePackage): Promise<any> {
 async function deleteEventPackage(data: DeletePackage): Promise<any> {
 	const { eventId, packageId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

@@ -4,8 +4,8 @@ import { timeout } from '../../config/variables';
 import delay from '../../utilities/helpers/delay';
 import OrgRolesHttp from '../../utilities/http/admin/roles';
 import { useRolesStore } from '../stores/useRolesStore';
-import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
+import { getCookieValue } from '../cookies';
 
 export interface ApiResponse {
 	status: number;
@@ -15,7 +15,10 @@ export interface ApiResponse {
 
 export async function getOrgRoles(retryCount = 0) {
 	const { setLoadingRoles, setOrgRoles, setOrgTotalRoles, setError, orgRolesCurrentPage } = useRolesStore.getState();
-	const { currentRole } = useUserStore.getState();
+	// const { currentRole } = useUserStore.getState();
+
+	const currentRoleCookie = getCookieValue('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
 
 	setLoadingRoles(true);
 	if (retryCount === 0) setError(null);
@@ -106,7 +109,10 @@ export async function getOrgRole(id: string, retryCount = 0) {
 
 export async function getOrgManagerRoles(retryCount = 0) {
 	const { setLoadingRoles, setOrgRoles, setOrgTotalRoles, setError, orgRolesCurrentPage } = useRolesStore.getState();
-	const { currentRole } = useUserStore.getState();
+	// const { currentRole } = useUserStore.getState();
+
+	const currentRoleCookie = getCookieValue('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
 
 	setLoadingRoles(true);
 	if (retryCount === 0) setError(null);

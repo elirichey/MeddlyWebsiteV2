@@ -1,11 +1,11 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 async function getOrgData(data: { id: string }): Promise<any> {
 	const { id } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -16,7 +16,7 @@ async function getOrgData(data: { id: string }): Promise<any> {
 async function updateOrg(payload: any): Promise<any | any> {
 	const { id, data } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -63,7 +63,7 @@ async function updateOrg(payload: any): Promise<any | any> {
 }
 
 async function uploadOrganizationalAvatar(id: string, avatar: string): Promise<any> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -105,7 +105,7 @@ async function uploadVideo(data: {
 }): Promise<any> {
 	const { eventId, payload, setPercentUploaded, setOnError } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

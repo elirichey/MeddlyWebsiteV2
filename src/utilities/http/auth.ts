@@ -4,7 +4,9 @@ import validator from 'validator';
 import type { AuthCredentials, NewUserCredentials, UserConnectToEventPayload } from '../../interfaces/Auth';
 import type { Error as ErrorType, ResponseError } from '../../interfaces/General';
 import API from './_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
+import cookieStorage, { setSecureRefreshCookie, setSecureAuthCookie } from '@/storage/cookies';
+import delay from '../helpers/delay';
 
 interface UpdatePasswordPayload {
 	oldPassword: string;
@@ -59,7 +61,7 @@ async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
 	const errorRes = { status: 400, errors: errors };
 	if (errorRes.errors.length > 0) return errorRes;
 
-	const res = await axios
+	const res: any = await axios
 		.post(`${API.url}/auth/login`, payload)
 		.then((res) => res)
 		.catch((e) => {
@@ -75,11 +77,16 @@ async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
 			}
 		});
 
+	console.log('login: Response', { res: res?.data });
+	if (res?.data?.accessToken) setSecureAuthCookie('accessToken', res?.data?.accessToken);
+	if (res?.data?.refreshToken) setSecureRefreshCookie('refreshToken', res?.data?.refreshToken);
+	await delay(100);
+
 	return res;
 }
 
 async function signOut(): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -91,7 +98,7 @@ async function signOut(): Promise<AxiosResponse> {
 }
 
 async function refreshUser(): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('refreshToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -117,7 +124,7 @@ async function requestPasswordReset(body: any): Promise<AxiosResponse> {
 }
 
 async function updateUserPassword(payload: UpdatePasswordPayload): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -135,20 +142,33 @@ async function updateUserPassword(payload: UpdatePasswordPayload): Promise<Axios
 // *************** Profile *************** //
 
 async function userGetSelf(): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
+		console.error('userGetSelf: No token found');
 		return Promise.reject(new Error('No token found'));
 	}
 
-	return axios
+	const res = await axios
 		.get(`${API.url}/user`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
 		.then((res) => res)
 		.catch((error) => error);
+
+	const profile = res?.data;
+
+	if (profile) {
+		setSecureAuthCookie('userId', profile?.id);
+		setSecureAuthCookie('userUsername', profile?.username);
+		setSecureAuthCookie('userName', profile?.name);
+		setSecureAuthCookie('userAvatar', profile?.avatar);
+		setSecureAuthCookie('userRoles', profile?.userRoles);
+	}
+
+	return res;
 }
 
 async function updateUser(payload: UpdateUserPayload): Promise<AxiosResponse> {
 	const { profile, data } = payload;
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -169,7 +189,7 @@ async function updateUser(payload: UpdateUserPayload): Promise<AxiosResponse> {
 }
 
 async function uploadProfileImage(profileId: string, newAvatar: string): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -200,23 +220,8 @@ async function uploadProfileImage(profileId: string, newAvatar: string): Promise
 		.catch((error) => error);
 }
 
-async function updateConnectedEvent(payload: UpdateUserConnectedEventPayload): Promise<AxiosResponse> {
-	const { eventConnectedId } = payload;
-	const token = cookieStorage.getItem('accessToken');
-	if (!token) {
-		return Promise.reject(new Error('No token found'));
-	}
-
-	const body: UserConnectToEventPayload = { eventConnectedId };
-
-	return await axios
-		.put(`${API.url}/user/event`, body, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } })
-		.then((res) => res)
-		.catch((error) => error);
-}
-
 async function deleteUser(): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -238,7 +243,7 @@ async function checkIfEmailInUse(test: string): Promise<AxiosResponse> {
 
 async function userCheckIfEmailInUse(payload: ValidateIfInUsePayload): Promise<AxiosResponse> {
 	const { test } = payload;
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -266,7 +271,7 @@ async function checkIfUsernameInUse(test: string): Promise<AxiosResponse> {
 }
 
 async function userCheckIfUsernameInUse(payload: ValidateIfInUsePayload): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -279,7 +284,7 @@ async function userCheckIfUsernameInUse(payload: ValidateIfInUsePayload): Promis
 }
 
 const resetPassword = async (payload: any) => {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -304,7 +309,6 @@ const AuthHTTP = {
 	userGetSelf,
 	updateUser,
 	uploadProfileImage,
-	updateConnectedEvent,
 	// Utilities
 	checkIfEmailInUse,
 	userCheckIfEmailInUse,

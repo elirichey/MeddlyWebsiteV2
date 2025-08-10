@@ -3,7 +3,6 @@ import { timeout } from '../../config/variables';
 import delay from '../../utilities/helpers/delay';
 import SupportHttp from '../../utilities/http/support';
 import { useSupportStore } from '../stores/useSupportStore';
-import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
 // import { ToastError } from '../../config/toastConfig';
 

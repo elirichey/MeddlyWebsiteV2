@@ -1,11 +1,11 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 async function managerStartProcessingServer(data: { orgId: string }): Promise<any> {
 	const { orgId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

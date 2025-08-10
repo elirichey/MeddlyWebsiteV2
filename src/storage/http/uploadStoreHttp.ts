@@ -212,6 +212,7 @@ async function useUpdatePercentUploaded(val: any) {
 // 	} = {
 // 		eventId,
 // 		payload,
+// 		token: token || '',
 // 	};
 
 // 	// console.log('uploadEventMedia - Upload Payload', { uploadPayload });
@@ -340,6 +341,7 @@ async function useUpdatePercentUploaded(val: any) {
 // 	} = {
 // 		eventId,
 // 		payload,
+// 		token: token || '',
 // 	};
 
 // 	try {

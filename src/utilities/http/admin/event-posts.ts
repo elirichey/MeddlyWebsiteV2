@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { PostItem } from '../../../interfaces/Post';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 interface EditorByType {
 	eventId: string;
@@ -22,7 +22,7 @@ interface MediaDefaults {
 async function editorGetEventPostsByType(data: EditorByType): Promise<any> {
 	const { eventId, type, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -39,7 +39,7 @@ async function editorGetEventPostsByType(data: EditorByType): Promise<any> {
 async function editorBulkAddPosts(data: EditorBulkAddPosts): Promise<any> {
 	const { packageId, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -54,7 +54,7 @@ async function editorBulkAddPosts(data: EditorBulkAddPosts): Promise<any> {
 async function getEventDefaultAudios(data: MediaDefaults): Promise<any> {
 	const { eventId, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -71,7 +71,7 @@ async function getEventDefaultAudios(data: MediaDefaults): Promise<any> {
 async function getEventDefaultVideos(data: MediaDefaults): Promise<any> {
 	const { eventId, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -88,7 +88,7 @@ async function getEventDefaultVideos(data: MediaDefaults): Promise<any> {
 async function generateAudioFileForPost(data: { postId: string }): Promise<any> {
 	const { postId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

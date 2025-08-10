@@ -1,18 +1,14 @@
-// import Toast from 'react-native-toast-message';
-// import { ToastError } from '../../config/toastConfig';
 import UserStoreHttp from './userStoreHttp';
-import { useUserStore } from '../stores/useUserStore';
-import CameraHttp from '../../utilities/http/camera';
 import { useEventStore } from '../stores/useEventStore';
 import type { MeddlyEvent } from '../../interfaces/Event';
-import type { Profile, UserSelectedRole } from '../../interfaces/Auth';
+import type { Profile } from '../../interfaces/Auth';
 import UserEventsHttp from '../../utilities/http/user/events';
 import OrgEventsHttp from '../../utilities/http/admin/events';
-import EventManagerHTTP from '../../utilities/http/admin/manage-event';
-// import { ToastSuccess } from '../../config/toastConfig';
 import { useOrgStore } from '../stores/useOrgStore';
 import { timeout } from '../../config/variables';
 import delay from '../../utilities/helpers/delay';
+import { useSnackbarStore } from '../stores/useSnackbarStore';
+import { getCookieValue } from '../cookies';
 
 export interface ApiResponse {
 	status: number;
@@ -25,134 +21,9 @@ export interface CameraEventsResponse {
 	user: Profile;
 }
 
-interface OrgCameraEventsPayload {
-	orgId: string;
-}
-
-interface EventManagerStatusPayload {
-	eventId: string;
-	payload: any;
-}
-
-// Camera Events
-
-export async function getUserCameraEvents(retryCount = 0): Promise<any | null> {
-	const { setUserRoles, setProfile } = useUserStore.getState();
-	const { setCameraEvents, setCameraEventsTotal, setError, setLoadingCameraEvents } = useEventStore.getState();
-
-	const maxRetries = 1;
-
-	setError(null);
-	setLoadingCameraEvents(true);
-
-	try {
-		const response = await CameraHttp.getUserCameraEvents({});
-		// console.log('getUserCameraEvents: Response', { response });
-
-		if (response.status === 200) {
-			const { events, totalEvents, user } = response.data as CameraEventsResponse;
-			setCameraEvents(events || []);
-			setCameraEventsTotal(totalEvents);
-			setProfile(user);
-			setUserRoles(user.userRoles);
-			setError(null);
-			setLoadingCameraEvents(false);
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return getUserCameraEvents(retryCount + 1);
-			}
-
-			setLoadingCameraEvents(false);
-			await UserStoreHttp.tryLogout();
-			// Toast.show(ToastError('Error', 'Logging User Out'));
-			setError('Authentication failed');
-			return;
-		}
-
-		setLoadingCameraEvents(false);
-		// Toast.show(ToastError('Oops!', 'Failed to get events'));
-		// console.log('getUserCameraEvents: Error 1', { response });
-		setError('Failed to fetch camera events');
-		return;
-	} catch (e) {
-		setLoadingCameraEvents(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
-		// console.log('getUserCameraEvents: Error 2', { e });
-		setError('An unexpected error occurred');
-		return;
-	}
-}
-
-export async function getOrgCameraEvents(retryCount = 0): Promise<CameraEventsResponse | null> {
-	const { currentRole, setUserRoles, setProfile, setCurrentRole } = useUserStore.getState();
-	const { setCameraEvents, setError, setCameraEventsTotal, setLoadingCameraEvents } = useEventStore.getState();
-
-	const maxRetries = 1;
-	const orgId = currentRole?.organization?.id;
-
-	// If no organization ID is available, fall back to user camera events
-	if (!orgId) {
-		// console.log('getOrgCameraEvents: No orgId available, falling back to getUserCameraEvents');
-		return getUserCameraEvents(retryCount);
-	}
-
-	const payload: OrgCameraEventsPayload = { orgId };
-
-	setError(null);
-	setLoadingCameraEvents(true);
-
-	try {
-		const response = await CameraHttp.getOrgCameraEvents(payload);
-		if (response.status === 200) {
-			const { events, totalEvents, user } = response.data as CameraEventsResponse;
-			setCameraEvents(events || []);
-			setCameraEventsTotal(totalEvents);
-			setProfile(user);
-			setUserRoles(user.userRoles);
-			if (currentRole) {
-				const useRole = user.userRoles.find((role: UserSelectedRole) => role.id === currentRole.id);
-				setCurrentRole(useRole || null);
-			} else {
-				setCurrentRole(null);
-			}
-
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return getOrgCameraEvents(retryCount + 1);
-			}
-
-			await UserStoreHttp.tryLogout();
-			setError('Authentication failed');
-			return null;
-		}
-
-		// Toast.show(ToastError('Oops!', 'Failed to get events'));
-		// console.log('getOrgCameraEvents: Error 1', { response });
-		setError('Failed to fetch camera events');
-		return null;
-	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
-		// console.log('getOrgCameraEvents: Error 2', { e });
-		setError('An unexpected error occurred');
-		return null;
-	} finally {
-		setLoadingCameraEvents(false);
-	}
-}
-
 // Org Events
 export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): Promise<any | null> {
-	const { currentRole } = useUserStore.getState();
+	const { setSnackbar } = useSnackbarStore.getState();
 	const {
 		setError,
 		setLoadingOrgEvents,
@@ -162,6 +33,9 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 		orgEventsCurrentTab,
 		setOrgEventsCurrentTab,
 	} = useEventStore.getState();
+
+	const currentRoleCookie = getCookieValue('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
 
 	const decodedStatus = encodedStatus ? decodeURIComponent(encodedStatus) : undefined;
 	const maxRetries = 1;
@@ -222,11 +96,23 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 			return null;
 		}
 
-		// Toast.show(ToastError('Oops!', 'Failed to get events'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to get events',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to fetch org events');
 		return null;
 	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -236,6 +122,7 @@ export async function getOrgListEvents(retryCount = 0, encodedStatus?: string): 
 
 export async function getViewOrgListEvents(retryCount = 0, encodedStatus?: string): Promise<any | null> {
 	const { viewOrg } = useOrgStore.getState();
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingOrgEvents } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -266,18 +153,31 @@ export async function getViewOrgListEvents(retryCount = 0, encodedStatus?: strin
 		}
 
 		setLoadingOrgEvents(false);
-		// Toast.show(ToastError('Oops!', 'Failed to get events'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to get events',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to fetch view org events');
 		return null;
 	} catch (e) {
 		setLoadingOrgEvents(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	}
 }
 
 export async function getCurrentUserEvent(eventId: string, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingOrgEvents } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -308,17 +208,30 @@ export async function getCurrentUserEvent(eventId: string, retryCount = 0): Prom
 		}
 
 		setLoadingOrgEvents(false);
-		// Toast.show(ToastError('Oops!', 'Failed to get event'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to get event',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to fetch user event');
 		return null;
 	} catch (e) {
 		setLoadingOrgEvents(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		return null;
 	}
 }
 
 export async function getOrgEvent(eventId: string, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -352,18 +265,31 @@ export async function getOrgEvent(eventId: string, retryCount = 0): Promise<any 
 		}
 
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('Oops!', 'Failed to get event'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to get event',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to fetch org event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	}
 }
 
 export async function createOrgEvent(payload: any, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -377,7 +303,13 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 		if (response.status === 200 || response.status === 201) {
 			setError(null);
 			setViewEvent(response.data);
-			// Toast.show(ToastSuccess('Success', 'Event Created'));
+			setSnackbar({
+				title: 'Success',
+				description: 'Event Created',
+				type: 'success',
+				duration: 3000,
+				show: true,
+			});
 			return response.data;
 		}
 
@@ -389,11 +321,23 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 			}
 		}
 
-		// Toast.show(ToastError('Oops!', 'Failed to create event'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to create event',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to create event');
 		return null;
 	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	} finally {
@@ -402,6 +346,7 @@ export async function createOrgEvent(payload: any, retryCount = 0): Promise<any 
 }
 
 export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent, setViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -419,7 +364,13 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 			setError(null);
 			setLoadingViewEvent(false);
 			setViewEvent(response.data);
-			// Toast.show(ToastSuccess('Success', 'Event Updated'));
+			setSnackbar({
+				title: 'Success',
+				description: 'Event Updated',
+				type: 'success',
+				duration: 3000,
+				show: true,
+			});
 			return response.data;
 		}
 
@@ -432,18 +383,31 @@ export async function updateOrgEvent(event: MeddlyEvent, payload: any, retryCoun
 		}
 
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('Oops!', 'Failed to update event'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to update event',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to update event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	}
 }
 
 export async function uploadCoverArt(event: any, payload: any, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent, loadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -457,7 +421,13 @@ export async function uploadCoverArt(event: any, payload: any, retryCount = 0): 
 		if (response.status === 200 || response.status === 201) {
 			setError(null);
 			setLoadingViewEvent(false);
-			// Toast.show(ToastSuccess('Success', 'Cover Art Updated'));
+			setSnackbar({
+				title: 'Success',
+				description: 'Cover Art Updated',
+				type: 'success',
+				duration: 3000,
+				show: true,
+			});
 			return response.data;
 		}
 
@@ -470,18 +440,31 @@ export async function uploadCoverArt(event: any, payload: any, retryCount = 0): 
 		}
 
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('Oops!', 'Failed to upload cover art'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to upload cover art',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to upload cover art');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	}
 }
 
 export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: () => void): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -495,7 +478,13 @@ export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: 
 		if (response.status === 200) {
 			setError(null);
 			setLoadingViewEvent(false);
-			// Toast.show(ToastSuccess('Success', 'Event Deleted'));
+			setSnackbar({
+				title: 'Success',
+				description: 'Event Deleted',
+				type: 'success',
+				duration: 3000,
+				show: true,
+			});
 			if (dismiss) dismiss();
 			return response.data;
 		}
@@ -509,18 +498,31 @@ export async function deleteOrgEvent(eventId: string, retryCount = 0, dismiss?: 
 		}
 
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('Oops!', 'Failed to delete event'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to delete event',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to delete event');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
 	}
 }
 
 export async function resyncEventAudioSources(eventId: string, retryCount = 0): Promise<any | null> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setError, setLoadingViewEvent } = useEventStore.getState();
 
 	const maxRetries = 1;
@@ -535,7 +537,13 @@ export async function resyncEventAudioSources(eventId: string, retryCount = 0): 
 		if (response.status === 201) {
 			setError(null);
 			setLoadingViewEvent(false);
-			// Toast.show(ToastSuccess('Success', 'Event Audio Sources Resynced'));
+			setSnackbar({
+				title: 'Success',
+				description: 'Event Audio Sources Resynced',
+				type: 'success',
+				duration: 3000,
+				show: true,
+			});
 			return response.data;
 		}
 
@@ -553,220 +561,30 @@ export async function resyncEventAudioSources(eventId: string, retryCount = 0): 
 		}
 
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('Oops!', 'Failed to resync event audio sources'));
+		setSnackbar({
+			title: 'Oops!',
+			description: 'Failed to resync event audio sources',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('Failed to resync event audio sources');
 		return null;
 	} catch (e) {
 		setLoadingViewEvent(false);
-		// Toast.show(ToastError('An unexpected error occurred'));
+		setSnackbar({
+			title: 'An unexpected error occurred',
+			description: '',
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
 		setError('An unexpected error occurred');
 		return null;
-	}
-}
-
-export async function eventManagerSetupEvent(retryCount = 0): Promise<any | null> {
-	const { setError, setManagerSetupEvent } = useEventStore.getState();
-
-	const { profile } = useUserStore.getState();
-	const eventConnected = profile?.eventConnected;
-	const eventId = eventConnected?.id || '';
-	const payload = { status: 'Pre-Event' };
-
-	const maxRetries = 1;
-	const data: EventManagerStatusPayload = {
-		eventId,
-		payload,
-	};
-
-	setError(null);
-	setManagerSetupEvent(true);
-
-	try {
-		const response = await EventManagerHTTP.managerUpdateEvent(data);
-		if (response.status === 200) {
-			setError(null);
-			await getOrgCameraEvents();
-			// Toast.show(ToastSuccess('Event Setup Ready'));
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return eventManagerSetupEvent(retryCount + 1);
-			}
-
-			await UserStoreHttp.tryLogout();
-			setError('Authentication failed');
-			return null;
-		}
-
-		// Toast.show(ToastError('Oops!', 'Failed to setup event'));
-		setError('Failed to setup event');
-		return null;
-	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
-		setError('An unexpected error occurred');
-		return null;
-	} finally {
-		setManagerSetupEvent(false);
-	}
-}
-
-export async function eventManagerStartEvent(timestamp: number, retryCount = 0): Promise<any | null> {
-	const { setError, setManagerStartingEvent } = useEventStore.getState();
-
-	const { profile } = useUserStore.getState();
-	const eventConnected = profile?.eventConnected;
-	const eventId = eventConnected?.id || '';
-	const payload = { status: 'In Progress', timestampStart: timestamp };
-
-	const maxRetries = 1;
-	const data: EventManagerStatusPayload = {
-		eventId,
-		payload,
-	};
-
-	setError(null);
-	setManagerStartingEvent(true);
-
-	try {
-		const response = await EventManagerHTTP.managerUpdateEvent(data);
-		if (response.status === 200) {
-			setError(null);
-			await getOrgCameraEvents();
-			// Toast.show(ToastSuccess('Event Started'));
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return eventManagerStartEvent(timestamp, retryCount + 1);
-			}
-
-			await UserStoreHttp.tryLogout();
-			setError('Authentication failed');
-			return null;
-		}
-
-		// Toast.show(ToastError('Oops!', 'Failed to start event'));
-		setError('Failed to start event');
-		return null;
-	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
-		setError('An unexpected error occurred');
-		return null;
-	} finally {
-		setManagerStartingEvent(false);
-	}
-}
-
-export async function eventManagerCancelEvent(retryCount = 0): Promise<any | null> {
-	const { setError, setManagerCancelingEvent } = useEventStore.getState();
-
-	const { profile } = useUserStore.getState();
-	const eventConnected = profile?.eventConnected;
-	const eventId = eventConnected?.id || '';
-	const payload = { status: 'Canceled' };
-
-	const maxRetries = 1;
-	const data: EventManagerStatusPayload = {
-		eventId,
-		payload,
-	};
-
-	setError(null);
-	setManagerCancelingEvent(true);
-
-	try {
-		const response = await EventManagerHTTP.managerUpdateEvent(data);
-		// console.log('eventManagerCancelEvent: Response', { response });
-		if (response.status === 200) {
-			setError(null);
-			await getOrgCameraEvents();
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return eventManagerCancelEvent(retryCount + 1);
-			}
-
-			await UserStoreHttp.tryLogout();
-			setError('Authentication failed');
-			return null;
-		}
-
-		// Toast.show(ToastError('Oops!', 'Failed to end event'));
-		setError('Failed to end event');
-		return null;
-	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
-		setError('An unexpected error occurred');
-		return null;
-	} finally {
-		setManagerCancelingEvent(false);
-	}
-}
-
-export async function eventManagerEndEvent(retryCount = 0): Promise<any | null> {
-	const { setError, setManagerEndingEvent } = useEventStore.getState();
-
-	const { profile } = useUserStore.getState();
-	const eventConnected = profile?.eventConnected;
-	const eventId = eventConnected?.id || '';
-	const payload = { status: 'Completed', timestampEnd: new Date().getTime() };
-
-	const maxRetries = 1;
-	const data: EventManagerStatusPayload = {
-		eventId,
-		payload,
-	};
-
-	setError(null);
-	setManagerEndingEvent(true);
-
-	try {
-		const response = await EventManagerHTTP.managerUpdateEvent(data);
-		if (response.status === 200) {
-			setError(null);
-			await getOrgCameraEvents();
-			// Toast.show(ToastSuccess('Success', 'Event Ended'));
-			return response.data;
-		}
-
-		if (response?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await UserStoreHttp.refreshUser();
-				await delay(timeout.auth);
-				return eventManagerEndEvent(retryCount + 1);
-			}
-
-			await UserStoreHttp.tryLogout();
-			setError('Authentication failed');
-			return null;
-		}
-
-		// Toast.show(ToastError('Oops!', 'Failed to end event'));
-		setError('Failed to end event');
-		return null;
-	} catch (e) {
-		// Toast.show(ToastError('An unexpected error occurred'));
-		setError('An unexpected error occurred');
-		return null;
-	} finally {
-		setManagerEndingEvent(false);
 	}
 }
 
 const EventStoreHttp = {
-	getUserCameraEvents,
-	getOrgCameraEvents,
 	getOrgListEvents,
 	getViewOrgListEvents,
 	getCurrentUserEvent,
@@ -776,10 +594,6 @@ const EventStoreHttp = {
 	uploadCoverArt,
 	deleteOrgEvent,
 	resyncEventAudioSources,
-	eventManagerSetupEvent,
-	eventManagerStartEvent,
-	eventManagerCancelEvent,
-	eventManagerEndEvent,
 };
 
 export default EventStoreHttp;

@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 interface UserEventSequencesRequest {
 	eventId: string;
@@ -14,7 +14,7 @@ interface UserEventSequenceRequest {
 async function getEventSequencesAsUser(payload: UserEventSequencesRequest): Promise<AxiosResponse> {
 	const { eventId } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -30,7 +30,7 @@ async function getEventSequencesAsUser(payload: UserEventSequencesRequest): Prom
 async function getEventSequencesOwnedAsUser(payload: UserEventSequencesRequest): Promise<AxiosResponse> {
 	const { eventId } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -46,7 +46,7 @@ async function getEventSequencesOwnedAsUser(payload: UserEventSequencesRequest):
 async function getSequenceOwnedAsUser(payload: UserEventSequenceRequest): Promise<AxiosResponse> {
 	const { sequenceId } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

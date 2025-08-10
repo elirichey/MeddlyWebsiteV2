@@ -1,11 +1,11 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 async function managerStartEventServer(data: { eventId: string }): Promise<any> {
 	const { eventId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -24,7 +24,7 @@ async function managerStartEventServer(data: { eventId: string }): Promise<any> 
 async function managerUpdateEvent(data: { eventId: string; payload: any }): Promise<any> {
 	const { eventId, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

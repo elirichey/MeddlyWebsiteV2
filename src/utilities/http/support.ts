@@ -1,6 +1,6 @@
 import axios from 'axios';
 import API from './_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 export interface SupportTicketPayload {
 	payload: SupportTicketOnCreate;
@@ -30,7 +30,7 @@ interface RequestOrganizationPayload {
 async function createSupportTicket(data: SupportTicketPayload): Promise<any> {
 	const { payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -44,7 +44,7 @@ async function createSupportTicket(data: SupportTicketPayload): Promise<any> {
 async function requestOrganization(data: RequestOrganizationPayload): Promise<any> {
 	const { payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -58,7 +58,7 @@ async function requestOrganization(data: RequestOrganizationPayload): Promise<an
 }
 
 async function getUserOrgRequests(): Promise<any> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -74,7 +74,7 @@ async function getUserOrgRequests(): Promise<any> {
 async function deleteUserOrgRequest(data: { id: string }): Promise<any> {
 	const { id } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

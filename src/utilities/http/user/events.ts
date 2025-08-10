@@ -1,6 +1,6 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 export interface UserEventsRequest {
 	id: string;
@@ -22,7 +22,7 @@ interface UserEventData {
 async function getUserCameraEvents(data: { page?: number }): Promise<any> {
 	const { page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -40,7 +40,7 @@ async function getUserCameraEvents(data: { page?: number }): Promise<any> {
 async function getUserListEvents(payload: UserEventsRequest): Promise<any> {
 	const { id, type, page, status } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -68,7 +68,7 @@ async function getUserListEvents(payload: UserEventsRequest): Promise<any> {
 async function getEventAsUser(vals: UserEventData): Promise<any> {
 	const { eventId } = vals;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -84,7 +84,7 @@ async function getEventAsUser(vals: UserEventData): Promise<any> {
 async function userGetOrgEvents(vals: { orgId: string; page?: number; status?: string }): Promise<any> {
 	const { orgId, page, status } = vals;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -110,7 +110,7 @@ async function userGetOrgEvents(vals: { orgId: string; page?: number; status?: s
 async function getUserEventPackages(payload: UserEventPackagesRequest): Promise<any> {
 	const { eventId } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

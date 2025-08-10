@@ -25,13 +25,22 @@ export const getCookieValue = (name: string): string | null => {
 };
 
 // Secure cookie functions for authentication
-export const setSecureAuthCookie = (name: string, value: string) => {
-	setCookie(name, value, {
-		httpOnly: false, // cookies-next doesn't support httpOnly in client-side
-		secure: process.env.NODE_ENV === 'production',
-		sameSite: 'strict',
-		maxAge: 15 * 60, // 15 minutes
-	});
+export const setSecureAuthCookie = (name: string, value: any) => {
+	// Convert value to string if it's not already
+	const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+
+	try {
+		setCookie(name, stringValue, {
+			httpOnly: false, // cookies-next doesn't support httpOnly in client-side
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'lax', // Changed from 'strict' to 'lax' for better browser compatibility
+			maxAge: 15 * 60, // 15 minutes
+			path: '/', // Ensure cookie is available across the site
+		});
+	} catch (error) {
+		console.error('setSecureAuthCookie: Error setting cookie:', error);
+		throw error;
+	}
 };
 
 export const setSecureRefreshCookie = (name: string, value: string) => {

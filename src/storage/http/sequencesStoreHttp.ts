@@ -4,7 +4,6 @@ import EventSequenceHTTP, { type CreateSequence } from '../../utilities/http/adm
 import UserEventSequencesHttp from '../../utilities/http/user/event-sequences';
 import { timeout } from '../../config/variables';
 import { useSequencesStore } from '../stores/useSequencesStore';
-import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
 import delay from '../../utilities/helpers/delay';
 

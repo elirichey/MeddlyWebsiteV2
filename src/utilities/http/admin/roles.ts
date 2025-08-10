@@ -1,13 +1,13 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 // Tested
 
 async function getOrgRoles(data: { id: string; page?: number }): Promise<any> {
 	const { id, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -26,7 +26,7 @@ async function getOrgRoles(data: { id: string; page?: number }): Promise<any> {
 async function getOrgRole(data: { id: string }): Promise<any> {
 	const { id } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -40,7 +40,7 @@ async function getOrgRole(data: { id: string }): Promise<any> {
 async function updateUserRole(data: { id: string; payload: any }): Promise<any> {
 	const { id, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -54,7 +54,7 @@ async function updateUserRole(data: { id: string; payload: any }): Promise<any> 
 async function getOrgEventManagers(data: { id: string; page?: number }): Promise<any> {
 	const { id, page } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -77,7 +77,7 @@ async function getOrgEventManagers(data: { id: string; page?: number }): Promise
 async function searchUserByEmail(data: { email: string; payload: any }): Promise<any> {
 	const { email, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -91,7 +91,7 @@ async function searchUserByEmail(data: { email: string; payload: any }): Promise
 async function createUserRole(data: { id: string; payload: any }): Promise<any> {
 	const { id, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -105,7 +105,7 @@ async function createUserRole(data: { id: string; payload: any }): Promise<any> 
 async function deleteUserRole(data: { id: string }): Promise<any> {
 	const { id } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

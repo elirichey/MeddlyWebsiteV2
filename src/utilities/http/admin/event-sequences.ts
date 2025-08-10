@@ -1,6 +1,6 @@
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 interface EventCall {
 	eventId: string;
@@ -42,7 +42,7 @@ interface DeleteSequence {
 async function orgGetEventSequences(data: EventCall): Promise<any> {
 	const { eventId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -58,7 +58,7 @@ async function orgGetEventSequences(data: EventCall): Promise<any> {
 async function getEventSequence(data: SequenceCall): Promise<any> {
 	const { sequenceId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -74,7 +74,7 @@ async function getEventSequence(data: SequenceCall): Promise<any> {
 async function createEventSequence(data: CreateSequence): Promise<any> {
 	const { payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -88,7 +88,7 @@ async function createEventSequence(data: CreateSequence): Promise<any> {
 const updateEventSequence = async (data: UpdateSequence): Promise<any> => {
 	const { sequenceId, payload } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -102,7 +102,7 @@ const updateEventSequence = async (data: UpdateSequence): Promise<any> => {
 async function deleteEventSequence(data: DeleteSequence): Promise<any> {
 	const { sequenceId } = data;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

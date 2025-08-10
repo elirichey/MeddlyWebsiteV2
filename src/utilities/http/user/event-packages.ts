@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 interface UserEventPackagesRequest {
 	eventId: string;
@@ -11,7 +11,7 @@ interface UserEventPackagesRequest {
 async function getEventPackagesAsUser(payload: UserEventPackagesRequest): Promise<AxiosResponse> {
 	const { eventId, page } = payload;
 
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

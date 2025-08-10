@@ -13,10 +13,14 @@ import { useThemeStore } from '../stores/useThemeStore';
 import { useUserStore } from '../stores/useUserStore';
 import delay from '../../utilities/helpers/delay';
 import { timeout } from '../../config/variables';
-import cookieStorage from '../cookies';
+import cookieStorage, { getCookieValue, removeSecureCookie, setSecureAuthCookie } from '../cookies';
+
+// import { useSnackbarStore } from '../stores/useSnackbarStore';
 
 async function tryLogin(data: AuthCredentials) {
-	const { setLoading, setTokens, setError } = useUserStore.getState();
+	// const { setSnackbar } = useSnackbarStore.getState();
+	const { setLoading, setError } = useUserStore.getState();
+
 	setLoading(true);
 	setError(null);
 
@@ -25,25 +29,50 @@ async function tryLogin(data: AuthCredentials) {
 	let errorMsg = '';
 	try {
 		const response = await AuthHTTP.login(data);
-		// console.log('tryLogin: Response', { response });
+
+		console.log('tryLogin: Response', { response });
 		if (response.status === 201 && response.data) {
+			console.log('tryLogin: Response 201', { response });
 			// setTokens(response.data);
-			UserStoreHttp.getUserProfile();
+			await UserStoreHttp.getUserProfile();
+
+			// setSnackbar({
+			// 	title: 'Success',
+			// 	description: 'Login Successful',
+			// 	type: 'success',
+			// 	duration: 3000,
+			// 	show: true,
+			// });
 
 			// console.log('tryLogin: Response', { tokens: response.data });
 		} else {
 			const msg = response?.errors?.[0]?.message || 'Incorrect credentials';
-			setError(msg);
+			// setError(msg);
 			errorMsg = msg;
+			// setSnackbar({
+			// 	title: 'Error',
+			// 	description: msg,
+			// 	type: 'error',
+			// 	duration: 3000,
+			// 	show: true,
+			// });
 			// console.log('tryLogin: Error 1', { err: response, msg });
 			return msg || 'Error';
 		}
 	} catch (err: any) {
 		const msg = err?.message || 'Caught Error';
-		setError(msg);
+		// setError(msg);
 		errorMsg = msg;
+		// setSnackbar({
+		// 	title: 'Error',
+		// 	description: msg,
+		// 	type: 'error',
+		// 	duration: 3000,
+		// 	show: true,
+		// });
 		// console.log('tryLogin: Error', { err });
 	} finally {
+		await delay(timeout.auth);
 		setLoading(false);
 		// console.log('tryLogin: Complete');
 		// if (errorMsg && errorMsg?.trim() !== '') {
@@ -55,7 +84,7 @@ async function tryLogin(data: AuthCredentials) {
 }
 
 async function trySignUp(data: NewUserCredentials) {
-	const { setLoading, setTokens, setError } = useUserStore.getState();
+	const { setLoading, setError } = useUserStore.getState();
 	setLoading(true);
 	setError(null);
 
@@ -65,20 +94,20 @@ async function trySignUp(data: NewUserCredentials) {
 	try {
 		const res: any = await AuthHTTP.registerNewUser(data);
 		if (res.status === 201 && res.data) {
-			setTokens(res.data);
-			UserStoreHttp.getUserProfile();
+			// setTokens(res.data);
+			await UserStoreHttp.getUserProfile();
 
 			// console.log('trySignUp: Response', { tokens: res.data });
 		} else {
 			const msg = res?.response?.data?.message;
-			setError(msg);
+			// setError(msg);
 			errorMsg = msg;
 			// console.log('trySignUp: Error 1', { err: res, msg });
 			return msg || 'Error';
 		}
 	} catch (err: any) {
 		const msg = err?.message || 'Caught Error';
-		setError(msg);
+		// setError(msg);
 		errorMsg = msg;
 		// console.log('trySignUp: Error Catch', { err, msg });
 		return msg;
@@ -95,6 +124,9 @@ async function trySignUp(data: NewUserCredentials) {
 
 async function resetAllStores() {
 	const { resetUserStore } = useUserStore.getState();
+	removeSecureCookie('profile');
+	removeSecureCookie('roles');
+	removeSecureCookie('currentRole');
 	const { resetEvents } = useEventStore.getState();
 	const { resetMedia } = useMediaStore.getState();
 	const { resetPackages } = usePackagesStore.getState();
@@ -106,7 +138,6 @@ async function resetAllStores() {
 
 	// console.log('resetAllStores');
 
-	resetUserStore();
 	resetEvents();
 	resetMedia();
 	resetPackages();
@@ -115,10 +146,11 @@ async function resetAllStores() {
 	resetServer();
 	resetSocket();
 	resetTheme();
+	resetUserStore();
 }
 
 async function tryLogout(): Promise<void> {
-	const { loading, setLoading, tokens } = useUserStore.getState();
+	const { loading, setLoading } = useUserStore.getState();
 
 	if (!loading) setLoading(true);
 	let errorMsg = '';
@@ -133,6 +165,9 @@ async function tryLogout(): Promise<void> {
 			logoutSuccessful = true;
 			cookieStorage.removeItem('accessToken');
 			cookieStorage.removeItem('refreshToken');
+			removeSecureCookie('profile');
+			removeSecureCookie('roles');
+			removeSecureCookie('currentRole');
 			// console.log('tryLogout: Server logout successful');
 			// setTimeout(() => {
 			// 	Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
@@ -222,27 +257,25 @@ async function refreshUser(): Promise<void> {
 }
 
 async function getUserProfile(retryCount = 0) {
-	const { setLoading, setProfile, setUserRoles, tokens, currentRole, setCurrentRole } = useUserStore.getState();
+	const { setLoading } = useUserStore.getState();
 	setLoading(true);
 
 	let errorMsg = '';
 	const maxRetries = 3;
 
-	if (!tokens?.accessToken) {
-		const msg = 'Failed to get user profile';
-		// Toast.show(ToastError('Oops!', msg));
-		return msg;
-	}
+	const token = getCookieValue('accessToken');
+	const currentRoleCookie = getCookieValue('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
 
+	console.log('getUserProfile: Start', { retryCount, token });
 	try {
 		const res: any = await AuthHTTP.userGetSelf();
-		if (res?.status === 200 && res?.data) {
-			setProfile(res.data);
-			setUserRoles(res.data.userRoles);
+		console.log('getUserProfile: Response', { res });
+		if ((res?.status === 200 || res?.status === 201) && res?.data) {
 			if (currentRole) {
-				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole.id);
+				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole?.id);
 				if (updatedRole) {
-					setCurrentRole(updatedRole);
+					setSecureAuthCookie('currentRole', updatedRole);
 				}
 			}
 			return null;
@@ -251,7 +284,8 @@ async function getUserProfile(retryCount = 0) {
 			if (retryCount < maxRetries) {
 				await refreshUser();
 				// await delay(timeout.auth);
-				return getUserProfile(retryCount + 1);
+				await getUserProfile(retryCount + 1);
+				return;
 			}
 		}
 
@@ -265,6 +299,7 @@ async function getUserProfile(retryCount = 0) {
 		// console.log('getUserProfile: Error Catch', { err, msg });
 		return msg;
 	} finally {
+		await delay(timeout.auth);
 		setLoading(false);
 		// console.log('getUserProfile: Complete');
 		// if (errorMsg.trim() !== '') {
@@ -274,8 +309,13 @@ async function getUserProfile(retryCount = 0) {
 }
 
 async function updateUserProfile(data: any, retryCount = 0) {
-	const { setLoading, profile, setProfile, currentRole, setCurrentRole, setUserRoles } = useUserStore.getState();
+	const { setLoading } = useUserStore.getState();
 	setLoading(true);
+
+	const profileCookie = getCookieValue('profile');
+	const currentRoleCookie = getCookieValue('currentRole');
+	const profile = profileCookie ? JSON.parse(profileCookie) : null;
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
 
 	let errorMsg = '';
 	const maxRetries = 3;
@@ -291,12 +331,12 @@ async function updateUserProfile(data: any, retryCount = 0) {
 		const res: any = await AuthHTTP.updateUser(payload);
 		// console.log('updateUserProfile: Response', { res });
 		if (res.status === 200 || res.status === 201) {
-			setProfile(res.data);
-			setUserRoles(res.data.userRoles);
+			setSecureAuthCookie('profile', res.data);
+			setSecureAuthCookie('roles', res.data.userRoles);
 			if (currentRole) {
 				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole.id);
 				if (updatedRole) {
-					setCurrentRole(updatedRole);
+					setSecureAuthCookie('currentRole', updatedRole);
 				}
 			}
 			// console.log('updateUserProfile: Success', { res });
@@ -333,8 +373,8 @@ async function updateUserProfile(data: any, retryCount = 0) {
 }
 
 async function updateUserConnectedEvent(eventConnectedId: string | null, retryCount = 0) {
-	const { setConnectedEventLoading, setProfile, setUserRoles } = useUserStore.getState();
-	setConnectedEventLoading(true);
+	const { setLoading } = useUserStore.getState();
+	setLoading(true);
 
 	let errorMsg = '';
 	const maxRetries = 3;
@@ -346,8 +386,8 @@ async function updateUserConnectedEvent(eventConnectedId: string | null, retryCo
 		const res: any = await AuthHTTP.updateConnectedEvent(payload);
 		// console.log('updateUserConnectedEvent: Response', { res });
 		if (res.status === 200 || res.status === 201) {
-			setProfile(res.data);
-			setUserRoles(res.data.userRoles);
+			setSecureAuthCookie('profile', res.data);
+			setSecureAuthCookie('roles', res.data.userRoles);
 			return null;
 		}
 
@@ -368,7 +408,7 @@ async function updateUserConnectedEvent(eventConnectedId: string | null, retryCo
 		// console.log('updateUserConnectedEvent: Error Catch', { err, msg });
 		return msg;
 	} finally {
-		setConnectedEventLoading(false);
+		setLoading(false);
 		// console.log('updateUserConnectedEvent: Complete');
 		if (errorMsg && errorMsg.trim() !== '') {
 			// Toast.show(ToastError('Oops!', errorMsg));

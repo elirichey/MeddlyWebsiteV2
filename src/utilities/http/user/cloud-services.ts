@@ -1,10 +1,10 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import API from '../_url';
-import cookieStorage from '@/storage/cookies';
+import { getCookie } from 'cookies-next';
 
 async function getOrgCloudServices(id: string): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -16,7 +16,7 @@ async function getOrgCloudServices(id: string): Promise<AxiosResponse> {
 }
 
 async function createOrgCloudService(id: string, payload: any): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -28,7 +28,7 @@ async function createOrgCloudService(id: string, payload: any): Promise<AxiosRes
 }
 
 async function updateOrgCloudService(id: string, payload: any): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -40,7 +40,7 @@ async function updateOrgCloudService(id: string, payload: any): Promise<AxiosRes
 }
 
 async function deleteOrgCloudService(id: string): Promise<AxiosResponse> {
-	const token = cookieStorage.getItem('accessToken');
+	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}

@@ -4,7 +4,6 @@ import EventPackageHTTP from '../../utilities/http/admin/event-packages';
 import EventPostHTTP from '../../utilities/http/admin/event-posts';
 import { timeout } from '../../config/variables';
 import { usePackagesStore } from '../stores/usePackagesStore';
-import { useUserStore } from '../stores/useUserStore';
 import UserStoreHttp from './userStoreHttp';
 import delay from '../../utilities/helpers/delay';
 
