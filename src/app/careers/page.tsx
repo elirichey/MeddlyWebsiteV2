@@ -1,4 +1,5 @@
 // import CareersForm from '@components/Forms/Careers/CareersForm';
+import CareersForm from '@/components/Forms/Careers/CareersForm';
 import PrimaryLayout from '@layout/PrimaryLayout';
 import '@styles/globals.sass';
 
@@ -37,7 +38,9 @@ export default function Careers() {
 								</div>
 
 								<div id="careers-form">
-									<div className="flex1 row w100">{/* <CareersForm /> */}</div>
+									<div className="flex1 row w100">
+										<CareersForm />
+									</div>
 								</div>
 							</div>
 						</div>

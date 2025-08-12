@@ -6,6 +6,7 @@ export interface EventOnCreate {
 	type: string;
 	venueId: string;
 	managerId: string;
+	coverImg?: string;
 	date: string;
 	time: string;
 }
@@ -18,6 +19,7 @@ export interface EventOnCreatePayload {
 	managerId: string;
 	orgOwnerId: string;
 	dateTime: number;
+	coverImg?: string;
 }
 
 export interface EventInterface {
@@ -31,6 +33,7 @@ export interface EventInterface {
 	venueId: string;
 	managerId?: string;
 	orgOwnerId: string;
+	coverImg?: string;
 	updated?: string;
 	created?: string;
 }
@@ -59,8 +62,8 @@ export function validateEventFields(values: EventOnCreate) {
 	return { status: 200, payload };
 }
 
-export function formatCreateEventPayload(values: EventOnCreate) {
-	const { title, status, type, venueId, managerId, date, time } = values;
+export function formatCreateEventPayload(values: EventOnCreate): EventOnCreatePayload {
+	const { title, status, type, venueId, managerId, date, time, coverImg } = values;
 
 	const roleCookie: any = getCookie('role');
 	const role = roleCookie ? JSON.parse(roleCookie) : null;
@@ -82,12 +85,13 @@ export function formatCreateEventPayload(values: EventOnCreate) {
 		managerId: managerId.trim(),
 		orgOwnerId: role.organization.id,
 		dateTime: resTime,
+		coverImg,
 	};
 
 	return payload;
 }
 
-export function formatEditEventPayload(values: any) {
+export function formatEditEventPayload(values: any): Partial<EventInterface> {
 	const { title, status, type, venueId, managerId, date, time } = values;
 
 	const newDateTime = new Date();

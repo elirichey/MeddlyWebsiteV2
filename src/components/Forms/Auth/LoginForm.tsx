@@ -7,11 +7,10 @@ import isEmail from 'validator/lib/isEmail';
 import Loader from '@/components/Loader/Loader';
 import { useUserStore } from '@/storage/stores/useUserStore';
 import { formatLoginFormPayload } from '@/utilities/validations/AuthFormValidator';
-import { getCookieValue } from '../../../storage/cookies';
 import Input from '../_Inputs/Input';
 import Password from '../_Inputs/Password';
 import UserStoreHttp from '@/storage/http/userStoreHttp';
-// import { useUserStore } from '@/storage/stores/useUserStore';
+import { getCookie } from 'cookies-next';
 
 interface Values {
 	email: string;
@@ -22,15 +21,11 @@ export default function LoginForm() {
 	const router = useRouter();
 
 	const userStore = useUserStore();
-	const { loading } = userStore;
-
-	const profileCookie = getCookieValue('profile');
-	const profile = profileCookie ? JSON.parse(profileCookie) : null;
+	const { loading, error } = userStore;
 
 	const checkIfSignedIn = useCallback(() => {
-		const accessToken: any = getCookieValue('accessToken');
-		const refreshToken: any = getCookieValue('refreshToken');
-		console.log('checkIfSignedIn: accessToken', { accessToken, refreshToken });
+		const accessToken: any = getCookie('accessToken');
+		const refreshToken: any = getCookie('refreshToken');
 		if (accessToken && refreshToken) router.push('/admin');
 	}, [router]);
 
@@ -40,10 +35,8 @@ export default function LoginForm() {
 		return () => controller.abort();
 	}, [checkIfSignedIn]);
 
-	const [errors, setErrors] = useState<any>([]);
-	const emailError = errors.find((x: any) => x.message.toLowerCase().includes('user'));
-
-	const passwordError = errors.find((x: any) => x.message.toLowerCase().includes('credentials'));
+	const emailError = error?.find((x: any) => x.toLowerCase().includes('user'));
+	const passwordError = error?.find((x: any) => x.toLowerCase().includes('credentials'));
 
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
 
@@ -67,9 +60,9 @@ export default function LoginForm() {
 		e.preventDefault();
 		const values: Values = { email, password };
 		const payload: Values = formatLoginFormPayload(values);
-
-		console.log('submitForm: payload', { payload });
-		await UserStoreHttp.tryLogin(payload);
+		const response = await UserStoreHttp.tryLogin(payload);
+		console.log('submitForm: Response', { response });
+		if (response) router.push('/admin');
 	};
 
 	const formIsComplete = emailComplete && passwordComplete;

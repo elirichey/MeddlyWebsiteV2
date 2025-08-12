@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { MeddlyEvent } from '../../../interfaces/Event';
 import API from '../_url';
 import { getCookie } from 'cookies-next';
+import type { EventInterface, EventOnCreate, EventOnCreatePayload } from '@/utilities/validations/EventFormValidator';
 
 interface OrgEventData {
 	eventId: string;
@@ -51,9 +52,7 @@ async function getOrgEvent(vals: OrgEventData): Promise<any> {
 
 // ************** NOT TESTED  ************** //
 
-async function createEvent(data: { payload: any }): Promise<any | any> {
-	const { payload } = data;
-
+async function createEvent(payload: EventOnCreatePayload): Promise<any | any> {
 	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
@@ -90,9 +89,7 @@ async function createEvent(data: { payload: any }): Promise<any | any> {
 	return res;
 }
 
-async function updateEvent(data: { event: MeddlyEvent; payload: any }): Promise<any | any> {
-	const { event, payload } = data;
-
+async function updateEvent(event: MeddlyEvent, payload: Partial<EventInterface>): Promise<any | any> {
 	const token = getCookie('accessToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));

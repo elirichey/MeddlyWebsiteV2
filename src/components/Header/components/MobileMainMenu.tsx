@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import type { FullUser } from '@/interfaces/User';
+import type { User } from '@/interfaces/User';
 
 interface Props {
-	user: FullUser | null;
+	user: User | null;
 }
 
 export default function MobileMainMenu(props: Props) {
@@ -56,12 +56,12 @@ export default function MobileMainMenu(props: Props) {
 						</li>
 
 						{/*
-            <li onClick={() => setShowMenu(false)}>
-              <Link href="/about" className="mobile-menu-primary">
-                About
-              </Link>
-            </li>
-            */}
+						<li onClick={() => setShowMenu(false)}>
+						<Link href="/about" className="mobile-menu-primary">
+							About
+						</Link>
+						</li>
+						*/}
 
 						<li onClick={() => setShowMenu(false)} onKeyDown={() => setShowMenu(false)}>
 							<Link href="/careers" className="mobile-menu-primary">
@@ -86,16 +86,16 @@ export default function MobileMainMenu(props: Props) {
 						)}
 
 						{/* <li onClick={() => setShowMenu(false)} onKeyDown={() => setShowMenu(false)}>
-              <Link href="/auth/login" className="mobile-menu-primary">
-                Login
-              </Link>
-            </li> */}
+						<Link href="/auth/login" className="mobile-menu-primary">
+							Login
+						</Link>
+						</li> */}
 
 						{/* <li onClick={() => setShowMenu(false)} onKeyDown={() => setShowMenu(false)}>
-              <Link href="/auth/register" className="mobile-menu-primary">
-                Sign Up
-              </Link>
-            </li> */}
+						<Link href="/auth/register" className="mobile-menu-primary">
+							Sign Up
+						</Link>
+						</li> */}
 					</ul>
 				</div>
 			) : null}

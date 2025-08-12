@@ -1,5 +1,5 @@
-import axios from 'axios';
 import AuthHTTP from '@/utilities/http/auth';
+import { deleteCookie, setCookie } from 'cookies-next/client';
 import type { AuthCredentials, NewUserCredentials } from '../../interfaces/Auth';
 import type { UsersOrgRole } from '../../interfaces/UserRoles';
 import { useEventStore } from '../stores/useEventStore';
@@ -8,78 +8,58 @@ import { usePackagesStore } from '../stores/usePackagesStore';
 import { useRolesStore } from '../stores/useRolesStore';
 import { useSequencesStore } from '../stores/useSequencesStore';
 import { useServerStore } from '../stores/useServerStore';
+import { useSnackbarStore } from '../stores/useSnackbarStore';
 import { useSocketStore } from '../stores/useSocketStore';
 import { useThemeStore } from '../stores/useThemeStore';
 import { useUserStore } from '../stores/useUserStore';
 import delay from '../../utilities/helpers/delay';
 import { timeout } from '../../config/variables';
-import cookieStorage, { getCookieValue, removeSecureCookie, setSecureAuthCookie } from '../cookies';
+import { getCookieValue } from '../cookies';
 
-// import { useSnackbarStore } from '../stores/useSnackbarStore';
-
-async function tryLogin(data: AuthCredentials) {
-	// const { setSnackbar } = useSnackbarStore.getState();
+async function tryLogin(data: AuthCredentials): Promise<boolean> {
+	const { setSnackbar } = useSnackbarStore.getState();
 	const { setLoading, setError } = useUserStore.getState();
 
 	setLoading(true);
 	setError(null);
 
-	// console.log('tryLogin: Star	t', { data });
-
-	let errorMsg = '';
 	try {
 		const response = await AuthHTTP.login(data);
 
 		console.log('tryLogin: Response', { response });
 		if (response.status === 201 && response.data) {
 			console.log('tryLogin: Response 201', { response });
-			// setTokens(response.data);
 			await UserStoreHttp.getUserProfile();
-
-			// setSnackbar({
-			// 	title: 'Success',
-			// 	description: 'Login Successful',
-			// 	type: 'success',
-			// 	duration: 3000,
-			// 	show: true,
-			// });
-
-			// console.log('tryLogin: Response', { tokens: response.data });
-		} else {
-			const msg = response?.errors?.[0]?.message || 'Incorrect credentials';
-			// setError(msg);
-			errorMsg = msg;
-			// setSnackbar({
-			// 	title: 'Error',
-			// 	description: msg,
-			// 	type: 'error',
-			// 	duration: 3000,
-			// 	show: true,
-			// });
-			// console.log('tryLogin: Error 1', { err: response, msg });
-			return msg || 'Error';
+			console.log('tryLogin: User Profile Done');
+			// setSnackbar({ title: 'Success', description: 'Login Successful', type: 'success', duration: 3000, show: true });
+			return true;
 		}
+		const msg = response?.errors?.[0]?.message || 'Incorrect credentials';
+		setError(msg);
+		setSnackbar({
+			title: 'Error',
+			description: msg,
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
+		console.log('tryLogin: Error', { msg });
+		return false;
 	} catch (err: any) {
 		const msg = err?.message || 'Caught Error';
-		// setError(msg);
-		errorMsg = msg;
-		// setSnackbar({
-		// 	title: 'Error',
-		// 	description: msg,
-		// 	type: 'error',
-		// 	duration: 3000,
-		// 	show: true,
-		// });
-		// console.log('tryLogin: Error', { err });
+		setError(msg);
+		setSnackbar({
+			title: 'Error',
+			description: msg,
+			type: 'error',
+			duration: 3000,
+			show: true,
+		});
+		console.log('tryLogin: Error Catch', { msg });
+		return false;
 	} finally {
 		await delay(timeout.auth);
 		setLoading(false);
-		// console.log('tryLogin: Complete');
-		// if (errorMsg && errorMsg?.trim() !== '') {
-		// 	Toast.show(ToastError('Oops!', errorMsg));
-		// } else {
-		// 	Toast.show(ToastGeneral('Login Successful'));
-		// }
 	}
 }
 
@@ -94,10 +74,7 @@ async function trySignUp(data: NewUserCredentials) {
 	try {
 		const res: any = await AuthHTTP.registerNewUser(data);
 		if (res.status === 201 && res.data) {
-			// setTokens(res.data);
 			await UserStoreHttp.getUserProfile();
-
-			// console.log('trySignUp: Response', { tokens: res.data });
 		} else {
 			const msg = res?.response?.data?.message;
 			// setError(msg);
@@ -124,9 +101,12 @@ async function trySignUp(data: NewUserCredentials) {
 
 async function resetAllStores() {
 	const { resetUserStore } = useUserStore.getState();
-	removeSecureCookie('profile');
-	removeSecureCookie('roles');
-	removeSecureCookie('currentRole');
+	deleteCookie('profile');
+	deleteCookie('roles');
+	deleteCookie('currentRole');
+	deleteCookie('accessToken');
+	deleteCookie('refreshToken');
+
 	const { resetEvents } = useEventStore.getState();
 	const { resetMedia } = useMediaStore.getState();
 	const { resetPackages } = usePackagesStore.getState();
@@ -163,11 +143,6 @@ async function tryLogout(): Promise<void> {
 		const res: any = await AuthHTTP.signOut();
 		if (res?.status === 200) {
 			logoutSuccessful = true;
-			cookieStorage.removeItem('accessToken');
-			cookieStorage.removeItem('refreshToken');
-			removeSecureCookie('profile');
-			removeSecureCookie('roles');
-			removeSecureCookie('currentRole');
 			// console.log('tryLogout: Server logout successful');
 			// setTimeout(() => {
 			// 	Toast.show(ToastGeneral('Logged Out', 'See you soon!'));
@@ -213,7 +188,7 @@ async function refreshUser(): Promise<void> {
 	isRefreshing = true;
 
 	// Add a small delay to prevent rapid successive calls
-	// await delay(100);
+	await delay(100);
 
 	try {
 		const res: any = await AuthHTTP.refreshUser();
@@ -225,19 +200,16 @@ async function refreshUser(): Promise<void> {
 			if (res.data?.name === 'PrismaClientKnownRequestError') {
 				// console.log('refreshUser: Prisma error in response despite 201 status', { error: res.data });
 				const msg = 'Database error during token refresh';
-				// console.log('refreshUser: Error from Prisma', { msg });
 				await tryLogout();
 				return;
 			}
 
 			// Check if the response has the expected token structure
 			if (res.data?.accessToken && res.data?.refreshToken) {
-				cookieStorage.setItem('accessToken', res.data.accessToken);
-				cookieStorage.setItem('refreshToken', res.data.refreshToken);
+				console.log('refreshUser: Success');
 				return;
 			}
 
-			const msg = 'Invalid token response from server';
 			await tryLogout();
 			return;
 		}
@@ -263,21 +235,12 @@ async function getUserProfile(retryCount = 0) {
 	let errorMsg = '';
 	const maxRetries = 3;
 
-	const token = getCookieValue('accessToken');
-	const currentRoleCookie = getCookieValue('currentRole');
-	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
-
-	console.log('getUserProfile: Start', { retryCount, token });
+	console.log('getUserProfile: Start', { retryCount });
 	try {
 		const res: any = await AuthHTTP.userGetSelf();
 		console.log('getUserProfile: Response', { res });
 		if ((res?.status === 200 || res?.status === 201) && res?.data) {
-			if (currentRole) {
-				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole?.id);
-				if (updatedRole) {
-					setSecureAuthCookie('currentRole', updatedRole);
-				}
-			}
+			console.log('getUserProfile: Done');
 			return null;
 		}
 		if (res?.message?.includes('403')) {
@@ -331,12 +294,10 @@ async function updateUserProfile(data: any, retryCount = 0) {
 		const res: any = await AuthHTTP.updateUser(payload);
 		// console.log('updateUserProfile: Response', { res });
 		if (res.status === 200 || res.status === 201) {
-			setSecureAuthCookie('profile', res.data);
-			setSecureAuthCookie('roles', res.data.userRoles);
 			if (currentRole) {
 				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole.id);
 				if (updatedRole) {
-					setSecureAuthCookie('currentRole', updatedRole);
+					setCookie('currentRole', updatedRole);
 				}
 			}
 			// console.log('updateUserProfile: Success', { res });
@@ -368,50 +329,6 @@ async function updateUserProfile(data: any, retryCount = 0) {
 			// Toast.show(ToastError('Oops!', errorMsg));
 		} else {
 			// Toast.show(ToastSuccess('Update Successful!'));
-		}
-	}
-}
-
-async function updateUserConnectedEvent(eventConnectedId: string | null, retryCount = 0) {
-	const { setLoading } = useUserStore.getState();
-	setLoading(true);
-
-	let errorMsg = '';
-	const maxRetries = 3;
-
-	const payload = { eventConnectedId };
-
-	// console.log('updateUserConnectedEvent: Start', { payload });
-	try {
-		const res: any = await AuthHTTP.updateConnectedEvent(payload);
-		// console.log('updateUserConnectedEvent: Response', { res });
-		if (res.status === 200 || res.status === 201) {
-			setSecureAuthCookie('profile', res.data);
-			setSecureAuthCookie('roles', res.data.userRoles);
-			return null;
-		}
-
-		if (res?.message?.includes('403')) {
-			if (retryCount < maxRetries) {
-				await refreshUser();
-				await delay(timeout.auth);
-				return updateUserConnectedEvent(eventConnectedId, retryCount + 1);
-			}
-		}
-		const msg = res?.response?.data?.message;
-		errorMsg = msg;
-		// console.log('updateUserConnectedEvent: Error', { msg });
-		return msg;
-	} catch (err: any) {
-		const msg = err?.message || 'Caught Error';
-		errorMsg = msg;
-		// console.log('updateUserConnectedEvent: Error Catch', { err, msg });
-		return msg;
-	} finally {
-		setLoading(false);
-		// console.log('updateUserConnectedEvent: Complete');
-		if (errorMsg && errorMsg.trim() !== '') {
-			// Toast.show(ToastError('Oops!', errorMsg));
 		}
 	}
 }
@@ -509,13 +426,12 @@ async function deleteUser(retryCount = 0) {
 }
 
 const UserStoreHttp = {
-	tryLogin,
-	trySignUp,
-	tryLogout,
-	refreshUser,
-	getUserProfile,
+	tryLogin, // Good
+	trySignUp, // Should be good
+	tryLogout, // Should be good
+	refreshUser, // Should be good
+	getUserProfile, // Good
 	updateUserProfile,
-	updateUserConnectedEvent,
 	updateUserPassword,
 	deleteUser,
 };

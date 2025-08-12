@@ -29,6 +29,8 @@ export const setSecureAuthCookie = (name: string, value: any) => {
 	// Convert value to string if it's not already
 	const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
 
+	console.log('setSecureAuthCookie: Setting cookie', { name, value, stringValue, type: typeof value });
+
 	try {
 		setCookie(name, stringValue, {
 			httpOnly: false, // cookies-next doesn't support httpOnly in client-side
@@ -37,6 +39,11 @@ export const setSecureAuthCookie = (name: string, value: any) => {
 			maxAge: 15 * 60, // 15 minutes
 			path: '/', // Ensure cookie is available across the site
 		});
+		
+		// Verify the cookie was set
+		const verifyCookie = getCookie(name);
+		console.log('setSecureAuthCookie: Cookie verification', { name, verifyCookie, success: !!verifyCookie });
+		
 	} catch (error) {
 		console.error('setSecureAuthCookie: Error setting cookie:', error);
 		throw error;

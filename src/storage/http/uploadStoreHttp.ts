@@ -7,7 +7,6 @@ import { timeout } from '../../config/variables';
 // import FileAction from '../../utilities/helpers/file-actions';
 // import CameraHttp from '../../utilities/http/camera';
 import { useUploadsStore } from '../stores/useUploadsStore';
-import { useUserStore } from '../stores/useUserStore';
 import delay from '../../utilities/helpers/delay';
 import UserStoreHttp from './userStoreHttp';
 import EventPostHTTP from '../../utilities/http/admin/event-posts';

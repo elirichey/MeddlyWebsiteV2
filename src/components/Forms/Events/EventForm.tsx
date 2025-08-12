@@ -1,10 +1,12 @@
+'use client';
+
 import { formatDateForInput, formatTimeForInput } from '@utilities/conversions/dates';
 import {
 	determineEventFieldsEditableByOrgRoles,
 	determineEventStatusesByOrgRole,
 } from '@utilities/helpers/admin/determine-event-fields';
-import OrgEventHTTP from '@utilities/http/admin/organization-events';
-import UserRolesHTTP from '@utilities/http/admin/user-roles';
+import OrgEventHTTP from '@utilities/http/admin/events';
+import UserRolesHTTP from '@utilities/http/admin/roles';
 import VenuesHttp from '@utilities/http/admin/venues';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
@@ -13,6 +15,7 @@ import type { MeddlyEvent, MeddlyEventOnCreate } from '@/interfaces/Event';
 import refreshUser from '@/utilities/RefreshUser';
 import {
 	type EventOnCreate,
+	type EventOnCreatePayload,
 	formatCreateEventPayload,
 	formatEditEventPayload,
 } from '@/utilities/validations/EventFormValidator';
@@ -162,11 +165,11 @@ export default function EventForm(props: Props) {
 	};
 
 	const getOrgRoles = async () => {
-		const [roleCookie, accessToken]: any = await Promise.all([getCookie('role'), getCookie('accessToken')]);
+		const [roleCookie]: any = await getCookie('role');
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 
 		try {
-			const res: any = await UserRolesHTTP.getOrgRoles(role.organization.id, accessToken);
+			const res: any = await UserRolesHTTP.getOrgRoles(role.organization.id);
 			// const {userRoles, totalUserRoles} = res.data;
 			if (res.status === 200) {
 				setEventManagerOptions(res.data.userRoles);
@@ -205,13 +208,12 @@ export default function EventForm(props: Props) {
 	// ********** Form Actions ********** //
 
 	const onSearch = async () => {
-		const accessToken = await getCookie('accessToken');
 		if (searchValue !== '') {
 			setLoadingSearchVenues(true);
 			setShowVenueOptions(true);
 
 			try {
-				const res = await VenuesHttp.searchVenues(searchValue, accessToken || '');
+				const res = await VenuesHttp.searchVenues(searchValue);
 
 				if (res.status === 200) {
 					setEventVenueOptions(res.data);
@@ -253,8 +255,6 @@ export default function EventForm(props: Props) {
 	};
 
 	const onSubmit = async (values: any) => {
-		const accessToken: any = await getCookie('accessToken');
-
 		setLoading(true);
 
 		// Create Event
@@ -269,10 +269,10 @@ export default function EventForm(props: Props) {
 				time: eventTime,
 			};
 
-			const payload = formatCreateEventPayload(onCreate);
+			const payload: EventOnCreatePayload = formatCreateEventPayload(onCreate);
 
 			try {
-				const res: any = await OrgEventHTTP.createEvent(payload, accessToken);
+				const res: any = await OrgEventHTTP.createEvent(payload);
 				if (res.status === 201) {
 					getEvents ? await getEvents() : null;
 					emptyForm();
@@ -305,10 +305,10 @@ export default function EventForm(props: Props) {
 			time: eventTime,
 		};
 
-		const payload: any = formatEditEventPayload(onEdit);
+		const payload = formatEditEventPayload(onEdit);
 
 		try {
-			const res: any = await OrgEventHTTP.updateEvent(viewEvent, payload, accessToken);
+			const res: any = await OrgEventHTTP.updateEvent(viewEvent, payload);
 			if (res.status === 200) {
 				emptyUpdates();
 				setTimeout(() => setLoading(false), 500);

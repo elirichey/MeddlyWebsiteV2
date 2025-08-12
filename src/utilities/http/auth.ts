@@ -1,12 +1,11 @@
-import type { AxiosResponse } from 'axios';
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import validator from 'validator';
-import type { AuthCredentials, NewUserCredentials, UserConnectToEventPayload } from '../../interfaces/Auth';
+import type { AuthCredentials, NewUserCredentials } from '../../interfaces/Auth';
 import type { Error as ErrorType, ResponseError } from '../../interfaces/General';
 import API from './_url';
-import { getCookie } from 'cookies-next';
-import cookieStorage, { setSecureRefreshCookie, setSecureAuthCookie } from '@/storage/cookies';
-import delay from '../helpers/delay';
+import { getCookie, setCookie } from 'cookies-next';
+import { setSecureRefreshCookie, setSecureAuthCookie } from '@/storage/cookies';
+import type { UserRole } from '@/interfaces/UserRoles';
 
 interface UpdatePasswordPayload {
 	oldPassword: string;
@@ -37,10 +36,20 @@ async function registerNewUser(payload: NewUserCredentials): Promise<AxiosRespon
 		password: password,
 	};
 
-	return axios
+	const res = await axios
 		.post(`${API.url}/auth/register`, newUser)
 		.then((res) => res)
 		.catch((error) => error);
+
+	console.log('registerNewUser: Response', { res: res?.data });
+	if (res?.data?.accessToken) {
+		setSecureAuthCookie('accessToken', res?.data?.accessToken);
+	}
+	if (res?.data?.refreshToken) {
+		setSecureRefreshCookie('refreshToken', res?.data?.refreshToken);
+	}
+
+	return res;
 }
 
 async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
@@ -77,10 +86,13 @@ async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
 			}
 		});
 
-	console.log('login: Response', { res: res?.data });
-	if (res?.data?.accessToken) setSecureAuthCookie('accessToken', res?.data?.accessToken);
-	if (res?.data?.refreshToken) setSecureRefreshCookie('refreshToken', res?.data?.refreshToken);
-	await delay(100);
+	console.log('login: Response', { res });
+	if (res?.data?.accessToken) {
+		setSecureAuthCookie('accessToken', res?.data?.accessToken);
+	}
+	if (res?.data?.refreshToken) {
+		setSecureRefreshCookie('refreshToken', res?.data?.refreshToken);
+	}
 
 	return res;
 }
@@ -98,7 +110,7 @@ async function signOut(): Promise<AxiosResponse> {
 }
 
 async function refreshUser(): Promise<AxiosResponse> {
-	const token = getCookie('accessToken');
+	const token = getCookie('refreshToken');
 	if (!token) {
 		return Promise.reject(new Error('No token found'));
 	}
@@ -108,10 +120,20 @@ async function refreshUser(): Promise<AxiosResponse> {
 	}
 
 	const payload = { token };
-	return axios
+	const res = await axios
 		.post(`${API.url}/auth/refresh`, payload)
 		.then((res) => res)
 		.catch((error) => error);
+
+	console.log('refreshUser: Response', { res: res?.data });
+	if (res?.data?.accessToken) {
+		setSecureAuthCookie('accessToken', res?.data?.accessToken);
+	}
+	if (res?.data?.refreshToken) {
+		setSecureRefreshCookie('refreshToken', res?.data?.refreshToken);
+	}
+
+	return res;
 }
 
 async function requestPasswordReset(body: any): Promise<AxiosResponse> {
@@ -143,6 +165,9 @@ async function updateUserPassword(payload: UpdatePasswordPayload): Promise<Axios
 
 async function userGetSelf(): Promise<AxiosResponse> {
 	const token = getCookie('accessToken');
+	const currentRoleCookie = await getCookie('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
+
 	if (!token) {
 		console.error('userGetSelf: No token found');
 		return Promise.reject(new Error('No token found'));
@@ -156,11 +181,27 @@ async function userGetSelf(): Promise<AxiosResponse> {
 	const profile = res?.data;
 
 	if (profile) {
-		setSecureAuthCookie('userId', profile?.id);
-		setSecureAuthCookie('userUsername', profile?.username);
-		setSecureAuthCookie('userName', profile?.name);
-		setSecureAuthCookie('userAvatar', profile?.avatar);
-		setSecureAuthCookie('userRoles', profile?.userRoles);
+		// Use the custom cookieStorage which handles JSON serialization properly
+		const user = {
+			id: profile.id,
+			name: profile.name,
+			username: profile.username,
+			avatar: profile.avatar,
+		};
+
+		setCookie('profile', user);
+		setCookie('roles', profile.userRoles);
+
+		if (currentRole) {
+			const updatedRole = profile.userRoles.find((role: UserRole) => role.id === currentRole?.id);
+			if (updatedRole) {
+				setCookie('currentRole', updatedRole);
+			}
+		}
+
+		console.log('userGetSelf: Cookie set successfully using cookieStorage');
+	} else {
+		console.log('userGetSelf: No profile data to set cookie');
 	}
 
 	return res;

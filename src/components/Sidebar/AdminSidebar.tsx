@@ -1,3 +1,5 @@
+'use client';
+
 import CalendarOutline from '@icons/CalendarOutline';
 import ChevronDown from '@icons/ChevronDown';
 import ChevronUp from '@icons/ChevronUp';
@@ -6,38 +8,48 @@ import HomeOutline from '@icons/HomeOutline';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import type { FullUser } from '@/interfaces/User';
+import type { User } from '@/interfaces/User';
 import type { UserRole } from '@/interfaces/UserRoles';
 import { getCookieValue, removeSecureCookie } from '../../storage/cookies';
 
 export default function AdminSidebar() {
 	const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
-	const [currentUser, setCurrentUser] = useState<FullUser | null>(null);
+	const [currentUser, setCurrentUser] = useState<User | null>(null);
 	const [hasRoles, setHasRoles] = useState<boolean>(false);
 	const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+	// const [userRoles, setUserRoles] = useState<UserRole[]>([]);
+
+	const userRolesCookie = getCookieValue('userRoles');
+	const userRoles = userRolesCookie ? JSON.parse(userRolesCookie) : [];
+
+	const currentRoleCookie = getCookieValue('currentRole');
+	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
+
+	console.log('currentRole', { userRoles, currentRole });
 
 	const router = useRouter();
-	const isOverivew: boolean = router.pathname === '/admin';
-	const isEvent: boolean = router.pathname.includes('event');
-	const isRoles: boolean = router.pathname.includes('role');
-	const isSupport: boolean = router.pathname.includes('support');
-	const isDocs: boolean = router.pathname.includes('docs');
+	const pathname = usePathname();
+	const isOverivew: boolean = pathname === '/admin';
+	const isEvent: boolean = pathname.includes('event');
+	const isRoles: boolean = pathname.includes('role');
+	const isSupport: boolean = pathname.includes('support');
+	const isDocs: boolean = pathname.includes('docs');
 
-	useEffect(() => {
-		checkForRoles();
-	}, []);
+	// useEffect(() => {
+	// 	checkForRoles();
+	// }, []);
 
-	const roleCookie = getCookieValue('role');
-	const currentRole = roleCookie ? JSON.parse(roleCookie) : null;
+	// const roleCookie = getCookieValue('role');
+	// const currentRole = roleCookie ? JSON.parse(roleCookie) : null;
 
 	const logout = () => {
 		const userCookie = getCookieValue('user');
 		const accessToken = getCookieValue('accessToken');
 		const refreshToken = getCookieValue('refreshToken');
 		const user = userCookie ? JSON.parse(userCookie) : null;
-		const role = roleCookie ? JSON.parse(roleCookie) : null;
+		// const role = roleCookie ? JSON.parse(roleCookie) : null;
 
 		// Remove secure authentication cookies
 		accessToken ? removeSecureCookie('accessToken') : null;
@@ -45,7 +57,7 @@ export default function AdminSidebar() {
 		// Remove user data from localStorage
 		localStorage.removeItem('user');
 		// Remove role cookie
-		role ? removeSecureCookie('role') : null;
+		userRoles ? removeSecureCookie('role') : null;
 		return router.push('/');
 	};
 
@@ -53,7 +65,7 @@ export default function AdminSidebar() {
 		// Logout user, invalidate current token...
 		const userCookie = getCookieValue('user');
 		const user = userCookie ? JSON.parse(userCookie) : null;
-		const role = roleCookie ? JSON.parse(roleCookie) : null;
+		// const role = roleCookie ? JSON.parse(roleCookie) : null;
 
 		const userHasRoles = user?.userRoles && user.userRoles.length > 0;
 		if (!userHasRoles) {
@@ -61,13 +73,13 @@ export default function AdminSidebar() {
 		}
 		setCurrentUser(user);
 		setHasRoles(true);
-		currentRole ? setSelectedRole(role) : null;
-		role ? setCookie('role', role) : null;
+		currentRole ? setSelectedRole(currentRole) : null;
+		currentRole ? setCookie('currentRole', currentRole) : null;
 	};
 
 	// When role updates, route to overview
 	const usePrevious = (value: any) => {
-		const ref = useRef();
+		const ref = useRef<any>(null);
 		useEffect(() => {
 			ref.current = value;
 		});
@@ -77,18 +89,16 @@ export default function AdminSidebar() {
 	useEffect(() => {
 		if (prevRole?.selectedRole) router.push('/admin');
 		if (selectedRole && showUserMenu) setShowUserMenu(false);
-	}, [selectedRole]);
+	}, [selectedRole, showUserMenu, router, prevRole]);
 
 	// When url updates, hide showUserMenu...
 	useEffect(() => {
 		if (selectedRole && showUserMenu) {
 			setShowUserMenu(false);
 		}
-	}, [router.asPath, selectedRole, showUserMenu]);
+	}, [selectedRole, showUserMenu]);
 
 	const currentRoleImage = selectedRole?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
-
-	const userRoles = currentUser?.userRoles || [];
 
 	return (
 		<div id="admin-sidebar">
@@ -189,7 +199,7 @@ export default function AdminSidebar() {
 					{showUserMenu || !selectedRole ? (
 						<div className="admin-switch-role-menu">
 							<ul id="role-selections">
-								{hasRoles && currentUser && currentUser?.userRoles
+								{hasRoles && currentUser && userRoles.length > 0
 									? userRoles.map((item: UserRole, i: number) => {
 											const image = item?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
 											return (

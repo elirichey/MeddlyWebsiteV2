@@ -11,7 +11,6 @@ export default function Snackbar() {
 	const text2 = snackbar?.description;
 	const type = snackbar?.type;
 	const duration = snackbar?.duration || 3000;
-
 	const shouldShow = snackbar && show;
 
 	useEffect(() => {

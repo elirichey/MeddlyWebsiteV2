@@ -1,6 +1,6 @@
 'use client';
 
-import type { FullUser } from '@interfaces/User';
+import type { User } from '@interfaces/User';
 import { getCookie } from 'cookies-next';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import HeaderLogo from './components/HeaderLogo';
 import MobileMainMenu from './components/MobileMainMenu';
 
 export default function Header() {
-	const [currentUser, setCurrentUser] = useState<FullUser | null>(null);
+	const [currentUser, setCurrentUser] = useState<User | null>(null);
 
 	const setUser = () => {
 		const userCookie: any = getCookie('user');

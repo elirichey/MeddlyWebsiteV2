@@ -1,3 +1,5 @@
+'use client';
+
 import Loader from '@/components/Loader/Loader';
 import { enforceFormat, formatToPhone } from '@/utilities/helpers/format-phone';
 import WebsiteFormsHTTP from '@/utilities/http/forms/website';

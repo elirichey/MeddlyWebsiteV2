@@ -1,6 +1,7 @@
+'use client';
+
 import CloseIcon from '@icons/CloseIcon';
 import MobileMenuWhite from '@icons/MobileMenuWhite';
-import { type CookieValueTypes } from 'cookies-next';
 import { getCookieValue } from '@/storage/cookies';
 import localFont from 'next/font/local';
 import Head from 'next/head';
@@ -9,6 +10,7 @@ import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Termly from '@/components/Legal/Termly';
 import AdminSidebar from '../components/Sidebar/AdminSidebar';
+import Snackbar from '@/components/Notifications/Snackbar';
 
 interface Props {
 	children: ReactNode;
@@ -87,7 +89,11 @@ export default function AdminLayout({ children }: Props) {
 				</div>
 
 				<div className="mobile-menu" ref={wrapperRef}>
-					<div className="mobile-menu-icon" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+					<div
+						className="mobile-menu-icon"
+						onClick={() => setShowMobileMenu(!showMobileMenu)}
+						onKeyDown={() => setShowMobileMenu(!showMobileMenu)}
+					>
 						{showMobileMenu ? (
 							<CloseIcon className="mobile-menu-icon" />
 						) : (
@@ -108,6 +114,8 @@ export default function AdminLayout({ children }: Props) {
           gtag('config', 'G-26GXSSEKE9');
         `}
 				</Script>
+
+				<Snackbar />
 
 				<Termly />
 			</body>

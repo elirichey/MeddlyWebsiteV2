@@ -14,7 +14,7 @@
   position: fixed
   height: 100%
   min-height: 100%
-  width: 320px
+  width: 304px
   background-color: $white
   overflow: hidden // scroll
   border-right: solid 1px $light
@@ -108,6 +108,7 @@
     flex-direction: column
     a
       color: $red
+      font-size: 10px
       &:hover
         color: $blue
     .login-btn
@@ -154,7 +155,7 @@
       justify-content: center
       position: relative
       background-color: $white
-      height: 80px
+      min-height: 80px
       width: calc(100% - 30px)
       border-radius: 10px
       padding-left: 15px
@@ -193,9 +194,9 @@
       &.select-user
         display: flex
         align-items: center
-        font-weight: 700
+        font-weight: 500
         font-size: 12px
-        letter-spacing: 3px
+        letter-spacing: 1.5px
         text-transform: uppercase
         padding-left: 20px
         margin: auto
@@ -265,7 +266,8 @@
   justify-content: center
   background-color: $white
   position: relative
-  height: 120px
+  padding-top: 10px
+  padding-bottom: 10px
   z-index: 1000000
   img
     width: auto

@@ -5,7 +5,7 @@ export default function HeaderLogo() {
 	return (
 		<div id="header-logo">
 			<Link href="/">
-				<Image src="/svg/logo/meddly/full.svg" height={75} width={270} alt="logo" priority />
+				<Image src="/svg/logo/meddly/full.svg" height={87} width={230} alt="logo" priority />
 			</Link>
 		</div>
 	);
