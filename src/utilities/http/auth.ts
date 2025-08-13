@@ -70,23 +70,21 @@ async function login(payload: AuthCredentials): Promise<AxiosResponse | any> {
 	const errorRes = { status: 400, errors: errors };
 	if (errorRes.errors.length > 0) return errorRes;
 
-	const res: any = await axios
+	console.log('login: Payload', { payload });
+
+	const res: AxiosResponse | any = await axios
 		.post(`${API.url}/auth/login`, payload)
 		.then((res) => res)
 		.catch((e) => {
-			if (e.request?._response) {
-				const obj = JSON.parse(e.request._response);
-				const error = {
-					type: 'Authentication',
-					message: obj.message,
-				};
-				errors.push(error);
-				const eResponse: ResponseError = { status: 400, errors: errors };
+			console.log('login: Error Catch 99987', { e });
+
+			if (e.status === 400) {
+				const msg = e?.response?.data?.message;
+				const eResponse: ResponseError = { status: 400, errors: [{ type: 'Authentication', message: msg }] };
 				return eResponse;
 			}
 		});
 
-	console.log('login: Response', { res });
 	if (res?.data?.accessToken) {
 		setSecureAuthCookie('accessToken', res?.data?.accessToken);
 	}

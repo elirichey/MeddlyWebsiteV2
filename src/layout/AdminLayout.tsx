@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: Props) {
 	const wrapperRef = useRef<any>(null);
 
 	useEffect(() => {
-		const roleCookie = getCookieValue('role');
+		const roleCookie = getCookieValue('currentRole');
 		const role = roleCookie ? JSON.parse(roleCookie) : null;
 		if (!role) setShowMobileMenu(true);
 	}, []);
@@ -65,60 +65,42 @@ export default function AdminLayout({ children }: Props) {
 	useDetectOutsideClick(wrapperRef);
 
 	return (
-		<html lang="en">
-			<Head>
-				<title>{title}</title>
-				<meta name="description" content={description} />
-				<meta property="og:title" content={title} />
-				<meta property="og:description" content={description} />
-				<meta property="og:image" content={ogImg} />
+		<div id="admin-layout" className={`base ${redhat.variable} ${logo.variable} font-sans`}>
+			<div className="desktop-menu">
+				<AdminSidebar />
+			</div>
 
-				<meta name="twitter:card" content="summary_large_image" />
-				<meta name="twitter:site" content="@meddlyapp" />
-				<meta name="twitter:creator" content="@meddlyapp" />
-				<meta name="twitter:title" content={title} />
-				<meta name="twitter:description" content={description} />
-				<meta name="twitter:image" content={ogImg} />
-				<meta name="robots" content="noindex" />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-
-			<body id="admin-layout" className={`base ${redhat.variable} ${logo.variable} font-sans`}>
-				<div className="desktop-menu">
-					<AdminSidebar />
+			<div className="mobile-menu" ref={wrapperRef}>
+				<div
+					className="mobile-menu-icon"
+					onClick={() => setShowMobileMenu(!showMobileMenu)}
+					onKeyDown={() => setShowMobileMenu(!showMobileMenu)}
+				>
+					{showMobileMenu ? (
+						<CloseIcon className="mobile-menu-icon" />
+					) : (
+						<MobileMenuWhite className="mobile-menu-icon" />
+					)}
 				</div>
+				{showMobileMenu ? <AdminSidebar /> : null}
+			</div>
 
-				<div className="mobile-menu" ref={wrapperRef}>
-					<div
-						className="mobile-menu-icon"
-						onClick={() => setShowMobileMenu(!showMobileMenu)}
-						onKeyDown={() => setShowMobileMenu(!showMobileMenu)}
-					>
-						{showMobileMenu ? (
-							<CloseIcon className="mobile-menu-icon" />
-						) : (
-							<MobileMenuWhite className="mobile-menu-icon" />
-						)}
-					</div>
-					{showMobileMenu ? <AdminSidebar /> : null}
-				</div>
-				{children}
+			{children}
 
-				<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
-				<Script id="google-analytics">
-					{`
+			<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
+			<Script id="google-analytics">
+				{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
           gtag('config', 'G-26GXSSEKE9');
         `}
-				</Script>
+			</Script>
 
-				<Snackbar />
+			<Snackbar />
 
-				<Termly />
-			</body>
-		</html>
+			<Termly />
+		</div>
 	);
 }

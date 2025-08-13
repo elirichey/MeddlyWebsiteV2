@@ -34,42 +34,23 @@ export default function AuthLayout({ children }: Props) {
 	const ogImg = '/image/og-img.png';
 
 	return (
-		<html lang="en">
-			<Head>
-				<title>{title}</title>
-				<meta name="description" content={description} />
-				<meta property="og:title" content={title} />
-				<meta property="og:description" content={description} />
-				<meta property="og:image" content={ogImg} />
+		<div className={`base ${redhat.variable} ${logo.variable} font-sans`}>
+			<Header />
+			{children}
+			<Footer />
 
-				<meta name="twitter:card" content="summary_large_image" />
-				<meta name="twitter:site" content="@meddlyapp" />
-				<meta name="twitter:creator" content="@meddlyapp" />
-				<meta name="twitter:title" content={title} />
-				<meta name="twitter:description" content={description} />
-				<meta name="twitter:image" content={ogImg} />
-				<meta name="robots" content="noindex" />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-
-			<body className={`base ${redhat.variable} ${logo.variable} font-sans`}>
-				<Header />
-				{children}
-				<Footer />
-
-				<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
-				<Script id="google-analytics">
-					{`
+			<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
+			<Script id="google-analytics">
+				{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
           gtag('config', 'G-26GXSSEKE9');
         `}
-				</Script>
+			</Script>
 
-				<Termly />
-			</body>
-		</html>
+			<Termly />
+		</div>
 	);
 }

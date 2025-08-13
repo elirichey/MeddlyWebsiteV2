@@ -1,3 +1,5 @@
+'use client';
+
 import EventFilter from '@/components/Filters/EventFilter';
 import Pagination from '@/components/Pagination/Pagination';
 import eventConfig from '@/config/events';
@@ -10,7 +12,7 @@ import AddIcon from '@icons/AddIcon';
 import AdminLayout from '@layout/AdminLayout';
 // import OrgEventHTTP from '@utilities/http/admin/organization-events';
 import { getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import '@styles/globals.sass';
 
@@ -83,8 +85,8 @@ export default function Events() {
 	const totalPages = Math.ceil(totalEvents / showItemsPerPage);
 
 	return (
-		<AdminLayout>
-			<main id="admin" className="admin-events">
+		<main id="admin" className="admin-events">
+			<AdminLayout>
 				<MenuBar>
 					<>
 						<div className="flex" />
@@ -128,7 +130,7 @@ export default function Events() {
 						<ListOrgEvents events={orgEvents} />
 					)}
 				</div>
-			</main>
-		</AdminLayout>
+			</AdminLayout>
+		</main>
 	);
 }

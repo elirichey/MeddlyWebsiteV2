@@ -1,5 +1,6 @@
 import LoginForm from '@components/Forms/Auth/LoginForm';
 import AuthLayout from '@layout/AuthLayout';
+import Snackbar from '@components/Notifications/Snackbar';
 import '@styles/globals.sass';
 
 export default function Login() {
@@ -19,6 +20,8 @@ export default function Login() {
 					</div>
 				</div>
 			</main>
+
+			<Snackbar />
 		</AuthLayout>
 	);
 }

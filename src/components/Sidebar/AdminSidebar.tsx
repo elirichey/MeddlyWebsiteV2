@@ -9,25 +9,16 @@ import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { User } from '@/interfaces/User';
 import type { UserRole } from '@/interfaces/UserRoles';
 import { getCookieValue, removeSecureCookie } from '../../storage/cookies';
 
 export default function AdminSidebar() {
 	const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
-	const [currentUser, setCurrentUser] = useState<User | null>(null);
 	const [hasRoles, setHasRoles] = useState<boolean>(false);
 	const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-	// const [userRoles, setUserRoles] = useState<UserRole[]>([]);
-
-	const userRolesCookie = getCookieValue('userRoles');
-	const userRoles = userRolesCookie ? JSON.parse(userRolesCookie) : [];
-
-	const currentRoleCookie = getCookieValue('currentRole');
-	const currentRole = currentRoleCookie ? JSON.parse(currentRoleCookie) : null;
-
-	console.log('currentRole', { userRoles, currentRole });
+	const [userRoles, setUserRoles] = useState<UserRole[]>([]);
 
 	const router = useRouter();
 	const pathname = usePathname();
@@ -37,14 +28,7 @@ export default function AdminSidebar() {
 	const isSupport: boolean = pathname.includes('support');
 	const isDocs: boolean = pathname.includes('docs');
 
-	// useEffect(() => {
-	// 	checkForRoles();
-	// }, []);
-
-	// const roleCookie = getCookieValue('role');
-	// const currentRole = roleCookie ? JSON.parse(roleCookie) : null;
-
-	const logout = () => {
+	const logout = useCallback(() => {
 		const userCookie = getCookieValue('user');
 		const accessToken = getCookieValue('accessToken');
 		const refreshToken = getCookieValue('refreshToken');
@@ -57,25 +41,32 @@ export default function AdminSidebar() {
 		// Remove user data from localStorage
 		localStorage.removeItem('user');
 		// Remove role cookie
-		userRoles ? removeSecureCookie('role') : null;
+		removeSecureCookie('currentRole');
 		return router.push('/');
-	};
+	}, [router]);
 
-	const checkForRoles = () => {
-		// Logout user, invalidate current token...
-		const userCookie = getCookieValue('user');
-		const user = userCookie ? JSON.parse(userCookie) : null;
-		// const role = roleCookie ? JSON.parse(roleCookie) : null;
+	const checkForRoles = useCallback(() => {
+		const userRolesCookie = getCookieValue('roles');
+		const userRoles = userRolesCookie ? JSON.parse(userRolesCookie) : [];
 
-		const userHasRoles = user?.userRoles && user.userRoles.length > 0;
+		const userHasRoles = userRoles && userRoles.length > 0;
 		if (!userHasRoles) {
 			return logout();
 		}
-		setCurrentUser(user);
+
+		setUserRoles(userRoles);
 		setHasRoles(true);
-		currentRole ? setSelectedRole(currentRole) : null;
-		currentRole ? setCookie('currentRole', currentRole) : null;
-	};
+
+		const userRoleCookie = getCookieValue('currentRole');
+		const userRole = userRoleCookie ? JSON.parse(userRoleCookie) : null;
+		if (userRole) {
+			setSelectedRole(userRole);
+		}
+	}, [logout]);
+
+	useEffect(() => {
+		checkForRoles();
+	}, [checkForRoles]);
 
 	// When role updates, route to overview
 	const usePrevious = (value: any) => {
@@ -88,15 +79,8 @@ export default function AdminSidebar() {
 	const prevRole: any = usePrevious({ selectedRole });
 	useEffect(() => {
 		if (prevRole?.selectedRole) router.push('/admin');
-		if (selectedRole && showUserMenu) setShowUserMenu(false);
-	}, [selectedRole, showUserMenu, router, prevRole]);
-
-	// When url updates, hide showUserMenu...
-	useEffect(() => {
-		if (selectedRole && showUserMenu) {
-			setShowUserMenu(false);
-		}
-	}, [selectedRole, showUserMenu]);
+		// if (selectedRole && showUserMenu) setShowUserMenu(false);
+	}, [router, prevRole]);
 
 	const currentRoleImage = selectedRole?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
 
@@ -199,26 +183,25 @@ export default function AdminSidebar() {
 					{showUserMenu || !selectedRole ? (
 						<div className="admin-switch-role-menu">
 							<ul id="role-selections">
-								{hasRoles && currentUser && userRoles.length > 0
+								{hasRoles && userRoles.length > 0
 									? userRoles.map((item: UserRole, i: number) => {
 											const image = item?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
 											return (
-												<li
-													onClick={() => {
-														setShowUserMenu(false);
-														setSelectedRole(item);
-														setCookie('role', item);
-													}}
-													onKeyDown={(e) => {
-														if (e.key === 'Enter' || e.key === ' ') {
-															setShowUserMenu(false);
+												<li key={item.id}>
+													<button
+														type="button"
+														className="role-card"
+														onClick={() => {
 															setSelectedRole(item);
-															setCookie('role', item);
-														}
-													}}
-													key={item.id}
-												>
-													<div className="role-card">
+															setCookie('currentRole', item);
+														}}
+														onKeyDown={(e) => {
+															if (e.key === 'Enter' || e.key === ' ') {
+																setSelectedRole(item);
+																setCookie('currentRole', item);
+															}
+														}}
+													>
 														<div className="avatar">
 															<Image src={image} height={50} width={50} alt="org-avatar" />
 														</div>
@@ -227,7 +210,7 @@ export default function AdminSidebar() {
 															<span className="user-name">{item.organization.name}</span>
 															<span className="user-role">{item.role}</span>
 														</div>
-													</div>
+													</button>
 												</li>
 											);
 										})

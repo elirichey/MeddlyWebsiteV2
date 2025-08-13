@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import Loader from '@/components/Loader/Loader';
-import { useUserStore } from '@/storage/stores/useUserStore';
 import { formatLoginFormPayload } from '@/utilities/validations/AuthFormValidator';
 import Input from '../_Inputs/Input';
 import Password from '../_Inputs/Password';
@@ -20,9 +19,6 @@ interface Values {
 export default function LoginForm() {
 	const router = useRouter();
 
-	const userStore = useUserStore();
-	const { loading, error } = userStore;
-
 	const checkIfSignedIn = useCallback(() => {
 		const accessToken: any = getCookie('accessToken');
 		const refreshToken: any = getCookie('refreshToken');
@@ -34,9 +30,6 @@ export default function LoginForm() {
 		checkIfSignedIn();
 		return () => controller.abort();
 	}, [checkIfSignedIn]);
-
-	const emailError = error?.find((x: any) => x.toLowerCase().includes('user'));
-	const passwordError = error?.find((x: any) => x.toLowerCase().includes('credentials'));
 
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
 
@@ -56,16 +49,27 @@ export default function LoginForm() {
 		else if (passwordComplete) setPasswordComplete(false);
 	}, [password, passwordComplete]);
 
+	const [loading, setLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
+
 	const submitForm = async (e: any) => {
 		e.preventDefault();
+		setLoading(true);
+		setError(null);
 		const values: Values = { email, password };
 		const payload: Values = formatLoginFormPayload(values);
 		const response = await UserStoreHttp.tryLogin(payload);
-		console.log('submitForm: Response', { response });
-		if (response) {
+		if (response.status === 200) {
 			router.push('/admin');
+		} else {
+			setError(response.response);
 		}
+
+		setLoading(false);
 	};
+
+	const emailError = error?.toLowerCase().includes('user');
+	const passwordError = error?.toLowerCase().includes('credentials');
 
 	const formIsComplete = emailComplete && passwordComplete;
 
@@ -88,7 +92,7 @@ export default function LoginForm() {
 						placeholder="email@example.com"
 						isComplete={emailComplete}
 						label="Email"
-						error={emailError ? emailError.message : null}
+						error={emailError ? error : null}
 					/>
 
 					<Password
@@ -101,7 +105,7 @@ export default function LoginForm() {
 						label="Password"
 						hidePassword={hidePassword}
 						toggleHidePassword={setHidePassword}
-						error={passwordError ? passwordError.message : null}
+						error={null}
 						showToggle={true}
 					/>
 

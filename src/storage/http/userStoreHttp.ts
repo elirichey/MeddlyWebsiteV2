@@ -16,50 +16,21 @@ import delay from '../../utilities/helpers/delay';
 import { timeout } from '../../config/variables';
 import { getCookieValue } from '../cookies';
 
-async function tryLogin(data: AuthCredentials): Promise<boolean> {
-	const { setSnackbar } = useSnackbarStore.getState();
-	const { setLoading, setError } = useUserStore.getState();
-
-	setLoading(true);
-	setError(null);
-
+async function tryLogin(data: AuthCredentials): Promise<{ status: number; response: string }> {
 	try {
 		const response = await AuthHTTP.login(data);
-
 		console.log('tryLogin: Response', { response });
+
 		if (response.status === 201 && response.data) {
-			console.log('tryLogin: Response 201', { response });
 			await UserStoreHttp.getUserProfile();
-			console.log('tryLogin: User Profile Done');
 			// setSnackbar({ title: 'Success', description: 'Login Successful', type: 'success', duration: 3000, show: true });
-			return true;
+			return { status: 200, response: 'Login Successful' };
 		}
 		const msg = response?.errors?.[0]?.message || 'Incorrect credentials';
-		setError(msg);
-		setSnackbar({
-			title: 'Error',
-			description: msg,
-			type: 'error',
-			duration: 3000,
-			show: true,
-		});
-		console.log('tryLogin: Error', { msg });
-		return false;
+		return { status: 400, response: msg };
 	} catch (err: any) {
 		const msg = err?.message || 'Caught Error';
-		setError(msg);
-		setSnackbar({
-			title: 'Error',
-			description: msg,
-			type: 'error',
-			duration: 3000,
-			show: true,
-		});
-		console.log('tryLogin: Error Catch', { msg });
-		return false;
-	} finally {
-		await delay(timeout.auth);
-		setLoading(false);
+		return { status: 400, response: msg };
 	}
 }
 

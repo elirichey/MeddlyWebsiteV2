@@ -70,7 +70,7 @@ export const metadata: Metadata = {
 
 export default function PrimaryLayout({ children }: Props) {
 	return (
-		<html lang="en">
+		<>
 			<Head>
 				<title>{title}</title>
 				<meta name="description" content={description} />
@@ -87,7 +87,7 @@ export default function PrimaryLayout({ children }: Props) {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<body className={`${redhat.variable} ${logo.variable} font-sans`}>
+			<div className={`base ${redhat.variable} ${logo.variable} font-sans`}>
 				<Header />
 				{children}
 
@@ -107,7 +107,7 @@ export default function PrimaryLayout({ children }: Props) {
 				</Script>
 
 				<Termly />
-			</body>
-		</html>
+			</div>
+		</>
 	);
 }
