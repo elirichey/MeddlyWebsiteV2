@@ -1,3 +1,5 @@
+'use client';
+
 import refreshUser from '@/utilities/RefreshUser';
 // import AuthUserHTTP from "@/utilities/http/user/auth";
 // import PackageForm from "@components/Forms/Packages/PackageForm";
@@ -9,7 +11,7 @@ import TrashIcon from '@icons/TrashIcon';
 import AdminLayout from '@layout/AdminLayout';
 import EventPackageHTTP from '@utilities/http/admin/event-packages';
 import { deleteCookie, getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -86,7 +88,8 @@ export default function Packages(props: Props) {
 	};
 
 	return (
-		<main id="admin" className="admin-package">
+		<AdminLayout>
+			<main id="admin" className="admin-package">
 			<MenuBar>
 				<button className="menu-bar-go-back" onClick={goBack} onKeyDown={goBack} type="button">
 					<ChevronLeft className="back-icon" />
@@ -128,22 +131,7 @@ export default function Packages(props: Props) {
 					</div>
 				</div>
 			)}
-		</main>
+			</main>
+		</AdminLayout>
 	);
 }
-
-export const getStaticPaths = async () => {
-	return { paths: [], fallback: 'blocking' };
-};
-
-export async function getStaticProps({
-	params,
-}: {
-	params: { eventId: string; packId: string };
-}) {
-	const eventId = params.eventId;
-	const packageId = params.packId;
-	return { props: { eventId, packageId } };
-}
-
-Packages.layout = AdminLayout;

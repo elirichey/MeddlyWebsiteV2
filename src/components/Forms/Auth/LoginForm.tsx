@@ -62,7 +62,9 @@ export default function LoginForm() {
 		const payload: Values = formatLoginFormPayload(values);
 		const response = await UserStoreHttp.tryLogin(payload);
 		console.log('submitForm: Response', { response });
-		if (response) router.push('/admin');
+		if (response) {
+			router.push('/admin');
+		}
 	};
 
 	const formIsComplete = emailComplete && passwordComplete;
