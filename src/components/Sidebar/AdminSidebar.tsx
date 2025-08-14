@@ -210,7 +210,7 @@ export default function AdminSidebar() {
 						<div className="admin-switch-role-menu">
 							<ul id="role-selections">
 								{hasRoles && userRoles.length > 0
-									? userRoles.map((item: UserRole, i: number) => {
+									? userRoles.map((item: UserRole) => {
 											const image = item?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
 											return (
 												<li key={item.id}>
