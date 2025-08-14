@@ -85,7 +85,7 @@ export default function AdminLayout({ children }: Props) {
 				{showMobileMenu ? <AdminSidebar /> : null}
 			</div>
 
-			{children}
+			<div className="admin-layout-container">{children}</div>
 
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
 			<Script id="google-analytics">

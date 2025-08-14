@@ -99,7 +99,7 @@ export default function Events() {
 					</>
 				</MenuBar>
 
-				<div id="list-events">
+				<div id="list-events" className="admin-container">
 					<EventFilter
 						selected={selectedStatus}
 						options={eventStatuses}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import AdminLayout from '@layout/AdminLayout';
 import '@styles/globals.sass';
+import MenuBar from '@/components/MenuBar/MenuBar';
 
 export const metadata: Metadata = {
 	title: 'Meddly | Admin Settings',
@@ -12,16 +13,13 @@ export const metadata: Metadata = {
 export default function Settings() {
 	return (
 		<AdminLayout>
-			<main id="admin" className="admin-roles">
-				<div className="container">
-					<h1>Admin Settings</h1>
-					<div className="flex1 row w100">
-						<div className="flex1 column">
-							<h2>Settings</h2>
-						</div>
-					</div>
-				</div>
-			</main>
+			<MenuBar>
+				<span className="txt-white">Settings</span>
+			</MenuBar>
+
+			<div id="admin-settings" className="admin-container">
+				<h1>Settings</h1>
+			</div>
 		</AdminLayout>
 	);
 }

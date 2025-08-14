@@ -11,7 +11,22 @@
     z-index: 3
   .mobile-menu
     display: none
-
+  .admin-layout-container
+    flex: 1
+    display: flex    
+    max-width: calc(100% - 304px)
+    margin-left: 304px  
+  .admin-container
+    flex: 1
+    flex-direction: column
+    height: calc(100% - 107px)
+    margin-top: 107px
+    background-color: $light
+    #pagination
+      padding: 15px 15px 0
+    .loader-container
+      padding-bottom: 250px
+    
 #admin-sidebar
   display: flex
   flex-direction: column
@@ -38,6 +53,7 @@
         height: 54px
         color: $gray
         font-weight: 500
+        letter-spacing: 1px;
         padding-left: 12px
         padding-top: 2px
         span
@@ -46,8 +62,8 @@
           display: flex
           align-items: center
           justify-content: center
-          height: 30px
-          width: 30px
+          height: 27px
+          width: 27px
           margin-right: 12px
           padding: 3px
           polyline, rect, line
