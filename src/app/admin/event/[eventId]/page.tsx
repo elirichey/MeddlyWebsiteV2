@@ -32,7 +32,7 @@ interface Props {
 	eventId: string;
 }
 
-export default function Events(props: Props) {
+export default function Event(props: Props) {
 	const router = useRouter();
 	const { eventId } = props;
 	const [loading, setLoading] = useState<boolean>(false);

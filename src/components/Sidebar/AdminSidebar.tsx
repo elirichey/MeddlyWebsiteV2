@@ -3,16 +3,20 @@
 import CalendarOutline from '@icons/CalendarOutline';
 import ChevronDown from '@icons/ChevronDown';
 import ChevronUp from '@icons/ChevronUp';
-import DocumentsOutline from '@icons/DocumentsOutline';
 import HomeOutline from '@icons/HomeOutline';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { User } from '@/interfaces/User';
 import type { UserRole } from '@/interfaces/UserRoles';
 import { getCookieValue, removeSecureCookie } from '../../storage/cookies';
+import HomeIcon from '../Icons/HomeIcon';
+import CalendarIcon from '../Icons/CalendarIcon';
+import PeopleFilledIcon from '../Icons/PeopleFilledIcon';
+import PeopleIcon from '../Icons/PeopleIcon';
+import GearIcon from '../Icons/GearIcon';
+import GearFilledIcon from '../Icons/GearFilledIcon';
 
 export default function AdminSidebar() {
 	const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
@@ -24,7 +28,8 @@ export default function AdminSidebar() {
 	const pathname = usePathname();
 	const isOverivew: boolean = pathname === '/admin';
 	const isEvent: boolean = pathname.includes('event');
-	const isRoles: boolean = pathname.includes('role');
+	const isTeam: boolean = pathname.includes('team');
+	const isSettings: boolean = pathname.includes('settings');
 	const isSupport: boolean = pathname.includes('support');
 	const isDocs: boolean = pathname.includes('docs');
 
@@ -76,11 +81,13 @@ export default function AdminSidebar() {
 		});
 		return ref.current;
 	};
-	const prevRole: any = usePrevious({ selectedRole });
+	const prevRole: any = usePrevious(selectedRole);
 	useEffect(() => {
-		if (prevRole?.selectedRole) router.push('/admin');
-		// if (selectedRole && showUserMenu) setShowUserMenu(false);
-	}, [router, prevRole]);
+		// Only navigate if role actually changed (previous role exists and is different from current)
+		if (prevRole && selectedRole && prevRole.id !== selectedRole.id) {
+			router.push('/admin');
+		}
+	}, [router, prevRole, selectedRole]);
 
 	const currentRoleImage = selectedRole?.organization?.avatar || '/image/webp/placeholders/avatar.webp';
 
@@ -97,44 +104,62 @@ export default function AdminSidebar() {
 					<>
 						<li>
 							<Link href="/admin" className={isOverivew ? 'active' : undefined}>
-								<HomeOutline className="sidebar-menu-icon no-fill" />
+								{isOverivew ? (
+									<HomeIcon className="sidebar-menu-icon active" />
+								) : (
+									<HomeOutline className="sidebar-menu-icon no-fill" />
+								)}
 								<span>Overview</span>
 							</Link>
 						</li>
 
 						<li>
 							<Link href="/admin/events" className={isEvent ? 'active' : undefined}>
-								<CalendarOutline className="sidebar-menu-icon" />
+								{isEvent ? (
+									<CalendarIcon className="sidebar-menu-icon active" />
+								) : (
+									<CalendarOutline className="sidebar-menu-icon" />
+								)}
 								<span>Events</span>
 							</Link>
 						</li>
 
-						{/*
-            <li>
-              <Link href="/admin/roles" className={isRoles ? "active" : null}>
-                <PeopleCircleOutline
-                  height={32}
-                  width={32}
-                  className="sidebar-menu-icon"
-                />
-                <span>Roles</span>
-              </Link>
-            </li>
+						<li>
+							<Link href="/admin/team" className={isTeam ? 'active' : undefined}>
+								{isTeam ? (
+									<PeopleIcon className="sidebar-menu-icon active" />
+								) : (
+									<PeopleFilledIcon className="sidebar-menu-icon" />
+								)}
+								<span>Team</span>
+							</Link>
+						</li>
 
-            <li>
-              <Link
-                href="/admin/support"
-                className={isSupport ? "active" : null}
-              >
-                <SupportIcon
-                  height={32}
-                  width={32}
-                  className="sidebar-menu-icon no-fill"
-                />
-                <span>Support</span>
-              </Link>
-            </li>
-            */}
+						<li>
+							<Link href="/admin/settings" className={isSettings ? 'active' : undefined}>
+								{isSettings ? (
+									<GearFilledIcon className="sidebar-menu-icon active" />
+								) : (
+									<GearIcon className="sidebar-menu-icon" />
+								)}
+								<span>Settings</span>
+							</Link>
+						</li>
+
+						{/*
+						<li>
+						<Link
+							href="/admin/support"
+							className={isSupport ? "active" : null}
+						>
+							<SupportIcon
+							height={32}
+							width={32}
+							className="sidebar-menu-icon no-fill"
+							/>
+							<span>Support</span>
+						</Link>
+						</li>						
 
 						<li>
 							<Link href="/docs" className={isDocs ? 'active' : undefined}>
@@ -142,6 +167,7 @@ export default function AdminSidebar() {
 								<span>Docs</span>
 							</Link>
 						</li>
+						*/}
 					</>
 				) : null}
 			</ul>

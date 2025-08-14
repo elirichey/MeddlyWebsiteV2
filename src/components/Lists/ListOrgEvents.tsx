@@ -1,5 +1,5 @@
 import type { MeddlyEvent } from '@interfaces/Event';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useState } from 'react';
 import EventCard from '../Cards/EventCard';
 import Modal from '../Modal/Modal';
@@ -11,10 +11,10 @@ interface Props {
 export default function ListOrgEvents(props: Props) {
 	const { events } = props;
 	const [showModal, setShowModal] = useState<boolean>(false);
-	const router = useRouter();
+	// const router = useRouter();
 
 	const goToEventPage = (x: MeddlyEvent) => {
-		router.push(`/admin/event/${x.id}`);
+		// router.push(`/admin/event/${x.id}`);
 	};
 
 	return (
