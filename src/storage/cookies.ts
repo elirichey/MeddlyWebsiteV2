@@ -40,9 +40,7 @@ export const setSecureAuthCookie = (name: string, value: any) => {
 			path: '/', // Ensure cookie is available across the site
 		});
 		
-		// Verify the cookie was set
-		const verifyCookie = getCookie(name);
-		console.log('setSecureAuthCookie: Cookie verification', { name, verifyCookie, success: !!verifyCookie });
+		console.log('setSecureAuthCookie: Cookie set', { name, value: stringValue });
 		
 	} catch (error) {
 		console.error('setSecureAuthCookie: Error setting cookie:', error);

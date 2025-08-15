@@ -10,13 +10,14 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { UserRole } from '@/interfaces/UserRoles';
-import { getCookieValue, removeSecureCookie } from '../../storage/cookies';
+import { getCookieValue } from '../../storage/cookies';
 import HomeIcon from '../Icons/HomeIcon';
 import CalendarIcon from '../Icons/CalendarIcon';
 import PeopleFilledIcon from '../Icons/PeopleFilledIcon';
 import PeopleIcon from '../Icons/PeopleIcon';
-import GearIcon from '../Icons/GearIcon';
-import GearFilledIcon from '../Icons/GearFilledIcon';
+// import GearIcon from '../Icons/GearIcon';
+// import GearFilledIcon from '../Icons/GearFilledIcon';
+import AuthHTTP from '@/utilities/http/auth';
 
 export default function AdminSidebar() {
 	const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
@@ -29,34 +30,16 @@ export default function AdminSidebar() {
 	const isOverivew: boolean = pathname === '/admin';
 	const isEvent: boolean = pathname.includes('event');
 	const isTeam: boolean = pathname.includes('team');
-	const isSettings: boolean = pathname.includes('settings');
-	const isSupport: boolean = pathname.includes('support');
-	const isDocs: boolean = pathname.includes('docs');
+	// const isSettings: boolean = pathname.includes('settings');
 
-	const logout = useCallback(() => {
-		const userCookie = getCookieValue('user');
-		const accessToken = getCookieValue('accessToken');
-		const refreshToken = getCookieValue('refreshToken');
-		const user = userCookie ? JSON.parse(userCookie) : null;
-		// const role = roleCookie ? JSON.parse(roleCookie) : null;
-
-		// Remove secure authentication cookies
-		accessToken ? removeSecureCookie('accessToken') : null;
-		refreshToken ? removeSecureCookie('refreshToken') : null;
-		// Remove user data from localStorage
-		localStorage.removeItem('user');
-		// Remove role cookie
-		removeSecureCookie('currentRole');
-		return router.push('/');
-	}, [router]);
-
-	const checkForRoles = useCallback(() => {
+	const checkForRoles = useCallback(async () => {
 		const userRolesCookie = getCookieValue('roles');
 		const userRoles = userRolesCookie ? JSON.parse(userRolesCookie) : [];
 
 		const userHasRoles = userRoles && userRoles.length > 0;
 		if (!userHasRoles) {
-			return logout();
+			await AuthHTTP.signOut();
+			return router.push('/');
 		}
 
 		setUserRoles(userRoles);
@@ -67,7 +50,7 @@ export default function AdminSidebar() {
 		if (userRole) {
 			setSelectedRole(userRole);
 		}
-	}, [logout]);
+	}, [router]);
 
 	useEffect(() => {
 		checkForRoles();
@@ -83,8 +66,7 @@ export default function AdminSidebar() {
 	};
 	const prevRole: any = usePrevious(selectedRole);
 	useEffect(() => {
-		// Only navigate if role actually changed (previous role exists and is different from current)
-		if (prevRole && selectedRole && prevRole.id !== selectedRole.id) {
+		if (prevRole && selectedRole && prevRole?.id !== selectedRole?.id) {
 			router.push('/admin');
 		}
 	}, [router, prevRole, selectedRole]);
@@ -135,7 +117,7 @@ export default function AdminSidebar() {
 							</Link>
 						</li>
 
-						<li>
+						{/* <li>
 							<Link href="/admin/settings" className={isSettings ? 'active' : undefined}>
 								{isSettings ? (
 									<GearFilledIcon className="sidebar-menu-icon active" />
@@ -144,7 +126,7 @@ export default function AdminSidebar() {
 								)}
 								<span>Settings</span>
 							</Link>
-						</li>
+						</li> */}
 
 						{/*
 						<li>
@@ -218,13 +200,17 @@ export default function AdminSidebar() {
 														type="button"
 														className="role-card"
 														onClick={() => {
-															setSelectedRole(item);
 															setCookie('currentRole', item);
+															window.dispatchEvent(new Event('currentRoleCookieChange'));
+															setSelectedRole(item);
+															setShowUserMenu(false);
 														}}
-														onKeyDown={(e) => {
+														onKeyDown={async (e) => {
 															if (e.key === 'Enter' || e.key === ' ') {
-																setSelectedRole(item);
 																setCookie('currentRole', item);
+																window.dispatchEvent(new Event('currentRoleCookieChange'));
+																setSelectedRole(item);
+																setShowUserMenu(false);
 															}
 														}}
 													>
@@ -248,13 +234,17 @@ export default function AdminSidebar() {
 
 				<div className="row mt-15">
 					<div
-						onKeyDown={(e) => {
+						onKeyDown={async (e) => {
 							if (e.key === 'Enter' || e.key === ' ') {
-								logout();
+								await AuthHTTP.signOut();
+								return router.push('/');
 							}
 						}}
 						className="login-btn"
-						onClick={logout}
+						onClick={async () => {
+							await AuthHTTP.signOut();
+							return router.push('/');
+						}}
 					>
 						Logout
 					</div>

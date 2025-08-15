@@ -9,10 +9,8 @@ import OrgEventHTTP from '@utilities/http/admin/events';
 import UserRolesHTTP from '@utilities/http/admin/roles';
 import VenuesHttp from '@utilities/http/admin/venues';
 import { getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import type { MeddlyEvent, MeddlyEventOnCreate } from '@/interfaces/Event';
-import refreshUser from '@/utilities/RefreshUser';
 import {
 	type EventOnCreate,
 	type EventOnCreatePayload,
@@ -37,7 +35,7 @@ interface Props {
 
 export default function EventForm(props: Props) {
 	const { viewEvent, getEvents, updateViewEvent } = props;
-	const router = useRouter();
+	// const router = useRouter();
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [errors, setErrors] = useState<Array<any>>([]);
@@ -174,7 +172,7 @@ export default function EventForm(props: Props) {
 			if (res.status === 200) {
 				setEventManagerOptions(res.data.userRoles);
 			} else if (res.status === 403) {
-				await refreshUser(router);
+				// await refreshUser(router);
 				setLoading(false);
 				// await getOrgRoles();
 			} else {
@@ -184,7 +182,7 @@ export default function EventForm(props: Props) {
 			const { data } = e.response;
 			const is403 = data?.code === 403;
 			if (is403) {
-				await refreshUser(router);
+				// await refreshUser(router);
 				console.log('TEST');
 				setLoading(false);
 				// await getOrgRoles();
@@ -219,7 +217,7 @@ export default function EventForm(props: Props) {
 					setEventVenueOptions(res.data);
 					setTimeout(() => setLoadingSearchVenues(false), 500);
 				} else if (res.status === 403) {
-					await refreshUser(router);
+					// await refreshUser(router);
 					// await onSearch();
 				} else {
 					console.warn('Search Venues - Non 200 Response:', res);
@@ -279,7 +277,7 @@ export default function EventForm(props: Props) {
 					setTimeout(() => setLoading(false), 500);
 					//return console.log("Event Created:", res);
 				} else if (res.status === 403) {
-					await refreshUser(router);
+					// await refreshUser(router);
 					setLoading(false);
 					// await onSubmit(values);
 				} else {
@@ -314,7 +312,7 @@ export default function EventForm(props: Props) {
 				setTimeout(() => setLoading(false), 500);
 				//return console.log("Event Updated:", res);
 			} else if (res.status === 403) {
-				await refreshUser(router);
+				// await refreshUser(router);
 				setLoading(false);
 				// await onSubmit(values);
 			} else {

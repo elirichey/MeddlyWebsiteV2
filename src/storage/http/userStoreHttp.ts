@@ -233,7 +233,8 @@ async function getUserProfile(retryCount = 0) {
 		// console.log('getUserProfile: Error Catch', { err, msg });
 		return msg;
 	} finally {
-		await delay(timeout.auth);
+		// Reduced delay for faster user feedback
+		await delay(100);
 		setLoading(false);
 		// console.log('getUserProfile: Complete');
 		// if (errorMsg.trim() !== '') {
@@ -269,6 +270,7 @@ async function updateUserProfile(data: any, retryCount = 0) {
 				const updatedRole = res.data.userRoles.find((role: UsersOrgRole) => role.id === currentRole.id);
 				if (updatedRole) {
 					setCookie('currentRole', updatedRole);
+					window.dispatchEvent(new Event('currentRoleCookieChange'));
 				}
 			}
 			// console.log('updateUserProfile: Success', { res });
@@ -278,7 +280,7 @@ async function updateUserProfile(data: any, retryCount = 0) {
 		if (res?.message?.includes('403')) {
 			if (retryCount < maxRetries) {
 				await refreshUser();
-				await delay(timeout.auth);
+				await delay(100);
 				return updateUserProfile(data, retryCount + 1);
 			}
 		}

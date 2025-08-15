@@ -19,6 +19,12 @@ export default function Settings() {
 
 			<div id="admin-settings" className="admin-container">
 				<h1>Settings</h1>
+				<ul>
+					<li>Avatar</li>
+					<li>Name</li>
+					<li>Website</li>
+					<li>Open Support Ticket</li>
+				</ul>
 			</div>
 		</AdminLayout>
 	);

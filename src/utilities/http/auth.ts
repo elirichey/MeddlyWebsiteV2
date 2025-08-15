@@ -194,6 +194,7 @@ async function userGetSelf(): Promise<AxiosResponse> {
 			const updatedRole = profile.userRoles.find((role: UserRole) => role.id === currentRole?.id);
 			if (updatedRole) {
 				setCookie('currentRole', updatedRole);
+				window.dispatchEvent(new Event('currentRoleCookieChange'));
 			}
 		}
 

@@ -4,13 +4,13 @@ import CloseIcon from '@icons/CloseIcon';
 import MobileMenuWhite from '@icons/MobileMenuWhite';
 import { getCookieValue } from '@/storage/cookies';
 import localFont from 'next/font/local';
-import Head from 'next/head';
 import Script from 'next/script';
 import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Termly from '@/components/Legal/Termly';
 import AdminSidebar from '../components/Sidebar/AdminSidebar';
 import Snackbar from '@/components/Notifications/Snackbar';
+import type { UserRole } from '@/interfaces/UserRoles';
 
 interface Props {
 	children: ReactNode;
@@ -39,6 +39,7 @@ export default function AdminLayout({ children }: Props) {
 		'Meddly helps artists and event organizers capture, package, and release complete recordings of every event.';
 	const ogImg = '/image/og-img.png';
 
+	const [currentRole, setCurrentRole] = useState<UserRole | null>(null);
 	const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 	const wrapperRef = useRef<any>(null);
 
@@ -61,6 +62,23 @@ export default function AdminLayout({ children }: Props) {
 			};
 		}, [ref]);
 	};
+
+	// Listener for currentRole cookie changes
+	useEffect(() => {
+		const handleRoleChange = () => {
+			const roleCookie = getCookieValue('currentRole');
+			const role = roleCookie ? JSON.parse(roleCookie) : null;
+			setCurrentRole(role);
+		};
+
+		// Check immediately on mount
+		handleRoleChange();
+		// Listen for custom cookie change events
+		window.addEventListener('currentRoleCookieChange', handleRoleChange);
+		return () => {
+			window.removeEventListener('currentRoleCookieChange', handleRoleChange);
+		};
+	}, []);
 
 	useDetectOutsideClick(wrapperRef);
 
@@ -85,7 +103,11 @@ export default function AdminLayout({ children }: Props) {
 				{showMobileMenu ? <AdminSidebar /> : null}
 			</div>
 
-			<div className="admin-layout-container">{children}</div>
+			{currentRole ? (
+				<div className="admin-layout-container">{children}</div>
+			) : (
+				<div className="admin-layout-container" />
+			)}
 
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-26GXSSEKE9" />
 			<Script id="google-analytics">
