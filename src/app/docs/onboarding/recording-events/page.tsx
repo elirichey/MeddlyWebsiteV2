@@ -140,8 +140,9 @@ export default function RecordingEvents() {
 								<h3 className="mb-15 txt-red">Event Media Processing</h3>
 								<p>
 									Once the event is recorded, the videos are automatically uploaded for processing. Once everything's
-									processed, you’ll be all set to start creating Sequences for your event. This step might take a few
-									minutes, so please be patient.
+									processed, you’ll be all set to start creating{' '}
+									<Link href="/docs/onboarding/edit-and-generate#generate-sequences">Sequences</Link> for your event.
+									This step might take a little bit, so please be patient.
 								</p>
 							</div>
 						</div>

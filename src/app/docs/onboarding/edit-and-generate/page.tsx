@@ -71,6 +71,55 @@ export default function EditMediaAndGenerateSequences() {
 									</li>
 								</ol>
 							</div>
+
+							<br />
+
+							<hr />
+
+							<br />
+
+							<div id="generate-sequences" className="document-section column">
+								<h3 className="mb-15">Generating Sequences</h3>
+
+								<ol>
+									<li>
+										<p className="font-500">Go to Events Screen</p>
+										<p>Navigate to the Events tab on the bottom right of the screen.</p>
+									</li>
+
+									<li>
+										<p className="font-500">Select Your Event</p>
+										<p>Under the section titled Event Media, you have two options:</p>
+										<ul>
+											<li>
+												<p className="font-500">
+													<i>Edit Media</i>
+												</p>
+												<p>
+													View and edit the audio and video clips from your event. Select the media you want to use for
+													Sequence generation. Upload additional video.
+												</p>
+											</li>
+
+											<li>
+												<p className="font-500">
+													<i>Generate Sequences</i>
+												</p>
+
+												<p>
+													Click the <i>Generate Sequence</i> button to create a Sequence from the selected media in Edit
+													Media. You can generate multiple Sequences from the same event.
+												</p>
+
+												<p>
+													<span className="font-500">Note:</span> Each event can only have a single sequence being
+													generated at a time.
+												</p>
+											</li>
+										</ul>
+									</li>
+								</ol>
+							</div>
 						</div>
 					</div>
 
