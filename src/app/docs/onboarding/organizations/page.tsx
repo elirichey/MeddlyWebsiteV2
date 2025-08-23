@@ -32,29 +32,24 @@ export default function Organizations() {
 								<h3 className="mb-15">How to Access Your Organization</h3>
 								<ol>
 									<li>
-										<p>Navigate to the Settings screen by clicking the Gear tab on the bottom of the screen.</p>
+										<p>Navigate to the Home screen by clicking the Home tab on the bottom of the screen.</p>
 									</li>
 									<li>
 										<p>
-											Scroll to bottom of the Settings screen and select the <i>Logout</i>.
+											Under "My Organizations", select the Organization you want to access. If you don't see it, pull down the list to refresh.
 										</p>
-									</li>
+									</li>									
 									<li>
-										<p>Log back in to Meddly using the email and password you used to sign up.</p>
-									</li>
-									<li>
-										<p>Navigate to the Camera screen by clicking the Camera tab on the bottom of the screen.</p>
-									</li>
-									<li>
-										<p>Navigate to the Home screen by clicking the Home tab on the bottom of the screen</p>
-									</li>
-									<li>
-										<p>On the Home screen, on the top left of the screen, select the dropdown that says "User".</p>
-									</li>
-									<li>
-										<p>Select your new Organization</p>
+										<p>If you're already signed into an Organization, but would like to switch to a different Organization, navigate to the home screen and select the dropdown in the top left of the screen.</p>
 									</li>
 								</ol>
+
+								<br />
+
+								<p>
+									<span className="font-500">Note: </span> 
+									If you're already signed into an Organization, but would like to switch to a different Organization, navigate to the Home screen and select the dropdown in the top left of the screen.
+								</p>
 							</div>
 
 							<br />
